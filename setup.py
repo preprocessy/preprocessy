@@ -2,7 +2,7 @@
 
 import io
 
-from setuptools import setup
+from setuptools import setup, find_packages
 
 with io.open("README.md", "rt", encoding="utf8") as f:
     LONG_DESC = f.read()
@@ -27,6 +27,7 @@ setup(
     packages=find_packages(where="./preprocessy"),
     include_package_data=True,
     install_requires=[
+        "pandas>=1.0.5"
         # add contents from requirements.txt only
         # "sample_package>=version_number"
     ],
