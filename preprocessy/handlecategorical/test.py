@@ -1,11 +1,22 @@
 from handlecategorical import EncodeData
 from pandas import DataFrame
+import pandas as pd
+
+ord_dict = {
+    'Student' : 1,
+    'Teacher' : 2,
+    'HOD' : 3
+}
 
 params = {
-    'cat_cols': ['Test']
+    'ord_cols': ['Profession'],
+    'ord_dict': ord_dict
 }
-train_df = [0,0,1,3,4,1,2,2]
-train_df = DataFrame(data=train_df, columns=['Test'])
-k = EncodeData(train_df, params=params)
-train = k.encode_categorical()
-# print(train)
+
+train_csv = pd.read_csv('test.csv')
+train_csv = train_csv.drop(['Unnamed: 4','Unnamed: 5','Unnamed: 6'],axis=1)
+
+k = EncodeData(train_csv,params=params)
+train = k.encode()
+
+print(train)
