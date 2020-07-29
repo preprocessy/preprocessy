@@ -13,9 +13,9 @@ params = {
     'ord_dict': ord_dict
 }
 
-train_csv = pd.read_csv('test.csv')
-train_csv = train_csv.drop(['Unnamed: 4','Unnamed: 5','Unnamed: 6'],axis=1)
-
+train_csv = pd.read_csv('testnew.csv')
+# print(train_csv.dtypes)
+# train_csv = train_csv.drop(['Unnamed: 5','Unnamed: 6'],axis=1)
 k = EncodeData(train_csv,params=params)
 train = k.encode()
 

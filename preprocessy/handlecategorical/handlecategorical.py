@@ -31,6 +31,9 @@ class EncodeData:
                 if '$' in self.train_df[col][0] or self.train_df[col].str.contains(',').any():
                     self.train_df[col] = self.train_df[col].apply(
                             lambda x: x.replace('$','').replace(',','')).astype('float')
+                elif pd.to_datetime(self.train_df[col],errors='coerce').isnull().any()!=True:
+                    self.train_df[col] = pd.to_datetime(
+                        self.train_df[col], errors='coerce')
                 elif isinstance(self.train_df[col][0], int) and self.train_df[col].nunique() < rows:
                     self.cat_cols.append(col)
                 elif isinstance(self.train_df[col][0], str) and self.train_df[col].nunique() > rows:
