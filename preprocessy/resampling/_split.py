@@ -8,7 +8,7 @@ class Split:
     Private Methods
     ---------------
 
-    __validate__input() : validates input recieved by train_test_split()
+    __validate__input() : validates input received by train_test_split()
 
     Public Methods
     --------------
@@ -22,7 +22,7 @@ class Split:
 
     def __validate_input(self, X, y, test_size, train_size, random_state):
 
-        """ Function to validate inputs recieved by train_test_split
+        """ Function to validate inputs received by train_test_split
 
         Parameters
         ----------

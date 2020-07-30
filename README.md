@@ -19,7 +19,7 @@ Data Preprocessing library that provides customizable pipelines.
 * Run tests from `root` directory.
 
 ```bash
-    $ python -m pytest
+    $ pytest -v -s
 ```
 
 * Run linter from `root` directory.
