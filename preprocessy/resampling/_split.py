@@ -70,7 +70,7 @@ class Split:
                 raise ValueError(
                     f"Number of samples of target label and feature dataframe unequal.\nSamples in feature dataframe: {X.shape[0]}\nSamples in target label: {y.shape[0]}"
                 )
-            if type(y) is not pandas.core.series.Series:
+            if type(y) is not pd.core.series.Series:
                 raise TypeError(
                     f"Target label is not a valid dataframe.\nExpected object type: pandas.core.series.Series"
                 )
@@ -115,7 +115,7 @@ class Split:
                 train_size = 0.8
             else:
                 features = len(X.columns)
-                test_size = 1 / np.sqrt(features)
+                test_size = float(1 / np.sqrt(features))
                 train_size = 1 - test_size
 
         if type(random_state) is not int:
@@ -176,12 +176,11 @@ class Split:
         np.random.seed(random_state)
 
         if y is not None:
-            df = pd.concat(X, y, axis=1)
+            df = pd.concat([X, y], axis=1)
         else:
             df = X
 
         df = df.iloc[np.random.permutation(len(df))].reset_index(drop=True)
-
         if type(test_size) is float:
             index = int(test_size * len(df))
             train = df.iloc[index:]
@@ -195,6 +194,6 @@ class Split:
             X_train = train.drop([y.name], axis=1)
             y_test = test[y.name]
             X_test = test.drop([y.name], axis=1)
-            return X_train, y_train, X_test, y_test
+            return X_train, X_test, y_train, y_test
 
         return train, test

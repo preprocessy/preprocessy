@@ -24,7 +24,7 @@ setup(
         "License :: OSI Approved :: MIT License",
         "Programming Language :: Python :: 3",
     ],
-    packages=find_packages(where="./preprocessy"),
+    packages=find_packages(),
     include_package_data=True,
     install_requires=[
         "pandas>=1.0.5"
