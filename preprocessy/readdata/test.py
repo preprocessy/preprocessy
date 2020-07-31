@@ -1,4 +1,4 @@
-from read import ReadData
+from preprocessy.read import ReadData
 import pandas as pd
 
 x = ReadData(r'csv file path')
