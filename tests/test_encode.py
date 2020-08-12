@@ -11,27 +11,26 @@ params = {"cat_cols": [], "ord_dict": ord_dict}
 class TestOrdinalEncoding:
     # test for empty input
     def test_empty_df(self):
-        train_csv = pd.read_csv("datasets/encoding/testnew.csv")
         with pytest.raises(ValueError):
             encoder = EncodeData(target_label="Price", params=params)
-            train = encoder.encode()
+            encoder.encode()
 
     # test for warning
     def test_warning(self):
         train_csv = pd.read_csv("datasets/encoding/testnew.csv")
         with pytest.warns(UserWarning):
             encoder = EncodeData(train_df=train_csv, params=params)
-            train = encoder.encode()
+            encoder.encode()
 
     # test ordinal encoding
     def test_mapping(self):
         train_csv = pd.read_csv("datasets/encoding/testnew.csv")
         encoder = EncodeData(train_df=train_csv, target_label="Price", params=params)
         train = encoder.encode()
-        assert train["Profession"].nunique() == 3
-        assert train["Profession"][2] == 3
+        assert train[0]["ProfessionEncoded"].nunique() == 3
+        assert train[0]["ProfessionEncoded"][2] == 3
         assert Counter(params["ord_dict"]["Profession"].values()) == Counter(
-            train["Profession"].unique()
+            train[0]["ProfessionEncoded"].unique()
         )
 
     # test for empty mapping
@@ -42,4 +41,4 @@ class TestOrdinalEncoding:
             encoder = EncodeData(
                 train_df=train_csv, target_label="Price", params=params
             )
-            train = encoder.encode()
+            encoder.encode()

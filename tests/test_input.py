@@ -7,7 +7,7 @@ import pytest
 class TestReader:
     def test_file_name(self):
         with pytest.raises(ValueError):
-            reader = ReadData(name_file="datasets")
+            ReadData(name_file="datasets")
 
     def test_reader(self):
         reader = ReadData(name_file="datasets/encoding/test.csv")
