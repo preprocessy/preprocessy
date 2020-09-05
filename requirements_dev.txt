@@ -18,6 +18,7 @@ pylint==2.5.3
 pyparsing==2.4.7
 pytest==5.4.3
 regex==2020.7.14
+scikit-learn==0.23.2
 six==1.15.0
 toml==0.10.1
 typed-ast==1.4.1
