@@ -1,0 +1,16 @@
+1. MaxMinScaler
+
+Xscaled = (X - Xmin)/(Xmax - Xmin)
+New Range: 0-1
+
+2. BinaryScaler
+
+Xscaled = X <= critical_value ? 0 : 1
+New Range: 0/1
+
+
+3. StandardScaler
+
+Xscaled = (X - Xmean)/ Xstd
+New Range: min(Xscaled) to max(Xscaled)
+Note: Contains negative values for all the data points less than mean 
