@@ -1,4 +1,4 @@
-# dpp
+# Preprocessy
 
 Data Preprocessing library that provides customizable pipelines.
 
