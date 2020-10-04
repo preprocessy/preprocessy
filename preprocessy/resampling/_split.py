@@ -1,6 +1,6 @@
 import numpy as np
 import pandas as pd
-
+from ..utils import num_of_samples
 
 class Split:
     """ Class for resampling and splitting input data
@@ -63,7 +63,7 @@ class Split:
                 f"Feature dataframe is not a valid dataframe.\nExpected object type: pandas.core.frame.DataFrame"
             )
 
-        n_samples = X.shape[0]
+        n_samples = num_of_samples(X)
 
         if y is not None:
             if n_samples != y.shape[0]:
