@@ -70,7 +70,6 @@ class Correlation:
 
         corr = X.corr()
         columns = corr.columns
-        results = []
         for i in range(corr.shape[0]):
             for j in range(i + 1, corr.shape[1]):
                 curr = corr.iloc[i, j]
@@ -80,5 +79,4 @@ class Correlation:
                         sign = "No correlation"
                     elif curr < 0:
                         sign = "Negative Correlation"
-                    results.append((columns[i], columns[j], curr, sign))
-        return results
+                    yield (columns[i], columns[j], curr, sign)
