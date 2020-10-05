@@ -3,8 +3,8 @@ import pandas as pd
 
 
 class Correlation:
-    """ Class for finding correlation between features
-    
+    """Class for finding correlation between features
+
     Private Methods
     ---------------
 
@@ -33,12 +33,12 @@ class Correlation:
         -------
 
         Raises errors for invalid inputs
-        
+
         """
 
         if X is None:
             raise ValueError(f"Feature dataframe should not be of None")
-        if type(X) is not pd.core.frame.DataFrame:
+        if not isinstance(X, pd.core.frame.DataFrame):
             raise TypeError(
                 f"Feature dataframe is not a valid dataframe.\nExpected object type: pandas.core.frame.DataFrame"
             )
@@ -64,7 +64,7 @@ class Correlation:
 
         results : list<tuple<string,string,float,string>>
                     A list of tuples where each tuple contains names of the columns, their correlation value and sign of correlation.
-        
+
         """
         self.__validate_input(X, threshold)
 

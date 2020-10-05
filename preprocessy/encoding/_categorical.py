@@ -4,8 +4,7 @@ import warnings
 
 
 class EncodeData:
-    """  A class to encode categorical and ordinal features
-    """
+    """A class to encode categorical and ordinal features"""
 
     def __init__(self, params, target_label=None, train_df=None, test_df=None):
         """
@@ -41,11 +40,11 @@ class EncodeData:
 
     def __validate_inputs(self):
         """
-        function to validate inputs 
+        function to validate inputs
         - check if training dataset is given(crucial)
-        - check if test df is provided then whether the number of columns are same . 
+        - check if test df is provided then whether the number of columns are same .
         - check if target variable is still not removed from training set
-        - check if mapping dictionary is provided for every ordinal column specified 
+        - check if mapping dictionary is provided for every ordinal column specified
 
         """
         if self.train_df is None:
@@ -73,7 +72,7 @@ class EncodeData:
 
     def __encode_categorical_util(self):
         """
-        Helper function to encode categorical columns using pd.factorize. Encoding will not affect the 
+        Helper function to encode categorical columns using pd.factorize. Encoding will not affect the
         original columns. Instead a new column will be made with the name 'col_nameEncoding'.
         """
         for col in self.cat_cols:
@@ -95,7 +94,7 @@ class EncodeData:
     def __encode_categorical(self):
         """
         Function to find out which columns may be categorical. All such columns will have their title
-        added to self.cat_cols which the user can use to identify which columns the code has identified as 
+        added to self.cat_cols which the user can use to identify which columns the code has identified as
         categorical. During encoding the map formed for encoding won't be sorted. Sort will be added in v2
         if demanded.
         """
@@ -137,7 +136,7 @@ class EncodeData:
 
     def __encode_ordinal(self):
         """
-        Function to encode ordinal columns as provided by user in the form of a dictionary. Format for the 
+        Function to encode ordinal columns as provided by user in the form of a dictionary. Format for the
         parameter is specified at the top during initialization.
         """
         self.ord_cols = []
@@ -162,10 +161,10 @@ class EncodeData:
         - categorical: cat_cols can be provided by user else the code will determine which
                       columns can be categorical.
         After encoding all new columns made will have dtype='category'
-        As an additional feature the code determines to find columns where integers exist 
+        As an additional feature the code determines to find columns where integers exist
         with $ or commas example- Money columns. The commas and $ are removed and the column has its dtype
         converted to int64. However this feature won't be activated if categorical columns are mentioned by
-        the user. 
+        the user.
 
         Returns
         _ _ _ _ _

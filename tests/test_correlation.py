@@ -27,4 +27,4 @@ class TestCorrelation:
     def test_for_same_column(self):
         # A column is highly correlated with itself. Test to check if this correlation is not included.
         for tup in Correlation().find(X):
-            assert tup[0]!=tup[1]
+            assert tup[0] != tup[1]

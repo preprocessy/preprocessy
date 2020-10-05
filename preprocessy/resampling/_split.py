@@ -2,9 +2,10 @@ import numpy as np
 import pandas as pd
 from ..utils import num_of_samples
 
+
 class Split:
-    """ Class for resampling and splitting input data
-    
+    """Class for resampling and splitting input data
+
     Private Methods
     ---------------
 
@@ -22,14 +23,14 @@ class Split:
 
     def __validate_input(self, X, y, test_size, train_size, random_state):
 
-        """ Function to validate inputs received by train_test_split
+        """Function to validate inputs received by train_test_split
 
         Parameters
         ----------
-        
+
         X : pandas.core.frames.DataFrame
             Input dataframe, may or may not consist of the target label.
-        
+
         y : pandas.core.series.Series
             Target label series. If None then X consists target label
 
@@ -52,7 +53,7 @@ class Split:
 
         test_size: float or int
             Returns default value of 0.3 if not provided any value.
-        
+
         """
 
         if X is None:
@@ -133,7 +134,7 @@ class Split:
         X : pandas.core.frames.DataFrame
             Input dataframe, may or may not consist of the target label.
             Should not be None
-        
+
         y : pandas.core.series.Series
             Target label series. If None then X consists target label
 

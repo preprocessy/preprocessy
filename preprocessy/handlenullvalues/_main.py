@@ -5,8 +5,8 @@ from .errors import ArgumentsError
 
 class NullValuesHandler:
 
-    """ Class for handling null values
-    
+    """Class for handling null values
+
     Private Methods
     ---------------
 
