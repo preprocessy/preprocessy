@@ -1,6 +1,6 @@
 import pandas as pd
-import math_funcs.math_func as math_func
 from errors import ArgumentsError
+import numpy as np
 
 
 class Scaler:
@@ -61,29 +61,32 @@ class Scaler:
             column_list = list(self.df.keys())
             for column in self.columns:
                 if type(column) != str:
-                    raise TypeError(f"Expected str type column, got {type(column)}")
+                    raise TypeError(
+                        f"Expected str type column, got {type(column)}")
                 if column not in column_list:
-                    raise ArgumentsError(f"Column {column} does not exist in dataframe")
+                    raise ArgumentsError(
+                        f"Column {column} does not exist in dataframe")
 
         self.new_df = self.df
 
     def __min_max_scaler(self):
         if not self.is_combined:
             for column in self.columns:
-                new_col = [val for val in self.df[column]]
-                max = math_func.max(new_col)
-                min = math_func.min(new_col)
+                new_col = np.array([val for val in self.df[column]])
+                max = np.maximum(new_col)
+                min = np.minimum(new_col)
                 diff = max - min
                 for i in range(len(new_col)):
                     new_col[i] = (new_col[i] - min) / diff
                 self.new_df[column] = new_col
         else:
-            new_mega_arr = []
+            new_combined_arr = []
             for column in self.columns:
                 for ele in self.df[column]:
-                    new_mega_arr.append(ele)
-            max = math_func.max(new_mega_arr)
-            min = math_func.min(new_mega_arr)
+                    new_combined_arr.append(ele)
+            new_combined_arr = np.array(new_combined_arr)
+            max = np.maximum(new_combined_arr)
+            min = np.minimum(new_combined_arr)
             diff = max - min
             for column in self.columns:
                 new_col = [val for val in self.df[column]]
@@ -115,12 +118,13 @@ class Scaler:
                     new_col[i] = (new_col[i] - mean) / std
                 self.new_df[column] = new_col
         else:
-            new_mega_arr = []
+            new_combined_arr = []
             for column in self.columns:
                 for ele in self.df[column]:
-                    new_mega_arr.append(ele)
-            mean = math_func.mean(new_mega_arr)
-            std = math_func.stdev(new_mega_arr)
+                    new_combined_arr.append(ele)
+            new_combined_arr = np.array(new_combined_arr)
+            mean = new_combined_arr.mean()
+            std = new_combined_arr.std()
             for column in self.columns:
                 new_col = [val for val in self.df[column]]
                 for i in range(len(new_col)):
@@ -140,10 +144,10 @@ class Scaler:
         return self.final_df
 
 
-"""df = pd.read_csv(
-    'C:/Users/yash/Downloads/37281_63530_bundle_archive/test_data9.csv')
-df = df.dropna()
-df = Scaler(df=df, type="StandardScaler", columns=[
-            'Id', 'ParentId'], is_combined=True, critical_value=20)
-df = df.execute()
-print(df)"""
+# df = pd.read_csv(
+#     'C:/Users/yash/Downloads/37281_63530_bundle_archive/test_data9.csv')
+# df = df.dropna()
+# df = Scaler(df=df, type="StandardScaler", columns=[
+#             'Id'], is_combined=True, critical_value=20)
+# df = df.execute()
+# print(df)
