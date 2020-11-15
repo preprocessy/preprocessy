@@ -9,7 +9,7 @@ importlib-metadata==2.0.0
 isort==5.5.4
 lazy-object-proxy==1.5.1
 mccabe==0.6.1
-more-itertools==8.5.0
+more-itertools==8.6.0
 packaging==20.4
 pathspec==0.8.0
 pluggy==0.13.1
