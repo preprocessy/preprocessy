@@ -5,7 +5,7 @@ attrs==20.2.0
 black==20.8b1
 click==7.1.2
 codespell==1.17.1
-importlib-metadata==2.0.0
+importlib-metadata==3.1.0
 isort==5.6.4
 lazy-object-proxy==1.5.1
 mccabe==0.6.1
