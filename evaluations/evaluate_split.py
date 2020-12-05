@@ -1,5 +1,6 @@
 import numpy as np
 import pandas as pd
+import time
 from sklearn.datasets import load_iris, load_boston, load_breast_cancer, load_diabetes
 from sklearn.linear_model import LinearRegression
 from sklearn.ensemble import RandomForestClassifier
@@ -42,12 +43,18 @@ def sklearn_eval(X, y, split, model):
 
 def eval(X, y, dataset, model):
     for split in splits:
+        start = time.time()
         preprocessy_test_size, preprocessy_preds, preprocessy_y_test = preprocessy_eval(
             X, y, split, model
         )
+        end = time.time()
+        preprocessy_time = end - start
+        start = time.time()
         sklearn_test_size, sklearn_preds, sklearn_y_test = sklearn_eval(
             X, y, split, model
         )
+        end = time.time()
+        sklearn_time = end - start
         preprocessy_accuracy = classification_report(
             preprocessy_y_test, preprocessy_preds, output_dict=True
         )["accuracy"]
@@ -56,9 +63,9 @@ def eval(X, y, dataset, model):
         )["accuracy"]
         print(f"Dataset - {dataset}")
         print(
-            f"Preprocessy test_size - {preprocessy_test_size} accuracy - {preprocessy_accuracy}"
+            f"Preprocessy test_size - {preprocessy_test_size} accuracy - {preprocessy_accuracy:.4f} time - {preprocessy_time:.4f}"
         )
-        print(f"Sklearn test_size - {sklearn_test_size} accuracy - {sklearn_accuracy}")
+        print(f"Sklearn test_size - {sklearn_test_size} accuracy - {sklearn_accuracy:.4f} time - {sklearn_time:.4f}")
         print()
 
 
@@ -78,19 +85,25 @@ def evaluate_on_diabetes():
     model = LinearRegression(fit_intercept=True, normalize=True, copy_X=True)
     X, y = load_diabetes(return_X_y=True, as_frame=True)
     for split in splits:
+        start = time.time()
         preprocessy_test_size, preprocessy_preds, preprocessy_y_test = preprocessy_eval(
             X, y, split, model
         )
+        end = time.time()
+        preprocessy_time = end - start
+        start = time.time()
         sklearn_test_size, sklearn_preds, sklearn_y_test = sklearn_eval(
             X, y, split, model
         )
+        end = time.time()
+        sklearn_time = end - start
         preprocessy_accuracy = r2_score(preprocessy_y_test, preprocessy_preds)
         sklearn_accuracy = r2_score(sklearn_y_test, sklearn_preds)
         print(f"Dataset - diabetes")
         print(
-            f"Preprocessy test_size - {preprocessy_test_size} accuracy - {preprocessy_accuracy}"
+            f"Preprocessy test_size - {preprocessy_test_size} accuracy - {preprocessy_accuracy:.4f} time - {preprocessy_time:.4f}"
         )
-        print(f"Sklearn test_size - {sklearn_test_size} accuracy - {sklearn_accuracy}")
+        print(f"Sklearn test_size - {sklearn_test_size} accuracy - {sklearn_accuracy:.4f} time - {sklearn_time:.4f}")
         print()
 
 
@@ -100,17 +113,29 @@ def evaluate_on_boston():
     X = pd.DataFrame(dataset.data, columns=dataset.feature_names)
     y = pd.Series(dataset.target, name="Target")
     for split in splits:
+        start = time.time()
         preprocessy_test_size, preprocessy_preds, preprocessy_y_test = preprocessy_eval(
             X, y, split, model
         )
+        end = time.time()
+        preprocessy_time = end - start
+        start = time.time()
         sklearn_test_size, sklearn_preds, sklearn_y_test = sklearn_eval(
             X, y, split, model
         )
+        end = time.time()
+        sklearn_time = end - start
         preprocessy_accuracy = r2_score(preprocessy_y_test, preprocessy_preds)
         sklearn_accuracy = r2_score(sklearn_y_test, sklearn_preds)
         print(f"Dataset - boston")
         print(
-            f"Preprocessy test_size - {preprocessy_test_size} accuracy - {preprocessy_accuracy}"
+            f"Preprocessy test_size - {preprocessy_test_size} accuracy - {preprocessy_accuracy:.4f} time - {preprocessy_time:.4f}"
         )
-        print(f"Sklearn test_size - {sklearn_test_size} accuracy - {sklearn_accuracy}")
+        print(f"Sklearn test_size - {sklearn_test_size} accuracy - {sklearn_accuracy:.4f} time - {sklearn_time:.4f}")
         print()
+
+if __name__ == "__main__":
+    evaluate_on_iris()
+    evaluate_on_breast_cancer()
+    evaluate_on_diabetes()
+    evaluate_on_boston()

@@ -1,47 +1,47 @@
 Dataset - iris
-Preprocessy test_size - 0.5 accuracy - 0.96
-Sklearn test_size - 0.25 accuracy - 0.9736842105263158
+Preprocessy test_size - 0.5 accuracy - 0.9600 time - 0.1485
+Sklearn test_size - 0.25 accuracy - 0.9737 time - 0.1185
 
 Dataset - iris
-Preprocessy test_size - 0.2 accuracy - 0.9666666666666667
-Sklearn test_size - 0.2 accuracy - 0.9666666666666667
+Preprocessy test_size - 0.2 accuracy - 0.9667 time - 0.1237
+Sklearn test_size - 0.2 accuracy - 0.9667 time - 0.1191
 
 Dataset - iris
-Preprocessy test_size - 0.3 accuracy - 0.9777777777777777
-Sklearn test_size - 0.3 accuracy - 0.9777777777777777
+Preprocessy test_size - 0.3 accuracy - 0.9778 time - 0.1211
+Sklearn test_size - 0.3 accuracy - 0.9778 time - 0.1186
 
 Dataset - breast cancer
-Preprocessy test_size - 0.18257418583505536 accuracy - 0.9514563106796117
-Sklearn test_size - 0.25 accuracy - 0.965034965034965
+Preprocessy test_size - 0.18257418583505536 accuracy - 0.9515 time - 0.1686
+Sklearn test_size - 0.25 accuracy - 0.9650 time - 0.1622
 
 Dataset - breast cancer
-Preprocessy test_size - 0.2 accuracy - 0.9469026548672567
-Sklearn test_size - 0.2 accuracy - 0.9473684210526315
+Preprocessy test_size - 0.2 accuracy - 0.9469 time - 0.1683
+Sklearn test_size - 0.2 accuracy - 0.9474 time - 0.1644
 
 Dataset - breast cancer
-Preprocessy test_size - 0.3 accuracy - 0.9705882352941176
-Sklearn test_size - 0.3 accuracy - 0.9473684210526315
+Preprocessy test_size - 0.3 accuracy - 0.9706 time - 0.1606
+Sklearn test_size - 0.3 accuracy - 0.9474 time - 0.1547
 
 Dataset - diabetes
-Preprocessy test_size - 0.31622776601683794 accuracy - 0.43497035817680085
-Sklearn test_size - 0.25 accuracy - 0.4405221139510801
+Preprocessy test_size - 0.31622776601683794 accuracy - 0.4350 time - 0.0293
+Sklearn test_size - 0.25 accuracy - 0.4405 time - 0.0055
 
 Dataset - diabetes
-Preprocessy test_size - 0.2 accuracy - 0.5065368093248677
-Sklearn test_size - 0.2 accuracy - 0.5144853110876044
+Preprocessy test_size - 0.2 accuracy - 0.5065 time - 0.0064
+Sklearn test_size - 0.2 accuracy - 0.5145 time - 0.0042
 
 Dataset - diabetes
-Preprocessy test_size - 0.3 accuracy - 0.4481652694315844
-Sklearn test_size - 0.3 accuracy - 0.45086829477801105
+Preprocessy test_size - 0.3 accuracy - 0.4482 time - 0.0050
+Sklearn test_size - 0.3 accuracy - 0.4509 time - 0.0037
 
 Dataset - boston
-Preprocessy test_size - 0.2773500981126146 accuracy - 0.6891093866231174
-Sklearn test_size - 0.25 accuracy - 0.6721704066419687
+Preprocessy test_size - 0.2773500981126146 accuracy - 0.6891 time - 0.0093
+Sklearn test_size - 0.25 accuracy - 0.6722 time - 0.0056
 
 Dataset - boston
-Preprocessy test_size - 0.2 accuracy - 0.6752430414650005
-Sklearn test_size - 0.2 accuracy - 0.6747386028052124
+Preprocessy test_size - 0.2 accuracy - 0.6752 time - 0.0061
+Sklearn test_size - 0.2 accuracy - 0.6747 time - 0.0055
 
 Dataset - boston
-Preprocessy test_size - 0.3 accuracy - 0.6754501272830646
-Sklearn test_size - 0.3 accuracy - 0.6927419569015707
+Preprocessy test_size - 0.3 accuracy - 0.6755 time - 0.0061
+Sklearn test_size - 0.3 accuracy - 0.6927 time - 0.0042
