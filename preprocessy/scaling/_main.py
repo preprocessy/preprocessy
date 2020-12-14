@@ -61,11 +61,9 @@ class Scaler:
             column_list = list(self.df.keys())
             for column in self.columns:
                 if type(column) != str:
-                    raise TypeError(
-                        f"Expected str type column, got {type(column)}")
+                    raise TypeError(f"Expected str type column, got {type(column)}")
                 if column not in column_list:
-                    raise ArgumentsError(
-                        f"Column {column} does not exist in dataframe")
+                    raise ArgumentsError(f"Column {column} does not exist in dataframe")
 
         self.new_df = self.df
 

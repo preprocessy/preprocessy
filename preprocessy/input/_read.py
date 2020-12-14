@@ -4,7 +4,7 @@ import os
 
 class ReadData(object):
     def __init__(self, file_name):
-        self.excel_extensions = ['xls', 'xlsx', 'xlsm', 'xlsb', 'odf', 'ods', 'odt']
+        self.excel_extensions = ["xls", "xlsx", "xlsm", "xlsb", "odf", "ods", "odt"]
         self.file_name = file_name
         self.df = self.__read_file()
         self.summary, self.stats = self.__read_summary()
@@ -21,8 +21,8 @@ class ReadData(object):
             if ".csv" in self.file_name:
                 self.df = pd.read_csv(self.file_name, index_col=0)
             elif ".tsv" in self.file_name:
-                self.df = pd.read_csv(self.file_name,sep="\t")
-            elif self.file_name.split('.')[-1] in self.excel_extensions:
+                self.df = pd.read_csv(self.file_name, sep="\t")
+            elif self.file_name.split(".")[-1] in self.excel_extensions:
                 self.df = pd.read_excel(self.file_name)
             else:
                 raise ValueError(
