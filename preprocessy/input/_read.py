@@ -3,43 +3,53 @@ import os
 
 
 class ReadData(object):
-    def __init__(self, name_file):
-        self.name_file = name_file
+    def __init__(self, file_name):
+        self.excel_extensions = ['xls', 'xlsx', 'xlsm', 'xlsb', 'odf', 'ods', 'odt']
+        self.file_name = file_name
         self.df = self.__read_file()
         self.summary, self.stats = self.__read_summary()
 
     def __read_file(self):
         """Read the file content"""
 
-        if ".csv" not in self.name_file:
+        if ".csv" not in self.file_name:
             raise ValueError(
-                f'Invalid filename. Expected path to file of type ".csv". Received {self.name_file}'
+                f'Invalid filename. Expected path to file of type ".csv". Received {self.file_name}'
             )
         try:
-            df = None
-            df = pd.read_csv(self.name_file, index_col=0)
-            df.drop(
-                df.columns[df.columns.str.contains("unnamed", case=False)],
+            self.df = None
+            if ".csv" in self.file_name:
+                self.df = pd.read_csv(self.file_name, index_col=0)
+            elif ".tsv" in self.file_name:
+                self.df = pd.read_csv(self.file_name,sep="\t")
+            elif self.file_name.split('.')[-1] in self.excel_extensions:
+                self.df = pd.read_excel(self.file_name)
+            else:
+                raise ValueError(
+                    f'Unsupported filetype. Supported extensions include [.csv, .tsv, .xls, .xlsx, .xlsm, .xlsb, .odf, .ods and .odt]. Received file of type .{self.file_name.split(".")[-1]}'
+                )
+
+            self.df.drop(
+                self.df.columns[self.df.columns.str.contains("unnamed", case=False)],
                 axis=1,
                 inplace=True,
             )
+
         except FileNotFoundError:
-            print(f"{self.name_file} not found")
+            print(f"{self.file_name} not found")
+
         finally:
-            return df
+            return self.df
 
     def __read_summary(self):
         """Read file summary"""
 
         summary = None
         stats = None
-        try:
+        if self.df is not None:
             summary = self.df.info()
             stats = self.df.describe()
-        except FileNotFoundError:
-            print(f"{self.name_file} not found")
-        finally:
-            return summary, stats
+        return summary, stats
 
     def display_file(self):
         print(self.df)
