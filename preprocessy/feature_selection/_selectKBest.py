@@ -153,7 +153,7 @@ class SelectKBest:
         return X.iloc[:, mask]
 
     def fit_transform(self, X, y):
-        """Does fit() and transform in single step
+        """Does fit() and transform() in single step
 
         Parameters
         ----------
