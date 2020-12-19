@@ -70,7 +70,7 @@ pandas
 scikit-learn # required for feature selection
 ```
 
-For development requirements see `Contribution Guidelines`
+For development requirements see [Contributing Guidelines](https://github.com/preprocessy/preprocessy/blob/master/CONTRIBUTING.md)
 
 ## Contributing
 
