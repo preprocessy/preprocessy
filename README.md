@@ -9,33 +9,85 @@
 [![PRs welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat)](https://github.com/dwyl/esta/issues)
 [![MIT license](https://img.shields.io/badge/License-MIT-informational.svg)](https://lbesson.mit-license.org/)
 
-Preprocessy is a library that provides data preprocessing pipelines for machine learning. It bundles all the common preprocessing steps that are performed on the data to prepare it for machine learning models. It aims to do so in a manner that is independent of the source and type of dataset. Hence, it provides a set of functions that have been generalized to different types of data. 
+Preprocessy is a library that provides data preprocessing pipelines for machine learning. It bundles all the common preprocessing steps that are performed on the data to prepare it for machine learning models. It aims to do so in a manner that is independent of the source and type of dataset. Hence, it provides a set of functions that have been generalised to different types of data.
 
 The pipelines themselves are composed of these functions and flexible so that the users can customise them by adding their processing functions or removing pipeline functions according to their needs. The pipelines thus provide an abstract and high-level interface to the users.
 
+## Pipeline Structure
 
-## Setup
+The pipelines are divided into 3 logical stages -
 
-* Clone the repo and install dependencies in a venv. `requirements_dev.txt` would automatically install `requirements.txt`
+### Stage 1 - Pipeline Input
 
-```bash
-    $ pip install -r requirements_dev.txt
+Input datasets with the following extensions are supported - `.csv, .tsv, .xls, .xlsx, .xlsm, .xlsb, .odf, .ods, .odt`
+
+### Stage 2 - Processing
+
+This is the major part of the pipeline consisting of processing functions. The following functions are provided out of the box as individual functions as well as a part of the pipelines -
+
+- Handling Null Values
+- Handling Outliers
+- Normalisation and Scaling
+- Label Encoding
+- Correlation and Feature Extraction
+- Training and Test set splitting
+
+### Stage 3 - Pipeline Output
+
+The output consists of processed dataset and pipeline parameters depending on the verbosity required.
+
+## Project Structure
+
+```
+.
+├── CONTRIBUTING.md
+├── LICENSE
+├── README.md
+├── datasets
+├── evaluations
+├── preprocessy
+├── requirements.txt
+├── requirements_dev.txt
+├── setup.py
+├── tests
+└── venv
+
+5 directories, 6 files
 ```
 
-* Create a folder called `datasets` in the `root` directory. Its content can be found [here](https://drive.google.com/drive/folders/1qO3xrOVxSJDkNEcSZBoUPqq5cS_HazCZ?usp=sharing)
+- **preprocessy** - Contains the different pipeline and function classes
 
-* All code goes inside `preprocessy`. All test scripts go inside `tests`. All evaluation scripts go in `evaluations`
+- **tests** - Contains all the unit and integration tests
 
-## Steps before committing
+- **datasets** - Contains sample datasets for development purposes
 
-* Run tests from `root` directory.
+- **evaluations** - Contains jupyter notebooks with example implementations and performance measurements
 
-```bash
-    $ pytest -v -s
+## Requirements
+
+```
+pandas
+scikit-learn # required for feature selection
 ```
 
-* Run code formatter and spell checker from `root` directory
+For development requirements see `Contribution Guidelines`
 
-```bash
-    $ black . && codespell --skip=".git,*.gif,*.png,*.PNG,./venv,*.json,./datasets,.DS_Store,*.pyc"
-```
+## Contributing
+
+Please read our [Contributing Guide](https://github.com/preprocessy/preprocessy/blob/master/CONTRIBUTING.md) before submitting a Pull Request to the project.
+
+## Support
+
+Feel free to contact any of the maintainers. We're happy to help!
+
+## Roadmap
+
+Check out our [roadmap](https://github.com/preprocessy/preprocessy/projects/1) to stay informed of the latest features released and the upcoming ones. Feel free to give us your insights!
+
+## Documentation
+
+Currently, documentation is under development. All contributions are welcome! Please see our [Contributing Guide](https://github.com/preprocessy/preprocessy/blob/master/CONTRIBUTING.md).
+
+## License
+
+See the [LICENSE](https://github.com/preprocessy/preprocessy/blob/master/LICENSE) file for licensing information.
