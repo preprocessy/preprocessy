@@ -30,19 +30,21 @@ Before submitting an issue please make sure:
     $ pip install -r requirements_dev.txt
 ```
 
-4. Run the tests
+4. Make the necessary changes
+
+5. Run the tests
 
 ```bash
     $ pytest -v -s
 ```
 
-5. Format the code before committing (replace `./venv` with your virtual environment folder)
+6. Format the code before committing (replace `./venv` with your virtual environment folder)
 
 ```bash
     $ black . && codespell --skip=".git,*.gif,*.png,*.PNG,./venv,*.json,./datasets,.DS_Store,*.pyc"
 ```
 
-6. Create a new pull request with an appropriate title, detailed explanation of what the pull request does and attach links to other issues or pull requests related to your pull request
+7. Create a new pull request with an appropriate title, detailed explanation of what the pull request does and attach links to other issues or pull requests related to your pull request
 
 ## License
 
