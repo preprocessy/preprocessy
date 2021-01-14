@@ -6,13 +6,13 @@ class HandleOutlier:
         Private methods
        _ _ _ _ _ _ _ _ _ _
 
-       __returnQuartiles() : returns the 5% and 95% mark in the distrubution 
+       __return_quartiles() : returns the 5% and 95% mark in the distrubution 
                              of data(Values above are default values)
 
         Public Methods
        _ _ _ _ _ _ _ _ _
 
-       handleOutliers() : Takes in the dataset as input, finds the quartiles
+       handle_outliers() : Takes in the dataset as input, finds the quartiles
                           and returns the dataset within the interquartile 
                           range. Function run only on int64 and float64 
                           specified columns.
@@ -42,38 +42,36 @@ class HandleOutlier:
         """
         self.train_df = train_df
         self.cols = []
-        self.removeoutliers = True
+        self.remove_outliers = True
         self.replace = False
         self.quartiles = {}
-        self.qone = 0.05
-        self.qthree = 0.95
+        self.first_quartile = 0.05
+        self.third_quartile = 0.95
         if 'cols' in params.keys():
             self.cols = params['cols']
         if 'removeoutliers' in params.keys():
-            self.removeoutliers = params['removeoutliers']
+            self.remove_outliers = params['removeoutliers']
         if 'replace' in params.keys():
             self.replace = params['replace'] 
         if 'q1' in params.keys():
-            self.qone = params['q1']
+            self.first_quartile = params['q1']
         if 'q3' in params.keys():
-            self.qthree = params['q3']
+            self.third_quartile = params['q3']
 
     def __return_quartiles(self,col):
         # return the quartile range or q1 and q3 values for the column passed as parameter
-        quartiles = self.quartiles
         train_df = self.train_df
-        q1 = train_df[col].quantile(self.qone)
+        q1 = train_df[col].quantile(self.first_quartile)
         q1 = round(q1)
-        q3 = train_df[col].quantile(self.qthree)
+        q3 = train_df[col].quantile(self.third_quartile)
         q3 = round(q3)
-        quartiles[col] = [q1,q3]
-        return True
+        self.quartiles[col] = [q1,q3]
 
     def handle_outliers(self):
 
         ### parameters till now: train_df, cols, removeoutliers, replace
         train_df = self.train_df
-        if self.removeoutliers: # if user has marked removeoutliers = True and wants outliers removed..
+        if self.remove_outliers: # if user has marked removeoutliers = True and wants outliers removed..
             if len(self.cols)>=1:
                 for col in self.cols:
                     self.__return_quartiles(col)
@@ -96,5 +94,6 @@ class HandleOutlier:
                     q3 = q[1]
                     train_df[(train_df[col]<q1)] = -999
                     train_df[(train_df[col]>q3)] = -999
+        print(self.quartiles)
         self.train_df = train_df
         return self.train_df
