@@ -18,7 +18,7 @@ class Correlation:
     """
 
     def __validate_input(self, X, threshold):
-        """Function to validate inputs recieved by find()
+        """Function to validate inputs received by find()
 
         Parameters
         ----------
