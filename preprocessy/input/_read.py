@@ -10,11 +10,6 @@ class ReadData(object):
 
     def __read_file(self):
         """Read the file content"""
-
-        if ".csv" not in self.file_name:
-            raise ValueError(
-                f'Invalid filename. Expected path to file of type ".csv". Received {self.file_name}'
-            )
         try:
             self.df = None
             if ".csv" in self.file_name:
