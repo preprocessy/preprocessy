@@ -7,7 +7,7 @@ class ReadData(object):
         self.file_name = file_name
         self.df = self.__read_file()
         self.summary, self.stats = self.__read_summary()
-
+        
     def __read_file(self):
         """Read the file content"""
         try:
