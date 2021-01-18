@@ -1,3 +1,4 @@
+from typing import List
 import warnings
 import pandas as pd
 from .errors import ArgumentsError
@@ -6,6 +7,23 @@ from .errors import ArgumentsError
 class NullValuesHandler:
 
     """Class for handling null values
+
+    Parameters
+    ---------------
+    df : pandas.core.frames.DataFrame
+         The input dataframe
+
+    drop : boolean
+           Controlling whether to drop rows/columns with null values or not
+
+    fill_missing : string
+                   can be "mean" or "median", determines the value to be filled in place of null values
+
+    fill_values : dict
+                  Column and value mapping, where the key is the column name and value is the custom value to be filled in place of null values
+
+    column_list : list
+                  List of column names which have to be dropped, if this parameter is not used, the dropping of values will occur on rows
 
     Private Methods
     ---------------
@@ -27,11 +45,12 @@ class NullValuesHandler:
 
     """
 
-    def __init__(self, df=None, drop=None, fill_missing=None, fill_values=None):
+    def __init__(self, df=None, drop=None, fill_missing=None, fill_values=None, column_list=None):
         self.df = df
         self.drop = drop
         self.fill_missing = fill_missing
         self.fill_values = fill_values
+        self.column_list = column_list
         self.__validate_input()
         self.new_df = None
         self.final_df = None
@@ -81,11 +100,23 @@ class NullValuesHandler:
                 )
             elif type(self.fill_values) is not dict:
                 raise TypeError(f'Expected dict value for argument "fill_values" ')
-            column_list = list(self.df)
+            col_list = list(self.df)
             user_column_list = list(self.fill_values.keys())
             for column in user_column_list:
-                if column not in column_list:
+                if column not in col_list:
                     raise ArgumentsError(f"Column {column} does not exist in dataframe")
+
+        if self.column_list is not None:
+            if not isinstance(self.column_list,list):
+                raise TypeError(f"Expected List for argument \"column_list\"")
+            if self.drop is not None and self.drop and len(self.column_list) == 0:
+                warnings.warn("\"column_list\" is empty, no columns will be dropped. If you want to drop rows, do not pass \"column_list\" in the arguments or pass None",UserWarning)
+            if len(self.column_list) != 0:
+                cols=list(self.df)
+                for c in self.column_list:
+                    if c not in cols:
+                        raise ArgumentsError(f"Column \"{c}\" does not exist in dataframe")
+
 
     # function to drop all rows with nan values
     def __drop_all_rows_with_null_values(self):
@@ -93,25 +124,23 @@ class NullValuesHandler:
         return self.new_df
 
     # function to drop a particular column
-    def __drop_column_with_null_values(self, column_name):
-        self.new_df = self.df.drop([column_name], axis=1)
+    def __drop_column_with_null_values(self):
+        self.new_df = self.df.drop(self.column_list, axis=1)
         return self.new_df
 
     # function to fill the missing values with mean or median as per the arguments passed
     def __fill_missing_with_mean_or_median(self):
         self.new_df = self.df
         if self.fill_missing == "median":
-            self.new_df = self.new_df.fillna(self.new_df.median())
+            self.new_df.fillna(self.new_df.median(),inplace=True)
         else:
-            self.new_df = self.new_df.fillna(self.new_df.mean())
+            self.new_df.fillna(self.new_df.mean(),inplace=True)
         return self.new_df
 
     # function to fill columns containing null values with the character supplied by the user
     def __fill_values_columns(self):
         self.new_df = self.df
-        print(list(self.fill_values.keys()))
         for column in list(self.fill_values.keys()):
-            print(column)
             self.new_df[column].fillna(self.fill_values[column], inplace=True)
         return self.new_df
 
@@ -122,6 +151,7 @@ class NullValuesHandler:
             and self.fill_missing is None
             and self.fill_values is None
             and self.drop != False
+            and self.column_list is None
         ):
             self.final_df = self.__drop_all_rows_with_null_values()
 
@@ -138,6 +168,14 @@ class NullValuesHandler:
             and self.fill_missing is None
         ):
             self.final_df = self.__fill_values_columns()
+        
+        elif (
+            self.drop is not None
+            and self.drop != False
+            and self.column_list is not None
+            and len(self.column_list) != 0
+        ):
+            self.final_df = self.__drop_column_with_null_values()
 
         else:
             return self.df
