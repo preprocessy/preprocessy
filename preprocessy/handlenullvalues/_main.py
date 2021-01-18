@@ -1,4 +1,3 @@
-from typing import List
 import warnings
 import pandas as pd
 from .errors import ArgumentsError
