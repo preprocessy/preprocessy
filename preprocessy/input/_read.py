@@ -2,12 +2,21 @@ import pandas as pd
 import os
 import errno
 
+
 class ReadData(object):
     def __init__(self, file_name):
         self.excel_extensions = ["xls", "xlsx", "xlsm", "xlsb", "odf", "ods", "odt"]
-        self.file_name = file_name
+        self._validate_input(file_name)
         self.__read_file()
         self.summary, self.stats = self.__read_summary()
+
+    def _validate_input(self, file_name):
+        if type(file_name) is not str:
+            raise TypeError(
+                f"Argument file_name should be of str type. Received {type(file_name)}"
+            )
+        else:
+            self.file_name = file_name
 
     def __read_file(self):
         """Read the file content"""
@@ -34,7 +43,9 @@ class ReadData(object):
                 inplace=True,
             )
         else:
-            raise FileNotFoundError(errno.ENOENT, os.strerror(errno.ENOENT), self.file_name)
+            raise FileNotFoundError(
+                errno.ENOENT, os.strerror(errno.ENOENT), self.file_name
+            )
 
     def __read_summary(self):
         """Read file summary"""
