@@ -5,6 +5,13 @@ import pytest
 
 
 class TestReader:
+    def test_incorrect_file_name_type(self):
+        with pytest.raises(TypeError):
+            reader = ReadData(None)
+
+        with pytest.raises(TypeError):
+            reader = ReadData(file_name=["datasets/encoding/test.csv"])
+
     def test_file_name(self):
         with pytest.raises(ValueError):
             ReadData(file_name="datasets")
