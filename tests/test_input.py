@@ -12,7 +12,7 @@ class TestReader:
         with pytest.raises(TypeError):
             reader = ReadData(file_name=["datasets/encoding/test.csv"])
 
-    def test_file_name(self):
+    def test_incorrect_file_type(self):
         with pytest.raises(ValueError):
             ReadData(file_name="datasets")
 
