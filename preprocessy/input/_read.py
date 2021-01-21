@@ -12,7 +12,9 @@ class ReadData(object):
 
     def _validate_input(self, file_name):
         if type(file_name) is not str:
-            raise TypeError("Argument file_name should be of str type")
+            raise TypeError(
+                f'Argument file_name should be of str type. Received type {str(type(file_name)).split(" ")[-1].split(">")[0]}'
+            )
         else:
             self.file_name = file_name
 
