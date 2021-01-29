@@ -101,9 +101,13 @@ class NullValuesHandler:
             elif type(self.fill_values) is not dict:
                 raise TypeError(f'Expected dict value for argument "fill_values" ')
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
             col_list = list(self.df)
 >>>>>>> 6181a2b (add option to drop columns)
+=======
+            col_list = list(self.df)
+>>>>>>> afb2112215d33669bbc51071a8cc6cd2511b4139
             user_column_list = list(self.fill_values.keys())
             for column in user_column_list:
                 if column not in col_list:
@@ -113,19 +117,25 @@ class NullValuesHandler:
             if not isinstance(self.column_list,list):
                 raise TypeError(f"Expected List for argument \"column_list\"")
 <<<<<<< HEAD
+<<<<<<< HEAD
             if self.drop and len(self.column_list) == 0:
                 warnings.warn("\"column_list\" is empty, no columns will be dropped. If you want to drop rows, do not pass \"column_list\" in the arguments or pass None",UserWarning)
             if len(self.column_list) != 0:
                 for c in self.column_list:
                     if c not in col_list:
 =======
+=======
+>>>>>>> afb2112215d33669bbc51071a8cc6cd2511b4139
             if self.drop is not None and self.drop and len(self.column_list) == 0:
                 warnings.warn("\"column_list\" is empty, no columns will be dropped. If you want to drop rows, do not pass \"column_list\" in the arguments or pass None",UserWarning)
             if len(self.column_list) != 0:
                 cols=list(self.df)
                 for c in self.column_list:
                     if c not in cols:
+<<<<<<< HEAD
 >>>>>>> 6181a2b (add option to drop columns)
+=======
+>>>>>>> afb2112215d33669bbc51071a8cc6cd2511b4139
                         raise ArgumentsError(f"Column \"{c}\" does not exist in dataframe")
 
 
@@ -182,11 +192,16 @@ class NullValuesHandler:
         
         elif (
 <<<<<<< HEAD
+<<<<<<< HEAD
             self.drop == True
 =======
             self.drop is not None
             and self.drop != False
 >>>>>>> 6181a2b (add option to drop columns)
+=======
+            self.drop is not None
+            and self.drop != False
+>>>>>>> afb2112215d33669bbc51071a8cc6cd2511b4139
             and self.column_list is not None
             and len(self.column_list) != 0
         ):
