@@ -92,6 +92,7 @@ class NullValuesHandler:
             if self.fill_missing not in ["mean", "median"]:
                 raise ArgumentsError('Allowed argument is "mean" or "median" ')
 
+        col_list = list(self.df)
         if self.fill_values is not None:
             if self.drop is not None or self.fill_missing is not None:
                 raise ArgumentsError(
@@ -99,7 +100,6 @@ class NullValuesHandler:
                 )
             elif type(self.fill_values) is not dict:
                 raise TypeError(f'Expected dict value for argument "fill_values" ')
-            col_list = list(self.df)
             user_column_list = list(self.fill_values.keys())
             for column in user_column_list:
                 if column not in col_list:
@@ -108,12 +108,11 @@ class NullValuesHandler:
         if self.column_list is not None:
             if not isinstance(self.column_list,list):
                 raise TypeError(f"Expected List for argument \"column_list\"")
-            if self.drop is not None and self.drop and len(self.column_list) == 0:
+            if self.drop and len(self.column_list) == 0:
                 warnings.warn("\"column_list\" is empty, no columns will be dropped. If you want to drop rows, do not pass \"column_list\" in the arguments or pass None",UserWarning)
             if len(self.column_list) != 0:
-                cols=list(self.df)
                 for c in self.column_list:
-                    if c not in cols:
+                    if c not in col_list:
                         raise ArgumentsError(f"Column \"{c}\" does not exist in dataframe")
 
 
@@ -169,8 +168,7 @@ class NullValuesHandler:
             self.final_df = self.__fill_values_columns()
         
         elif (
-            self.drop is not None
-            and self.drop != False
+            self.drop == True
             and self.column_list is not None
             and len(self.column_list) != 0
         ):
