@@ -46,6 +46,20 @@ Before submitting an issue please make sure:
 
 7. Create a new pull request with an appropriate title, detailed explanation of what the pull request does and attach links to other issues or pull requests related to your pull request
 
+## Running test coverage
+
+Generating a report of lines that do not have test coverage can indicate where to start contributing. Run `pytest` using `coverage` and generate a report.
+
+```bash
+    $ coverage run --source=./preprocessy -m pytest
+
+    $ coverage html
+```
+
+Open `htmlcov/index.html` in your browser to explore the report.
+
+Read more about [coverage](https://coverage.readthedocs.io/en/coverage-5.4/).
+
 ## License
 
 By contributing your code to the Preprocessy GitHub repository, you agree to license your contribution under the [MIT](https://github.com/preprocessy/preprocessy/blob/master/LICENSE) license.
