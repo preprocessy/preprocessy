@@ -35,7 +35,7 @@ class TestBasePipeline:
             Pipeline(steps=[read, times_two, squared, split])
 
         with pytest.raises(TypeError):
-            Pipeline(steps=[read, "times_two", squared, split])
+            Pipeline(steps=[read, "times_two", squared, split],params=["hello"])
 
         with pytest.raises(TypeError):
             Pipeline(steps=[read, times_two, squared, split], params=["hello"])
