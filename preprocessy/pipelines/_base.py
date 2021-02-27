@@ -55,7 +55,7 @@ class Pipeline:
             )
 
         if self.config_file and not self.params:
-            self.params = read_config(self.config_file,[str(f) for f in self.steps])
+            self.params = read_config(self.config_file,[f.__name__ for f in self.steps])
 
     def process(self):
         for step in self.steps:
