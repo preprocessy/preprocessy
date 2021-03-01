@@ -6,28 +6,28 @@ class TestConfig:
 
     def test_filenotfound(self):
         with pytest.raises(FileNotFoundError):
-            c = read_config("/usr/src/app/config.json",["Split"])
+            c = read_config("/usr/src/app/config.json")
     
     def test_jsonload(self):
         with pytest.raises(TypeError):
-            c = read_config("./datasets/configs/config2.json",["Split"])
+            c = read_config("./datasets/configs/config2.json")
 
-    def test_step(self):
-        with pytest.raises(ValueError):
-            c = read_config("./datasets/configs/config3.json",["Split"])
+    def test_df(self):
+        with pytest.raises(FileNotFoundError):
+            c = read_config("./datasets/configs/config_df.json")
         
     def test_read(self):
-        params = read_config("./datasets/configs/config4.json",["Split"])
-        exp = {"param1":69,"param2":{"nestedParam":420},"Split":6969}
+        params = read_config("./datasets/configs/config4.json")
+        exp = {"param1":69,"param2":{"nestedParam":420},"Split":6969,"df":"./datasets/encoding/test.csv"}
         assert (
             params == exp
         )
 
     def test_save(self):
         filepath = "./datasets/configs/params.json"
-        params = {"param1":69,"param2":{"nestedParam":420},"Split":6969}
+        params = {"param1":69,"param2":{"nestedParam":420},"Split":6969,"df":"./datasets/encoding/test.csv"}
         save_config(filepath,params)
-        contents = read_config(filepath,["Split"])
+        contents = read_config(filepath)
         assert (
             params == contents
         )
