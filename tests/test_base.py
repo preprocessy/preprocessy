@@ -5,9 +5,12 @@ import pandas as pd
 from preprocessy.pipelines import Pipeline
 from preprocessy.utils import num_of_samples
 from preprocessy.exceptions import ArgumentsError
+from preprocessy.pipelines.config import save_config
 
 
 def read(params):
+    if type(params["df"]) != pd.core.frame.DataFrame:
+        params["df"]=pd.read_csv(params["df"])
     params["df_copy"] = params["df"].copy()
 
 
@@ -35,7 +38,7 @@ class TestBasePipeline:
             Pipeline(steps=[read, times_two, squared, split])
 
         with pytest.raises(TypeError):
-            Pipeline(steps=[read, "times_two", squared, split])
+            Pipeline(steps=[read, "times_two", squared, split],params=["hello"])
 
         with pytest.raises(TypeError):
             Pipeline(steps=[read, times_two, squared, split], params=["hello"])
@@ -43,8 +46,9 @@ class TestBasePipeline:
     def test_pipeline(self):
 
         df = pd.DataFrame({"A": np.arange(1, 100), "B": np.arange(1, 100)})
+        df_path = df.to_csv("./datasets/configs/dataset.csv",index=False)
 
-        params = {"df": df, "col_1": "A", "col_2": "B", "test_size": 0.2}
+        params = {"df": "./datasets/configs/dataset.csv", "col_1": "A", "col_2": "B","test_size": 0.2}
 
         pipeline = Pipeline(steps=[read, times_two, squared, split], params=params)
         pipeline.process()
@@ -63,14 +67,15 @@ class TestBasePipeline:
     def test_add(self):
 
         df = pd.DataFrame({"A": np.arange(1, 100), "B": np.arange(1, 100)})
+        df_path = df.to_csv("./datasets/configs/dataset.csv",index=False)
 
-        params = {"df": df, "col_1": "B", "test_size": 0.2}
+        params = {"df": "./datasets/configs/dataset.csv", "col_1": "A", "col_2": "B","test_size": 0.2}
 
         pipeline = Pipeline(steps=[read, times_two, split], params=params)
         pipeline.process()
         assert (
-            pipeline.params["df"].loc[42, "B"]
-            == pipeline.params["df_copy"].loc[42, "B"] * 2
+            pipeline.params["df"].loc[42, "A"]
+            == pipeline.params["df_copy"].loc[42, "A"] * 2
         )
 
         pipeline.add(
@@ -84,15 +89,35 @@ class TestBasePipeline:
         num_0 = pipeline.params["df"].loc[42, "B"]
         num_1 = pipeline.params["df_copy"].loc[42, "B"]
 
-        assert num_0 == (num_1 ** 2) * 2
+        assert num_0 == (num_1 ** 2)
 
     def test_remove(self):
 
         df = pd.DataFrame({"A": np.arange(1, 100), "B": np.arange(1, 100)})
+        df_path = df.to_csv("./datasets/configs/dataset.csv",index=False)
 
-        params = {"df": df, "col_1": "A", "col_2": "B", "test_size": 0.2}
+        params = {"df": "./datasets/configs/dataset.csv", "col_1": "A", "col_2": "B","test_size": 0.2}
 
         pipeline = Pipeline(steps=[read, times_two, squared, split], params=params)
+        pipeline.process()
+
+        assert len(pipeline.params["X_train"]) == 80
+
+        pipeline.remove("split")
+
+        pipeline.process()
+
+        assert pipeline.params["df"].shape[0] == pipeline.params["df_copy"].shape[0]
+
+    def test_config(self):
+        df = pd.DataFrame({"A": np.arange(1, 100), "B": np.arange(1, 100)})
+        df_path = df.to_csv("./datasets/configs/dataset.csv",index=False)
+
+        params = {"df": "./datasets/configs/dataset.csv", "col_1": "A", "col_2": "B","test_size": 0.2}
+        config_path = "./datasets/configs/pipeline_config.json" 
+        save_config(config_path, params)
+
+        pipeline = Pipeline(steps=[read, times_two, squared, split], config_file=config_path)
         pipeline.process()
 
         assert len(pipeline.params["X_train"]) == 80

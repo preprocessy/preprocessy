@@ -1,5 +1,6 @@
 import inspect
 import warnings
+from .config import read_config
 
 from ..exceptions import ArgumentsError
 
@@ -15,13 +16,13 @@ class Pipeline:
 
     def __validate_input(self):
 
-        if self.steps and self.config_file:
+        if self.params and self.config_file:
             self.config_file = None
             warnings.warn(
-                f"'steps' and 'config_file' both were provided. Using 'steps' to construct the pipeline."
+                f"'params' and 'config_file' both were provided. Using 'params' to construct the pipeline."
             )
-
-        if not self.steps and not self.config_file:
+        
+        if not self.params and not self.config_file:
             raise ArgumentsError(
                 f"Both 'steps' and 'config_file' cannot be null. Please provide either a list of steps or path to a JSON config file."
             )
@@ -38,9 +39,9 @@ class Pipeline:
                         f"All steps of the pipeline must be functions. Received {step} of type {type(step)}"
                     )
 
-        if self.steps and not self.params:
+        if self.steps and not self.params and not self.config_file:
             raise ArgumentsError(
-                f"'params' dictionary required for configuring pipeline. Received None"
+                f"'params' dictionary or 'config_file' path to config file required for configuring pipeline. Received None"
             )
 
         if self.params and not isinstance(self.params, dict):
@@ -52,6 +53,9 @@ class Pipeline:
             raise TypeError(
                 f"'config_file' should be of type str. Received {self.config_file} of type: {type(self.config_file)}"
             )
+
+        if self.config_file and not self.params:
+            self.params = read_config(self.config_file)
 
     def process(self):
         for step in self.steps:
