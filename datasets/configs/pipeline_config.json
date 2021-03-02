@@ -1,0 +1,6 @@
+{
+    "df": "./datasets/configs/dataset.csv",
+    "col_1": "A",
+    "col_2": "B",
+    "test_size": 0.2
+}

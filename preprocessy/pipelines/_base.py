@@ -21,7 +21,7 @@ class Pipeline:
             warnings.warn(
                 f"'params' and 'config_file' both were provided. Using 'params' to construct the pipeline."
             )
-        
+
         if not self.params and not self.config_file:
             raise ArgumentsError(
                 f"Both 'steps' and 'config_file' cannot be null. Please provide either a list of steps or path to a JSON config file."
