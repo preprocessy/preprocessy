@@ -10,7 +10,7 @@ class NullValuesHandler:
     Private Methods
     ---------------
 
-    __validate_input(params) : validates the input
+    __validate_input() : validates the input
 
     __drop_all_rows_with_null_values() : function to drop all rows with nan values
 
@@ -28,22 +28,12 @@ class NullValuesHandler:
     """
 
     def __init__(self):
-        pass
+        self.df = None
+        self.drop = None
+        self.fill_missing = None
+        self.fill_values = None
 
-    def __validate_input(self, params):
-        if "df" not in params.keys():
-            params["df"] = None
-        if "drop" not in params.keys():
-            params["drop"] = None
-        if "fill_missing" not in params.keys():
-            params["fill_missing"] = None
-        if "fill_values" not in params.keys():
-            params["fill_values"] = None
-
-        self.df = params["df"]
-        self.drop = params["drop"]
-        self.fill_missing = params["fill_missing"]
-        self.fill_values = params["fill_values"]
+    def __validate_input(self):
 
         if self.df is None:
             raise ValueError("Feature dataframe should not be of None type")
@@ -126,9 +116,17 @@ class NullValuesHandler:
     # main function
     def execute(self, params):
 
-        self.__validate_input(params)
-        self.df = params["df"]
-        self.new_df = None
+        if "df" in params.keys():
+            self.df = params["df"]
+        if "drop" in params.keys():
+            self.drop = params["drop"]
+        if "fill_missing" in params.keys():
+            self.fill_missing = params["fill_missing"]
+        if "fill_values" in params.keys():
+            self.fill_values = params["fill_values"]
+
+        self.__validate_input()
+
         self.final_df = None
 
         if (
