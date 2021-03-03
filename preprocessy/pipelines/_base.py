@@ -64,13 +64,14 @@ class Pipeline:
     def __insert(self, index, func, params):
         self.steps.insert(index, func)
         for k, v in params.items():
+            # TODO: Add warning if param with same name already exists
             self.params[k] = v
 
     def add(self, func=None, params=None, **kwargs):
 
         if not inspect.isfunction(func):
             raise TypeError(
-                f"'steps' should be of type 'list'. Received {self.steps} of type {type(self.steps)}"
+                f"'func' should be a callable. Received {func} of type {type(func)}"
             )
 
         if params and not isinstance(params, dict):
@@ -101,7 +102,7 @@ class Pipeline:
                 raise ValueError(
                     f"Function {kwargs.get('before')} is not a part of the pipeline."
                 )
-            self.__insert(index - 1, func, params)
+            self.__insert(index - 1 if index != 0 else index, func, params)
         else:
             raise ArgumentsError(
                 f"No position was provided to insert the function into the pipeline"

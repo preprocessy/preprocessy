@@ -9,7 +9,7 @@ def __validate_config(file_path):
     global content
     if not (os.path.exists(file_path) and os.path.isfile(file_path)):
         raise FileNotFoundError(
-            f"Please make sure you provide a valid config file and the file exists at {file_path}"
+            f"Please make sure you to provide a valid config file that exists at {file_path}"
         )
 
     try:
@@ -36,6 +36,6 @@ def read_config(file_path):
 def save_config(file_path, params):
     try:
         with open(file_path, "w") as f:
-            json.dump(params, f, indent=4)
+            json.dump(params, f, indent=2)
     except Exception as e:
         print(f"Error occurred while saving config to file : {str(e)}")
