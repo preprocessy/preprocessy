@@ -23,20 +23,18 @@ class NullValuesHandler:
     Public Methods
     --------------
 
-    execute() : Main function that performs the operations on supplied dataframe and returns a new dataframe
+    execute(params) : Main function that performs the operations on supplied dataframe and returns a new dataframe
 
     """
 
-    def __init__(self, df=None, drop=None, fill_missing=None, fill_values=None):
-        self.df = df
-        self.drop = drop
-        self.fill_missing = fill_missing
-        self.fill_values = fill_values
-        self.__validate_input()
-        self.new_df = None
-        self.final_df = None
+    def __init__(self):
+        self.df = None
+        self.drop = None
+        self.fill_missing = None
+        self.fill_values = None
 
     def __validate_input(self):
+
         if self.df is None:
             raise ValueError("Feature dataframe should not be of None type")
 
@@ -115,7 +113,21 @@ class NullValuesHandler:
             self.new_df[column].fillna(self.fill_values[column], inplace=True)
         return self.new_df
 
-    def execute(self):
+    # main function
+    def execute(self, params):
+
+        if "df" in params.keys():
+            self.df = params["df"]
+        if "drop" in params.keys():
+            self.drop = params["drop"]
+        if "fill_missing" in params.keys():
+            self.fill_missing = params["fill_missing"]
+        if "fill_values" in params.keys():
+            self.fill_values = params["fill_values"]
+
+        self.__validate_input()
+
+        self.final_df = None
 
         if (
             self.drop is not None
@@ -140,6 +152,6 @@ class NullValuesHandler:
             self.final_df = self.__fill_values_columns()
 
         else:
-            return self.df
+            self.final_df = self.df
 
-        return self.final_df
+        params["df"] = self.final_df
