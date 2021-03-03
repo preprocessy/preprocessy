@@ -116,7 +116,7 @@ class TestBasePipeline:
 
     def test_add(self):
         df = pd.DataFrame({"A": np.arange(1, 100), "B": np.arange(1, 100)})
-        df_path = pdf.to_csv("./datasets/configs/dataset.csv", index=False)
+        df_path = df.to_csv("./datasets/configs/dataset.csv", index=False)
         params = {
             "col_1": "A",
             "test_size": 0.2,
