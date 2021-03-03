@@ -4,11 +4,8 @@ import errno
 
 
 class ReadData(object):
-    def __init__(self, file_name):
+    def __init__(self):
         self.excel_extensions = ["xls", "xlsx", "xlsm", "xlsb", "odf", "ods", "odt"]
-        self._validate_input(file_name)
-        self.__read_file()
-        self.summary, self.stats = self.__read_summary()
 
     def _validate_input(self, file_name):
         if type(file_name) is not str:
@@ -18,9 +15,10 @@ class ReadData(object):
         else:
             self.file_name = file_name
 
-    def __read_file(self):
+    def read_file(self, params):
         """Read the file content"""
 
+        self._validate_input(params["df_path"])
         self.df = None
 
         if ".csv" in self.file_name:
@@ -46,6 +44,11 @@ class ReadData(object):
             raise FileNotFoundError(
                 errno.ENOENT, os.strerror(errno.ENOENT), self.file_name
             )
+
+        self.summary, self.stats = self.__read_summary()
+        params["df"] = self.df
+        params["summary"] = self.summary
+        params["stats"] = self.stats
 
     def __read_summary(self):
         """Read file summary"""

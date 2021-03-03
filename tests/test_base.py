@@ -8,7 +8,7 @@ from preprocessy.exceptions import ArgumentsError
 from preprocessy.pipelines.config import save_config
 
 
-def read(params):
+def custom_read(params):
     if type(params["df"]) != pd.core.frame.DataFrame:
         params["df"] = pd.read_csv(params["df"])
     params["df_copy"] = params["df"].copy()

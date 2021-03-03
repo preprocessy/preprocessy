@@ -3,6 +3,5 @@
   "param2": {
     "nestedParam": 420
   },
-  "Split": 6969,
-  "df": "./datasets/encoding/test.csv"
+  "Split": 6969
 }

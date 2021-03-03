@@ -1,4 +1,3 @@
-from tests.test_base import read
 import pytest
 from preprocessy.pipelines.config import read_config, save_config
 
@@ -36,4 +35,5 @@ class TestConfig:
         }
         save_config(filepath, params)
         contents = read_config(filepath)
+        params.pop("df")
         assert params == contents

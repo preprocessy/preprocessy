@@ -1,18 +1,37 @@
 import inspect
 import warnings
 from .config import read_config
+from ..input import ReadData
 
 from ..exceptions import ArgumentsError
 
 
 class Pipeline:
-    def __init__(self, steps=None, config_file=None, params=None):
+    def __init__(
+        self,
+        df_path=None,
+        steps=None,
+        config_file=None,
+        params=None,
+        custom_reader=None,
+    ):
 
         self.params = params
+        self.df_path = df_path
         self.config_file = config_file
         self.steps = steps
-        self.output = {}
+        self.custom_reader = custom_reader
         self.__validate_input()
+
+        if self.config_file and not self.params:
+            self.params = read_config(self.config_file)
+
+        self.params["df_path"] = self.df_path
+
+        if self.custom_reader is None:
+            self.custom_reader = ReadData().read_file
+
+        self.add(self.custom_reader, self.params, index=0)
 
     def __validate_input(self):
 
@@ -54,8 +73,18 @@ class Pipeline:
                 f"'config_file' should be of type str. Received {self.config_file} of type: {type(self.config_file)}"
             )
 
-        if self.config_file and not self.params:
-            self.params = read_config(self.config_file)
+        if not self.df_path:
+            raise ArgumentsError(f"'df_path' should not be None.")
+
+        if not isinstance(self.df_path, str):
+            raise TypeError(
+                f"'df_path' should be of type str. Received {self.df_path} of type {type(self.df_path)}"
+            )
+
+        if self.custom_reader and not inspect.isfunction(self.custom_reader):
+            raise TypeError(
+                f"'custom_reader' should be a callable. Received {self.custom_reader} of type {type(self.custom_reader)}"
+            )
 
     def process(self):
         for step in self.steps:

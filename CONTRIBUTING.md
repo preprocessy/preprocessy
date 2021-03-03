@@ -41,7 +41,7 @@ Before submitting an issue please make sure:
 6. Format the code before committing (replace `./venv` with your virtual environment folder)
 
 ```bash
-    $ black . && codespell --skip=".git,*.gif,*.png,*.PNG,./venv,*.json,./datasets,.DS_Store,*.pyc"
+    $ black . && codespell --skip=".git,*.gif,*.png,*.PNG,./venv,*.json,./datasets,.DS_Store,*.pyc,./htmlcov,.coverage"
 ```
 
 7. Create a new pull request with an appropriate title, detailed explanation of what the pull request does and attach links to other issues or pull requests related to your pull request
