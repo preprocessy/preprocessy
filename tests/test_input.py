@@ -21,7 +21,7 @@ class TestReader:
     def test_reader(self):
         reader.read_file({"df_path": "datasets/encoding/test.csv"})
         assert isinstance(reader.df, pd.core.frame.DataFrame) == True
-        assert reader.df.shape == (3, 4)
+        assert reader.df.shape == (3, 5)
         assert reader.stats.iloc[1, 0] == -4003
 
     def test_file_not_exists(self):

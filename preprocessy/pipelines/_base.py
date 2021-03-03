@@ -31,7 +31,7 @@ class Pipeline:
         if self.custom_reader is None:
             self.custom_reader = ReadData().read_file
 
-        self.add(self.custom_reader, self.params, index=0)
+        self.add(self.custom_reader, {}, index=0)
 
     def __validate_input(self):
 
@@ -53,9 +53,9 @@ class Pipeline:
 
         if self.steps:
             for step in self.steps:
-                if not inspect.isfunction(step):
+                if not callable(step):
                     raise TypeError(
-                        f"All steps of the pipeline must be functions. Received {step} of type {type(step)}"
+                        f"All steps of the pipeline must be callable. Received {step} of type {type(step)}"
                     )
 
         if self.steps and not self.params and not self.config_file:
@@ -81,7 +81,7 @@ class Pipeline:
                 f"'df_path' should be of type str. Received {self.df_path} of type {type(self.df_path)}"
             )
 
-        if self.custom_reader and not inspect.isfunction(self.custom_reader):
+        if self.custom_reader and not callable(self.custom_reader):
             raise TypeError(
                 f"'custom_reader' should be a callable. Received {self.custom_reader} of type {type(self.custom_reader)}"
             )
@@ -98,7 +98,7 @@ class Pipeline:
 
     def add(self, func=None, params=None, **kwargs):
 
-        if not inspect.isfunction(func):
+        if not callable(func):
             raise TypeError(
                 f"'func' should be a callable. Received {func} of type {type(func)}"
             )
@@ -112,8 +112,8 @@ class Pipeline:
             self.__insert(kwargs.get("index"), func, params)
         elif "after" in kwargs.keys():
             index = -1
-            for i, func in enumerate(self.steps):
-                if func.__name__ == kwargs.get("after"):
+            for i, step in enumerate(self.steps):
+                if step.__name__ == kwargs.get("after"):
                     index = i
                     break
             if index == -1:
@@ -123,15 +123,15 @@ class Pipeline:
             self.__insert(index + 1, func, params)
         elif "before" in kwargs.keys():
             index = -1
-            for i, func in enumerate(self.steps):
-                if func.__name__ == kwargs.get("before"):
+            for i, step in enumerate(self.steps):
+                if step.__name__ == kwargs.get("before"):
                     index = i
                     break
             if index == -1:
                 raise ValueError(
                     f"Function {kwargs.get('before')} is not a part of the pipeline."
                 )
-            self.__insert(index - 1 if index != 0 else index, func, params)
+            self.__insert(index, func, params)
         else:
             raise ArgumentsError(
                 f"No position was provided to insert the function into the pipeline"
@@ -150,7 +150,9 @@ class Pipeline:
                 break
 
         if not func:
-            raise ValueError(f"Function {func_name} is not a part of the pipeline.")
+            raise ValueError(
+                f"Function {func_name} is not a part of the pipeline."
+            )
 
         self.steps.remove(func)
 

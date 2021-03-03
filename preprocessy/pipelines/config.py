@@ -22,7 +22,9 @@ def read_config(file_path):
         with open(file_path) as f:
             content = json.load(f)
     except Exception as e:
-        raise TypeError(f"Error occurred while reading the config file : {str(e)}")
+        raise TypeError(
+            f"Error occurred while reading the config file : {str(e)}"
+        )
 
     if "df_path" in content:
         warnings.warn(
