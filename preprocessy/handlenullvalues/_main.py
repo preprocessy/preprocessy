@@ -10,7 +10,7 @@ class NullValuesHandler:
     Private Methods
     ---------------
 
-    __validate_input() : validates the input
+    __validate_input(params) : validates the input
 
     __drop_all_rows_with_null_values() : function to drop all rows with nan values
 
@@ -23,20 +23,28 @@ class NullValuesHandler:
     Public Methods
     --------------
 
-    execute() : Main function that performs the operations on supplied dataframe and returns a new dataframe
+    execute(params) : Main function that performs the operations on supplied dataframe and returns a new dataframe
 
     """
 
-    def __init__(self, df=None, drop=None, fill_missing=None, fill_values=None):
-        self.df = df
-        self.drop = drop
-        self.fill_missing = fill_missing
-        self.fill_values = fill_values
-        self.__validate_input()
-        self.new_df = None
-        self.final_df = None
+    def __init__(self):
+        pass
 
-    def __validate_input(self):
+    def __validate_input(self, params):
+        if "df" not in params.keys():
+            params["df"] = None
+        if "drop" not in params.keys():
+            params["drop"] = None
+        if "fill_missing" not in params.keys():
+            params["fill_missing"] = None
+        if "fill_values" not in params.keys():
+            params["fill_values"] = None
+
+        self.df = params["df"]
+        self.drop = params["drop"]
+        self.fill_missing = params["fill_missing"]
+        self.fill_values = params["fill_values"]
+
         if self.df is None:
             raise ValueError("Feature dataframe should not be of None type")
 
@@ -115,7 +123,13 @@ class NullValuesHandler:
             self.new_df[column].fillna(self.fill_values[column], inplace=True)
         return self.new_df
 
-    def execute(self):
+    # main function
+    def execute(self, params):
+
+        self.__validate_input(params)
+        self.df = params["df"]
+        self.new_df = None
+        self.final_df = None
 
         if (
             self.drop is not None
@@ -140,6 +154,6 @@ class NullValuesHandler:
             self.final_df = self.__fill_values_columns()
 
         else:
-            return self.df
+            self.final_df = self.df
 
-        return self.final_df
+        params["df"] = self.final_df
