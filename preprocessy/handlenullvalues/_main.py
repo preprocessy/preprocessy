@@ -45,13 +45,12 @@ class NullValuesHandler:
     """
 
 
-    def __init__(self, df=None, drop=None, fill_missing=None, fill_values=None, column_list=None):
-        self.df = df
-        self.drop = drop
-        self.fill_missing = fill_missing
-        self.fill_values = fill_values
-        self.column_list = column_list
-        self.__validate_input()
+    def __init__(self):
+        self.df = None
+        self.drop = None
+        self.fill_missing = None
+        self.fill_values = None
+        self.column_list = None
         self.new_df = None
         self.final_df = None
 
@@ -155,6 +154,8 @@ class NullValuesHandler:
             self.fill_missing = params["fill_missing"]
         if "fill_values" in params.keys():
             self.fill_values = params["fill_values"]
+        if "column_list" in params.keys():
+            self.column_list = params["column_list"]
 
         self.__validate_input()
 
