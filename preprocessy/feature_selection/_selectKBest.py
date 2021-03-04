@@ -1,6 +1,7 @@
 import numpy as np
 import pandas as pd
-from sklearn.feature_selection import f_classif, f_regression
+from sklearn.feature_selection import f_classif
+from sklearn.feature_selection import f_regression
 
 
 class SelectKBest:
@@ -45,7 +46,7 @@ class SelectKBest:
         k : int , default=10. Number of top features to select.
 
         """
-        self.score_func=None
+        self.score_func = None
         self.k = 10
         self.scores = None
         self.pvalues = None
@@ -67,7 +68,8 @@ class SelectKBest:
 
         if self.scores is None:
             raise ValueError(
-                f"self.scores is None. Please fit the estimator before calling transform."
+                "self.scores is None. Please fit the estimator before calling"
+                " transform."
             )
 
         mask = np.zeros(self.scores.shape, dtype=bool)
@@ -75,7 +77,7 @@ class SelectKBest:
         mask[np.argsort(self.scores, kind="stable")[-self.k :]] = 1
         return mask
 
-    def fit(self,params):
+    def fit(self, params):
         """Function that fits the scoring function over (X,y) and generates the scores and pvalues for all features with the
         target label. If no scoring function is passed, then defaults to f_classify or f_regression based on the predictive
         problem.
@@ -98,7 +100,7 @@ class SelectKBest:
         if "y" in params.keys():
             self.y = params["y"]
         if "score_func" in params.keys():
-            self.score_func=params["score_func"]
+            self.score_func = params["score_func"]
         if "k" in params.keys():
             self.k = params["k"]
         if "scores" in params.keys():
@@ -108,12 +110,14 @@ class SelectKBest:
 
         if not isinstance(self.X, pd.core.frame.DataFrame):
             raise TypeError(
-                f"Feature dataframe is not a valid dataframe.\nExpected object type: pandas.core.frame.DataFrame"
+                "Feature dataframe is not a valid dataframe.\nExpected object"
+                " type: pandas.core.frame.DataFrame"
             )
 
         if not isinstance(self.y, pd.core.series.Series):
             raise TypeError(
-                f"Target column is not a valid series.\nExpected object type: pandas.core.series.Series"
+                "Target column is not a valid series.\nExpected object type:"
+                " pandas.core.series.Series"
             )
 
         if self.score_func is None:
@@ -124,7 +128,8 @@ class SelectKBest:
 
         if not callable(self.score_func):
             raise TypeError(
-                f"The score function should be a callable, {self.score_func} of type ({type(self.score_func)}) was passed."
+                f"The score function should be a callable, {self.score_func}"
+                f" of type ({type(self.score_func)}) was passed."
             )
 
         score_func_ret = self.score_func(self.X, self.y)
@@ -157,7 +162,7 @@ class SelectKBest:
         if "X" in params.keys():
             self.X = params["X"]
         if "score_func" in params.keys():
-            self.score_func=params["score_func"]
+            self.score_func = params["score_func"]
         if "k" in params.keys():
             self.k = params["k"]
         if "scores" in params.keys():
@@ -168,7 +173,8 @@ class SelectKBest:
         mask = self.__get_mask()
         if not mask.any():
             raise ValueError(
-                f"No features were selected: either the data is too noisy or the selection test too strict."
+                "No features were selected: either the data is too noisy or"
+                " the selection test too strict."
             )
 
         if len(mask) != self.X.shape[1]:

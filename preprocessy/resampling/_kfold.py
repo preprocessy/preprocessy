@@ -1,8 +1,6 @@
-import numpy as np
-import pandas as pd
 import numbers
 
-from pandas.core.arrays.sparse import dtype
+import numpy as np
 
 from ..utils import num_of_samples
 
@@ -39,25 +37,33 @@ class KFold:
 
         if not isinstance(n_splits, numbers.Integral):
             raise ValueError(
-                f"Number of folds must be an integer. {n_splits} of type {type(n_splits)} was passed"
+                f"Number of folds must be an integer. {n_splits} of type"
+                f" {type(n_splits)} was passed"
             )
 
         if n_splits <= 1:
             raise ValueError(
-                f"K-fold cross-validation requires at least one train/test split by setting n_splits=2 or more, received n_splits={n_splits}."
+                "K-fold cross-validation requires at least one train/test"
+                " split by setting n_splits=2 or more, received"
+                f" n_splits={n_splits}."
             )
 
         if not isinstance(shuffle, bool):
-            raise ValueError(f"shuffle must be boolean value. Received {shuffle}")
+            raise ValueError(
+                f"shuffle must be boolean value. Received {shuffle}"
+            )
 
         if not isinstance(random_state, numbers.Integral):
             raise ValueError(
-                f"Random state must be an integer. {random_state} of type {type(random_state)} was passed"
+                f"Random state must be an integer. {random_state} of type"
+                f" {type(random_state)} was passed"
             )
 
         if not shuffle and random_state is not None:
             raise ValueError(
-                f"Setting a random_state has no effect since shuffle is False. You should leave random_state to its default (None), or set shuffle=True.",
+                "Setting a random_state has no effect since shuffle is False."
+                " You should leave random_state to its default (None), or set"
+                " shuffle=True.",
             )
 
         self.n_splits = n_splits
@@ -89,7 +95,8 @@ class KFold:
 
         if self.n_splits > n_samples:
             raise ValueError(
-                f"Cannot have number of splits {self.n_splits} > number of samples {n_samples}"
+                f"Cannot have number of splits {self.n_splits} > number of"
+                f" samples {n_samples}"
             )
 
         indices = np.arange(n_samples)
@@ -118,7 +125,9 @@ class KFold:
         else:
             indices = np.arange(n_samples)
 
-        fold_sizes = np.full(self.n_splits, n_samples // self.n_splits, dtype=int)
+        fold_sizes = np.full(
+            self.n_splits, n_samples // self.n_splits, dtype=int
+        )
         fold_sizes[: n_samples % self.n_splits] += 1
         current = 0
         for fold_size in fold_sizes:

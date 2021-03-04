@@ -1,7 +1,9 @@
-from preprocessy.encoding import EncodeData
+from collections import Counter
+
 import pandas as pd
 import pytest
-from collections import Counter
+
+from preprocessy.encoding import EncodeData
 
 ord_dict = {"Profession": {"Student": 1, "Teacher": 2, "HOD": 3}}
 train_csv = pd.read_csv("datasets/encoding/testnew.csv")
@@ -26,7 +28,12 @@ class TestEncoding:
     # test ordinal encoding
     def test_mapping(self):
         train_csv = pd.read_csv("datasets/encoding/testnew.csv")
-        params = {"train_df": train_csv, "target_label": "Price", "ord_dict": ord_dict}
+        train_csv.drop(["Price"], axis=1, inplace=True)
+        params = {
+            "train_df": train_csv,
+            "target_label": "Price",
+            "ord_dict": ord_dict,
+        }
         encoder = EncodeData()
         encoder.encode(params=params)
         assert params["train_df"]["ProfessionEncoded"].nunique() == 3
@@ -38,9 +45,14 @@ class TestEncoding:
     # test for empty mapping
     def test_empty_weight_mapping(self):
         train_csv = pd.read_csv("datasets/encoding/testnew.csv")
+        train_csv.drop(["Price"], axis=1, inplace=True)
         ord_dict1 = ord_dict.copy()
         ord_dict1["Size"] = None
-        params = {"train_df": train_csv, "target_label": "Price", "ord_dict": ord_dict1}
+        params = {
+            "train_df": train_csv,
+            "target_label": "Price",
+            "ord_dict": ord_dict1,
+        }
         with pytest.raises(ValueError):
             encoder = EncodeData()
             encoder.encode(params=params)

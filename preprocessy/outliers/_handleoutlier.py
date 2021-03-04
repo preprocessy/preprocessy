@@ -66,7 +66,7 @@ class HandleOutlier:
 
     def handle_outliers(self):
 
-        ### parameters till now: train_df, cols, removeoutliers, replace
+        # parameters till now: train_df, cols, removeoutliers, replace
         train_df = self.train_df
         if (
             self.remove_outliers

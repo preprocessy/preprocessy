@@ -1,11 +1,17 @@
-import pandas as pd
-from errors import ArgumentsError
 import numpy as np
+import pandas as pd
+
+from ..exceptions import ArgumentsError
 
 
 class Scaler:
     def __init__(
-        self, df=None, type=None, columns=None, is_combined=False, critical_value=0
+        self,
+        df=None,
+        type=None,
+        columns=None,
+        is_combined=False,
+        critical_value=0,
     ):
         """Class for Scaling the columns
 
@@ -44,26 +50,36 @@ class Scaler:
 
         if type(self.df) is not pd.core.frame.DataFrame:
             raise TypeError(
-                "Feature dataframe is not a valid dataframe.\nExpected object type: pandas.core.frame.DataFrame"
+                "Feature dataframe is not a valid dataframe.\nExpected object"
+                " type: pandas.core.frame.DataFrame"
             )
 
         if self.type is None:
             raise ValueError("Feature type should not be of None type")
         else:
             if type(self.type) is not str:
-                raise TypeError(f'Expected string value for argument "type" ')
-            if self.type not in ["MinMaxScaler", "BinaryScaler", "StandardScaler"]:
+                raise TypeError('Expected string value for argument "type" ')
+            if self.type not in [
+                "MinMaxScaler",
+                "BinaryScaler",
+                "StandardScaler",
+            ]:
                 raise ArgumentsError(
-                    f'Allowed argument for type is "MinMaxScaler" or "BinaryScaler" or "StandardScaler", got {self.type}'
+                    'Allowed argument for type is "MinMaxScaler" or'
+                    f' "BinaryScaler" or "StandardScaler", got {self.type}'
                 )
 
         if self.columns is not None:
             column_list = list(self.df.keys())
             for column in self.columns:
                 if type(column) != str:
-                    raise TypeError(f"Expected str type column, got {type(column)}")
+                    raise TypeError(
+                        f"Expected str type column, got {type(column)}"
+                    )
                 if column not in column_list:
-                    raise ArgumentsError(f"Column {column} does not exist in dataframe")
+                    raise ArgumentsError(
+                        f"Column {column} does not exist in dataframe"
+                    )
 
         self.new_df = self.df
 

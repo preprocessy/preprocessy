@@ -1,5 +1,6 @@
 import numpy as np
 import pandas as pd
+
 from ..utils import num_of_samples
 
 
@@ -57,11 +58,12 @@ class Split:
         """
 
         if X is None:
-            raise ValueError(f"Feature dataframe should not be of None")
+            raise ValueError("Feature dataframe should not be of None")
 
         if type(X) is not pd.core.frame.DataFrame:
             raise TypeError(
-                f"Feature dataframe is not a valid dataframe.\nExpected object type: pandas.core.frame.DataFrame"
+                "Feature dataframe is not a valid dataframe.\nExpected object"
+                " type: pandas.core.frame.DataFrame"
             )
 
         n_samples = num_of_samples(X)
@@ -69,45 +71,66 @@ class Split:
         if y is not None:
             if n_samples != y.shape[0]:
                 raise ValueError(
-                    f"Number of samples of target label and feature dataframe unequal.\nSamples in feature dataframe: {X.shape[0]}\nSamples in target label: {y.shape[0]}"
+                    "Number of samples of target label and feature dataframe"
+                    " unequal.\nSamples in feature dataframe:"
+                    f" {X.shape[0]}\nSamples in target label: {y.shape[0]}"
                 )
             if type(y) is not pd.core.series.Series:
                 raise TypeError(
-                    f"Target label is not a valid dataframe.\nExpected object type: pandas.core.series.Series"
+                    "Target label is not a valid dataframe.\nExpected object"
+                    " type: pandas.core.series.Series"
                 )
 
         if test_size and train_size:
             if type(test_size) is not int or type(test_size) is not float:
-                raise TypeError(f"test_size must be of type int or float")
+                raise TypeError("test_size must be of type int or float")
             if type(train_size) is not int or type(train_size) is not float:
-                raise TypeError(f"train_size must be of type int or float")
+                raise TypeError("train_size must be of type int or float")
             if type(test_size) != type(train_size):
                 raise TypeError(
-                    f"Data types of test_size and train_size do not match.\ntest_size: {type(test_size)}.\ntrain_size: {type(train_size)}"
+                    "Data types of test_size and train_size do not"
+                    f" match.\ntest_size: {type(test_size)}.\ntrain_size:"
+                    f" {type(train_size)}"
                 )
             if type(test_size) is float and test_size + train_size != 1:
-                raise ValueError(f"test_size + train_size should be equal to 1")
-            elif type(test_size) is int and test_size + train_size != n_samples:
+                raise ValueError("test_size + train_size should be equal to 1")
+            elif (
+                type(test_size) is int and test_size + train_size != n_samples
+            ):
                 raise ValueError(
-                    f"test_size + train_size not equal to number of samples"
+                    "test_size + train_size not equal to number of samples"
                 )
 
         elif test_size:
             if type(test_size) is float and (test_size < 0 or test_size > 1):
-                raise ValueError(f"test_size should be between 0 and 1")
-            if type(test_size) is int and (test_size < 0 or test_size > n_samples):
-                raise ValueError(f"test_size should be between 0 and {n_samples}")
+                raise ValueError("test_size should be between 0 and 1")
+            if type(test_size) is int and (
+                test_size < 0 or test_size > n_samples
+            ):
+                raise ValueError(
+                    f"test_size should be between 0 and {n_samples}"
+                )
             train_size = (
-                1 - test_size if type(test_size) is float else n_samples - test_size
+                1 - test_size
+                if type(test_size) is float
+                else n_samples - test_size
             )
 
         elif train_size:
-            if type(train_size) is float and (train_size < 0 or train_size > 1):
-                raise ValueError(f"train_size should be between 0 and 1")
-            if type(train_size) is int and (train_size < 0 or train_size > n_samples):
-                raise ValueError(f"train_size should be between 0 and {n_samples}")
+            if type(train_size) is float and (
+                train_size < 0 or train_size > 1
+            ):
+                raise ValueError("train_size should be between 0 and 1")
+            if type(train_size) is int and (
+                train_size < 0 or train_size > n_samples
+            ):
+                raise ValueError(
+                    f"train_size should be between 0 and {n_samples}"
+                )
             test_size = (
-                1 - train_size if type(train_size) is float else n_samples - train_size
+                1 - train_size
+                if type(train_size) is float
+                else n_samples - train_size
             )
 
         else:
@@ -120,7 +143,7 @@ class Split:
                 train_size = 1 - test_size
 
         if type(random_state) is not int:
-            raise TypeError(f"random_state should be of type int")
+            raise TypeError("random_state should be of type int")
 
         return train_size, test_size
 

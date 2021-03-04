@@ -1,6 +1,8 @@
 import warnings
+
 import pandas as pd
-from .errors import ArgumentsError
+
+from ..exceptions import ArgumentsError
 
 
 class NullValuesHandler:
@@ -44,7 +46,6 @@ class NullValuesHandler:
 
     """
 
-
     def __init__(self):
         self.df = None
         self.drop = None
@@ -61,10 +62,15 @@ class NullValuesHandler:
 
         if type(self.df) is not pd.core.frame.DataFrame:
             raise TypeError(
-                "Feature dataframe is not a valid dataframe.\nExpected object type: pandas.core.frame.DataFrame"
+                "Feature dataframe is not a valid dataframe.\nExpected object"
+                " type: pandas.core.frame.DataFrame"
             )
 
-        if self.drop is None and self.fill_missing is None and self.fill_values is None:
+        if (
+            self.drop is None
+            and self.fill_missing is None
+            and self.fill_values is None
+        ):
             raise ArgumentsError(
                 "Expected one argument apart from dataframe, received none"
             )
@@ -72,23 +78,28 @@ class NullValuesHandler:
         if self.drop is not None:
             if self.fill_missing is not None or self.fill_values is not None:
                 raise ArgumentsError(
-                    "Received more than one arguments, expected atmost one argument"
+                    "Received more than one arguments, expected atmost one"
+                    " argument"
                 )
             elif type(self.drop) is not bool:
-                raise TypeError(f'Expected boolean value for argument "drop" ')
-            elif self.drop == False:
+                raise TypeError('Expected boolean value for argument "drop" ')
+            elif self.drop is False:
                 warnings.warn(
-                    "Drop is False, thus no operation will be performed on dataframe, please specify drop=True ",
+                    "Drop is False, thus no operation will be performed on"
+                    " dataframe, please specify drop=True ",
                     UserWarning,
                 )
 
         if self.fill_missing is not None:
             if self.drop is not None or self.fill_values is not None:
                 raise ArgumentsError(
-                    "Received more than one arguments, expected atmost one argument"
+                    "Received more than one arguments, expected atmost one"
+                    " argument"
                 )
             elif type(self.fill_missing) is not str:
-                raise TypeError(f'Expected string value for argument "fill_missing" ')
+                raise TypeError(
+                    'Expected string value for argument "fill_missing" '
+                )
             self.fill_missing = self.fill_missing.lower()
             if self.fill_missing not in ["mean", "median"]:
                 raise ArgumentsError('Allowed argument is "mean" or "median" ')
@@ -97,25 +108,36 @@ class NullValuesHandler:
         if self.fill_values is not None:
             if self.drop is not None or self.fill_missing is not None:
                 raise ArgumentsError(
-                    "Received more than one arguments, expected atmost one argument"
+                    "Received more than one arguments, expected atmost one"
+                    " argument"
                 )
             elif type(self.fill_values) is not dict:
-                raise TypeError(f'Expected dict value for argument "fill_values" ')
+                raise TypeError(
+                    'Expected dict value for argument "fill_values" '
+                )
             user_column_list = list(self.fill_values.keys())
             for column in user_column_list:
                 if column not in col_list:
-                    raise ArgumentsError(f"Column {column} does not exist in dataframe")
+                    raise ArgumentsError(
+                        f"Column {column} does not exist in dataframe"
+                    )
 
         if self.column_list is not None:
-            if not isinstance(self.column_list,list):
-                raise TypeError(f"Expected List for argument \"column_list\"")
+            if not isinstance(self.column_list, list):
+                raise TypeError('Expected List for argument "column_list"')
             if self.drop and len(self.column_list) == 0:
-                warnings.warn("\"column_list\" is empty, no columns will be dropped. If you want to drop rows, do not pass \"column_list\" in the arguments or pass None",UserWarning)
+                warnings.warn(
+                    '"column_list" is empty, no columns will be dropped. If'
+                    ' you want to drop rows, do not pass "column_list" in the'
+                    " arguments or pass None",
+                    UserWarning,
+                )
             if len(self.column_list) != 0:
                 for c in self.column_list:
                     if c not in col_list:
-                        raise ArgumentsError(f"Column \"{c}\" does not exist in dataframe")
-
+                        raise ArgumentsError(
+                            f'Column "{c}" does not exist in dataframe'
+                        )
 
     # function to drop all rows with nan values
     def __drop_all_rows_with_null_values(self):
@@ -131,9 +153,9 @@ class NullValuesHandler:
     def __fill_missing_with_mean_or_median(self):
         self.new_df = self.df
         if self.fill_missing == "median":
-            self.new_df.fillna(self.new_df.median(),inplace=True)
+            self.new_df.fillna(self.new_df.median(), inplace=True)
         else:
-            self.new_df.fillna(self.new_df.mean(),inplace=True)
+            self.new_df.fillna(self.new_df.mean(), inplace=True)
         return self.new_df
 
     # function to fill columns containing null values with the character supplied by the user
@@ -182,9 +204,9 @@ class NullValuesHandler:
             and self.fill_missing is None
         ):
             self.final_df = self.__fill_values_columns()
-        
+
         elif (
-            self.drop == True
+            self.drop is True
             and self.column_list is not None
             and len(self.column_list) != 0
         ):

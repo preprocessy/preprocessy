@@ -1,4 +1,3 @@
-import numpy as np
 import pandas as pd
 
 
@@ -37,14 +36,16 @@ class Correlation:
         """
 
         if X is None:
-            raise ValueError(f"Feature dataframe should not be of None")
+            raise ValueError("Feature dataframe should not be of None")
         if not isinstance(X, pd.core.frame.DataFrame):
             raise TypeError(
-                f"Feature dataframe is not a valid dataframe.\nExpected object type: pandas.core.frame.DataFrame"
+                "Feature dataframe is not a valid dataframe.\nExpected object"
+                " type: pandas.core.frame.DataFrame"
             )
         if threshold < 0 or threshold > 1:
             raise ValueError(
-                f"Threshold value should lie between 0 and 1. Value passed is {threshold}"
+                "Threshold value should lie between 0 and 1. Value passed is"
+                f" {threshold}"
             )
 
     def find(self, X, threshold=0.8):
@@ -73,7 +74,9 @@ class Correlation:
         for i in range(corr.shape[0]):
             for j in range(i + 1, corr.shape[1]):
                 curr = corr.iloc[i, j]
-                if j != i and (curr >= threshold or curr <= -threshold or curr == 0):
+                if j != i and (
+                    curr >= threshold or curr <= -threshold or curr == 0
+                ):
                     sign = "Positive Correlation"
                     if curr == 0:
                         sign = "No correlation"

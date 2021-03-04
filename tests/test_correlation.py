@@ -1,8 +1,7 @@
-import numpy as np
-import pandas as pd
-from preprocessy.feature_selection import Correlation
 import pytest
 from sklearn.datasets import load_iris
+
+from preprocessy.feature_selection import Correlation
 
 X, y = load_iris(return_X_y=True, as_frame=True)
 

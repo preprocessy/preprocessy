@@ -4,8 +4,8 @@ astroid==2.4.2
 attrs==20.2.0
 black==20.8b1
 click==7.1.2
-codespell==1.17.1
 coverage==5.4
+flake8==3.8.4
 importlib-metadata==3.1.1
 isort==5.6.4
 lazy-object-proxy

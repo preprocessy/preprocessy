@@ -1,7 +1,7 @@
-from preprocessy.input import ReadData
 import pandas as pd
-import numpy as np
 import pytest
+
+from preprocessy.input import ReadData
 
 reader = ReadData()
 
@@ -20,7 +20,7 @@ class TestReader:
 
     def test_reader(self):
         reader.read_file({"df_path": "datasets/encoding/test.csv"})
-        assert isinstance(reader.df, pd.core.frame.DataFrame) == True
+        assert isinstance(reader.df, pd.core.frame.DataFrame)
         assert reader.df.shape == (3, 5)
         assert reader.stats.iloc[1, 0] == -4003
 
