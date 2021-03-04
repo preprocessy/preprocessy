@@ -162,10 +162,9 @@ class NullValuesHandler:
         self.final_df = None
 
         if (
-            self.drop is not None
+            self.drop is True
             and self.fill_missing is None
             and self.fill_values is None
-            and self.drop != False
             and self.column_list is None
         ):
             self.final_df = self.__drop_all_rows_with_null_values()
