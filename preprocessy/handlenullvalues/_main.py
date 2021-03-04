@@ -159,6 +159,7 @@ class NullValuesHandler:
 
         self.__validate_input()
 
+        self.final_df = None
 
         if (
             self.drop is True

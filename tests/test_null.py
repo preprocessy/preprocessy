@@ -20,13 +20,14 @@ class TestHandlingNullValues:
 
     def test_multiple_args(self):
         with pytest.raises(ArgumentsError):
-            handler = NullValuesHandler(df=dataframe, drop=True, fill_missing="mean")
-            handler.execute()
+            handler = NullValuesHandler()
+            handler.execute({"df": dataframe, "drop": True, "fill_missing":"mean"})
 
         with pytest.raises(ArgumentsError):
             handler = NullValuesHandler(
                 df=dataframe, drop=True, fill_values={"Test": "Tata"}
             )
+            handler.execute({"df": dataframe, "drop": True, "fill_values":{"Test": "Tata"}})
 
         with pytest.raises(ArgumentsError):
             handler = NullValuesHandler()
@@ -46,6 +47,7 @@ class TestHandlingNullValues:
 
         # for drop argument
         self.dataframe = pd.read_csv("datasets/encoding/testnew.csv")
+
         with pytest.raises(TypeError):
             handler = NullValuesHandler()
             handler.execute({"df": self.dataframe, "drop": "nice"})
