@@ -1,6 +1,6 @@
-import pandas as pd
-import numpy as np
 import warnings
+
+import pandas as pd
 
 
 class EncodeData:
@@ -25,11 +25,16 @@ class EncodeData:
 
         """
         if self.train_df is None:
-            raise ValueError(f"Dataframe cannot be null")
+            raise ValueError("Dataframe cannot be null")
 
-        if self.test_df is not None and self.train_df.shape[1] != self.test_df.shape[1]:
+        if (
+            self.test_df is not None
+            and self.train_df.shape[1] != self.test_df.shape[1]
+        ):
             raise KeyError(
-                f"Target variable in still present in one of the datasets or the number of columns in both test and train are not equal. Rectify"
+                "Target variable in still present in one of the datasets or"
+                " the number of columns in both test and train are not equal."
+                " Rectify"
             )
 
         # target_label should not be in list of columns
@@ -38,13 +43,15 @@ class EncodeData:
             and (self.cat_cols is None or self.target_label in self.cat_cols)
         ):
             warnings.warn(
-                f"target_label may get encoded. Please remove target_label from dataframe or provide explicit list of columns for encoding.",
+                "target_label may get encoded. Please remove target_label from"
+                " dataframe or provide explicit list of columns for encoding.",
                 UserWarning,
             )
         for key, mapping in self.ord_dict.items():
             if mapping is None or mapping == {}:
                 raise ValueError(
-                    f"Expected a weight mapping for ordinal column {key}. Received {self.ord_dict[key]}"
+                    f"Expected a weight mapping for ordinal column {key}."
+                    f" Received {self.ord_dict[key]}"
                 )
 
     def __encode_categorical_util(self):
@@ -61,9 +68,9 @@ class EncodeData:
                     self.test_df[col + str("Encoded")] = self.test_df[
                         col + str("Encoded")
                     ].astype("category")
-                self.train_df[col + str("Encoded")] = pd.factorize(self.train_df[col])[
-                    0
-                ]
+                self.train_df[col + str("Encoded")] = pd.factorize(
+                    self.train_df[col]
+                )[0]
                 self.train_df[col + str("Encoded")] = self.train_df[
                     col + str("Encoded")
                 ].astype("category")
@@ -74,14 +81,17 @@ class EncodeData:
         original columns. Instead a new column will be made with the name 'col_labelname'.
         """
         for col in self.cat_cols:
-            if col in self.train_df and col + str("Encoded") not in self.ord_cols:
+            if (
+                col in self.train_df
+                and col + str("Encoded") not in self.ord_cols
+            ):
                 if self.test_df is not None:
                     self.test_df = pd.concat(
                         [
                             self.test_df,
-                            pd.get_dummies(self.test_df[col], prefix=col).astype(
-                                "category"
-                            ),
+                            pd.get_dummies(
+                                self.test_df[col], prefix=col
+                            ).astype("category"),
                         ],
                         axis=1,
                     )
@@ -114,7 +124,9 @@ class EncodeData:
                     ):
                         self.train_df[col] = (
                             self.train_df[col]
-                            .apply(lambda x: x.replace("$", "").replace(",", ""))
+                            .apply(
+                                lambda x: x.replace("$", "").replace(",", "")
+                            )
                             .astype("float")
                         )
                     elif pd.to_datetime(
@@ -145,12 +157,16 @@ class EncodeData:
         for key, value in self.ord_dict.items():
             if key in self.train_df.columns:
                 if self.test_df is not None:
-                    self.test_df[key + str("Encoded")] = self.test_df[key].map(value)
+                    self.test_df[key + str("Encoded")] = self.test_df[key].map(
+                        value
+                    )
                     self.test_df[key + str("Encoded")] = self.test_df[
                         key + str("Encoded")
                     ].astype("category")
 
-                self.train_df[key + str("Encoded")] = self.train_df[key].map(value)
+                self.train_df[key + str("Encoded")] = self.train_df[key].map(
+                    value
+                )
                 self.train_df[key + str("Encoded")] = self.train_df[
                     key + str("Encoded")
                 ].astype("category")

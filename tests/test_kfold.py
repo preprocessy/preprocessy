@@ -1,6 +1,6 @@
 import numpy as np
-import pandas as pd
 import pytest
+
 from preprocessy.resampling import KFold
 
 
@@ -27,7 +27,10 @@ class TestKFold:
             arr = np.arange(10)
             kFold = KFold(n_splits=20)
             for train_indices, test_indices in kFold.split(arr):
-                print(f"Train indices: {train_indices}\nTest indices: {test_indices}")
+                print(
+                    f"Train indices: {train_indices}\nTest indices:"
+                    f" {test_indices}"
+                )
 
         arr = np.arange(12)
         kFold = KFold(n_splits=3, shuffle=True, random_state=69)

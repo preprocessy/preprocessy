@@ -1,6 +1,7 @@
-import pandas as pd
-import os
 import errno
+import os
+
+import pandas as pd
 
 
 class ReadData(object):

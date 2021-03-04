@@ -13,4 +13,4 @@ New Range: 0/1
 
 Xscaled = (X - Xmean)/ Xstd
 New Range: min(Xscaled) to max(Xscaled)
-Note: Contains negative values for all the data points less than mean 
+Note: Contains negative values for all the data points less than mean

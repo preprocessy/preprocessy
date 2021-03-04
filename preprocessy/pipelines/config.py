@@ -1,7 +1,7 @@
+import copy
 import json
 import os.path
 import warnings
-import copy
 
 content = dict()
 
@@ -9,7 +9,8 @@ content = dict()
 def __validate_config(file_path):
     if not (os.path.exists(file_path) and os.path.isfile(file_path)):
         raise FileNotFoundError(
-            f"Please make sure you to provide a valid config file that exists at {file_path}"
+            "Please make sure you to provide a valid config file that exists"
+            f" at {file_path}"
         )
 
 
@@ -28,7 +29,8 @@ def read_config(file_path):
 
     if "df_path" in content:
         warnings.warn(
-            f"The dataset has to be passed as param to the Pipeline class, any value provided here will be overridden."
+            "The dataset has to be passed as param to the Pipeline class, any"
+            " value provided here will be overridden."
         )
     return content
 

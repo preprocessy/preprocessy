@@ -1,11 +1,11 @@
-import pytest
 import numpy as np
 import pandas as pd
+import pytest
 
-from preprocessy.pipelines import Pipeline
-from preprocessy.utils import num_of_samples
 from preprocessy.exceptions import ArgumentsError
+from preprocessy.pipelines import Pipeline
 from preprocessy.pipelines.config import save_config
+from preprocessy.utils import num_of_samples
 
 
 def custom_read(params):
@@ -64,7 +64,7 @@ class TestBasePipeline:
 
     def test_pipeline_with_default_reader(self):
         df = pd.DataFrame({"A": np.arange(1, 100), "B": np.arange(1, 100)})
-        df_path = df.to_csv("./datasets/configs/dataset.csv", index=False)
+        _ = df.to_csv("./datasets/configs/dataset.csv", index=False)
 
         params = {
             "col_1": "A",
@@ -86,7 +86,7 @@ class TestBasePipeline:
     def test_pipeline_with_custom_reader(self):
 
         df = pd.DataFrame({"A": np.arange(1, 100), "B": np.arange(1, 100)})
-        df_path = df.to_csv("./datasets/configs/dataset.csv", index=False)
+        _ = df.to_csv("./datasets/configs/dataset.csv", index=False)
 
         params = {
             "col_1": "A",
@@ -116,7 +116,7 @@ class TestBasePipeline:
 
     def test_add(self):
         df = pd.DataFrame({"A": np.arange(1, 100), "B": np.arange(1, 100)})
-        df_path = df.to_csv("./datasets/configs/dataset.csv", index=False)
+        _ = df.to_csv("./datasets/configs/dataset.csv", index=False)
         params = {
             "col_1": "A",
             "test_size": 0.2,
@@ -148,7 +148,7 @@ class TestBasePipeline:
 
     def test_remove(self):
         df = pd.DataFrame({"A": np.arange(1, 100), "B": np.arange(1, 100)})
-        df_path = df.to_csv("./datasets/configs/dataset.csv", index=False)
+        _ = df.to_csv("./datasets/configs/dataset.csv", index=False)
         params = {
             "col_1": "A",
             "col_2": "B",
@@ -167,7 +167,7 @@ class TestBasePipeline:
 
     def test_config(self):
         df = pd.DataFrame({"A": np.arange(1, 100), "B": np.arange(1, 100)})
-        df_path = df.to_csv("./datasets/configs/dataset.csv", index=False)
+        _ = df.to_csv("./datasets/configs/dataset.csv", index=False)
         params = {
             "df": "./datasets/configs/dataset.csv",
             "col_1": "A",

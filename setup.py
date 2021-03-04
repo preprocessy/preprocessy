@@ -1,8 +1,8 @@
 """ setup """
-
 import io
 
-from setuptools import setup, find_packages
+from setuptools import find_packages
+from setuptools import setup
 
 with io.open("README.md", "rt", encoding="utf8") as f:
     LONG_DESC = f.read()
@@ -27,7 +27,8 @@ setup(
     packages=find_packages(),
     include_package_data=True,
     install_requires=[
-        "pandas>=1.0.5"
+        "pandas>=1.0.5",
+        "scikit-learn>=0.23.2"
         # add contents from requirements.txt only
         # "sample_package>=version_number"
     ],

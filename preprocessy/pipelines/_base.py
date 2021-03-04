@@ -1,9 +1,8 @@
-import inspect
 import warnings
-from .config import read_config
-from ..input import ReadData
 
 from ..exceptions import ArgumentsError
+from ..input import ReadData
+from .config import read_config
 
 
 class Pipeline:
@@ -38,52 +37,61 @@ class Pipeline:
         if self.params and self.config_file:
             self.config_file = None
             warnings.warn(
-                f"'params' and 'config_file' both were provided. Using 'params' to construct the pipeline."
+                "'params' and 'config_file' both were provided. Using 'params'"
+                " to construct the pipeline."
             )
 
         if not self.params and not self.config_file:
             raise ArgumentsError(
-                f"Both 'steps' and 'config_file' cannot be null. Please provide either a list of steps or path to a JSON config file."
+                "Both 'steps' and 'config_file' cannot be null. Please provide"
+                " either a list of steps or path to a JSON config file."
             )
 
         if self.steps and not isinstance(self.steps, list):
             raise TypeError(
-                f"'steps' should be of type 'list'. Received {self.steps} of type {type(self.steps)}"
+                f"'steps' should be of type 'list'. Received {self.steps} of"
+                f" type {type(self.steps)}"
             )
 
         if self.steps:
             for step in self.steps:
                 if not callable(step):
                     raise TypeError(
-                        f"All steps of the pipeline must be callable. Received {step} of type {type(step)}"
+                        "All steps of the pipeline must be callable. Received"
+                        f" {step} of type {type(step)}"
                     )
 
         if self.steps and not self.params and not self.config_file:
             raise ArgumentsError(
-                f"'params' dictionary or 'config_file' path to config file required for configuring pipeline. Received None"
+                "'params' dictionary or 'config_file' path to config file"
+                " required for configuring pipeline. Received None"
             )
 
         if self.params and not isinstance(self.params, dict):
             raise TypeError(
-                f"'params' should be of type dict. Received {self.params} of type {type(self.params)}"
+                f"'params' should be of type dict. Received {self.params} of"
+                f" type {type(self.params)}"
             )
 
         if self.config_file and not isinstance(self.config_file, str):
             raise TypeError(
-                f"'config_file' should be of type str. Received {self.config_file} of type: {type(self.config_file)}"
+                "'config_file' should be of type str. Received"
+                f" {self.config_file} of type: {type(self.config_file)}"
             )
 
         if not self.df_path:
-            raise ArgumentsError(f"'df_path' should not be None.")
+            raise ArgumentsError("'df_path' should not be None.")
 
         if not isinstance(self.df_path, str):
             raise TypeError(
-                f"'df_path' should be of type str. Received {self.df_path} of type {type(self.df_path)}"
+                f"'df_path' should be of type str. Received {self.df_path} of"
+                f" type {type(self.df_path)}"
             )
 
         if self.custom_reader and not callable(self.custom_reader):
             raise TypeError(
-                f"'custom_reader' should be a callable. Received {self.custom_reader} of type {type(self.custom_reader)}"
+                "'custom_reader' should be a callable. Received"
+                f" {self.custom_reader} of type {type(self.custom_reader)}"
             )
 
     def process(self):
@@ -100,12 +108,14 @@ class Pipeline:
 
         if not callable(func):
             raise TypeError(
-                f"'func' should be a callable. Received {func} of type {type(func)}"
+                f"'func' should be a callable. Received {func} of type"
+                f" {type(func)}"
             )
 
         if params and not isinstance(params, dict):
             raise TypeError(
-                f"'params' should be of type dict. Received {params} of type {type(params)}"
+                f"'params' should be of type dict. Received {params} of type"
+                f" {type(params)}"
             )
 
         if "index" in kwargs.keys():
@@ -118,7 +128,8 @@ class Pipeline:
                     break
             if index == -1:
                 raise ValueError(
-                    f"Function {kwargs.get('after')} is not a part of the pipeline."
+                    f"Function {kwargs.get('after')} is not a part of the"
+                    " pipeline."
                 )
             self.__insert(index + 1, func, params)
         elif "before" in kwargs.keys():
@@ -129,18 +140,21 @@ class Pipeline:
                     break
             if index == -1:
                 raise ValueError(
-                    f"Function {kwargs.get('before')} is not a part of the pipeline."
+                    f"Function {kwargs.get('before')} is not a part of the"
+                    " pipeline."
                 )
             self.__insert(index, func, params)
         else:
             raise ArgumentsError(
-                f"No position was provided to insert the function into the pipeline"
+                "No position was provided to insert the function into the"
+                " pipeline"
             )
 
     def remove(self, func_name=None):
         if not isinstance(func_name, str):
             raise TypeError(
-                f"'func_name' should be of type str. Received {func_name} of type {type(func_name)}"
+                f"'func_name' should be of type str. Received {func_name} of"
+                f" type {type(func_name)}"
             )
 
         func = None

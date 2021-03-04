@@ -1,3 +1,3 @@
-from _handleoutlier import HandleOutlier
+from ._handleoutlier import HandleOutlier
 
-_all_ = ["HandleOutlier"]
+__all__ = ["HandleOutlier"]

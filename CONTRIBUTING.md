@@ -30,18 +30,18 @@ Before submitting an issue please make sure:
     $ pip install -r requirements_dev.txt
 ```
 
-4. Make the necessary changes
-
-5. Run the tests
+4. Install pre-commit hooks
 
 ```bash
-    $ pytest -v -s
+    $ pre-commit install
 ```
 
-6. Format the code before committing (replace `./venv` with your virtual environment folder)
+5. Make the necessary changes
+
+6. Run the tests
 
 ```bash
-    $ black . && codespell --skip=".git,*.gif,*.png,*.PNG,./venv,*.json,./datasets,.DS_Store,*.pyc,./htmlcov,.coverage"
+    $ pytest -W ignore::DeprecationWarning
 ```
 
 7. Create a new pull request with an appropriate title, detailed explanation of what the pull request does and attach links to other issues or pull requests related to your pull request
@@ -51,7 +51,7 @@ Before submitting an issue please make sure:
 Generating a report of lines that do not have test coverage can indicate where to start contributing. Run `pytest` using `coverage` and generate a report.
 
 ```bash
-    $ coverage run --source=./preprocessy -m pytest
+    $ coverage run --source=./preprocessy --omit="./*/__init__.py"  -m pytest
 
     $ coverage html
 ```

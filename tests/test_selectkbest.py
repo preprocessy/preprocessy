@@ -1,7 +1,9 @@
 import pandas as pd
-from sklearn.datasets import make_regression, make_classification
-from sklearn.feature_selection import f_classif, f_regression
 import pytest
+from sklearn.datasets import make_classification
+from sklearn.datasets import make_regression
+from sklearn.feature_selection import f_classif
+from sklearn.feature_selection import f_regression
 
 from preprocessy.feature_selection import SelectKBest
 
@@ -25,7 +27,9 @@ class TestSelectKBest:
             kbest.fit({"score_func": 10, "k": 10, "X": X_class, "y": y_reg})
         with pytest.raises(TypeError):
             kbest = SelectKBest()
-            kbest.fit({"score_func": "chi2", "k": 10, "X": X_class, "y": y_reg})
+            kbest.fit(
+                {"score_func": "chi2", "k": 10, "X": X_class, "y": y_reg}
+            )
 
     def test_default_score_func(self):
         kbest = SelectKBest()
