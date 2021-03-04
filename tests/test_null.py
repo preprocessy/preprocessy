@@ -24,9 +24,7 @@ class TestHandlingNullValues:
             handler.execute({"df": dataframe, "drop": True, "fill_missing":"mean"})
 
         with pytest.raises(ArgumentsError):
-            handler = NullValuesHandler(
-                df=dataframe, drop=True, fill_values={"Test": "Tata"}
-            )
+            handler = NullValuesHandler()
             handler.execute({"df": dataframe, "drop": True, "fill_values":{"Test": "Tata"}})
 
         with pytest.raises(ArgumentsError):
