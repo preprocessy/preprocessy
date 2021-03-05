@@ -18,7 +18,7 @@ class HandleOutlier:
 
     """
 
-    def __init__(self, train_df, params):
+    def __init__(self):
 
         """Function to initialize a few parameters used to make the process
         run without human interaction.
@@ -37,23 +37,14 @@ class HandleOutlier:
             -q3 : specify the end of the range (Default is 0.95)
 
         """
-        self.train_df = train_df
+        self.train_df = None
         self.cols = []
         self.remove_outliers = True
         self.replace = False
         self.quartiles = {}
         self.first_quartile = 0.05
         self.third_quartile = 0.95
-        if "cols" in params.keys():
-            self.cols = params["cols"]
-        if "removeoutliers" in params.keys():
-            self.remove_outliers = params["removeoutliers"]
-        if "replace" in params.keys():
-            self.replace = params["replace"]
-        if "q1" in params.keys():
-            self.first_quartile = params["q1"]
-        if "q3" in params.keys():
-            self.third_quartile = params["q3"]
+        
 
     def __return_quartiles(self, col):
         # return the quartile range or q1 and q3 values for the column passed as parameter
@@ -64,7 +55,7 @@ class HandleOutlier:
         q3 = round(q3)
         self.quartiles[col] = [q1, q3]
 
-    def handle_outliers(self):
+    def handle_outliers(self, params):
 
         # parameters till now: train_df, cols, removeoutliers, replace
         train_df = self.train_df
@@ -95,4 +86,4 @@ class HandleOutlier:
                     train_df[(train_df[col] > q3)] = -999
         print(self.quartiles)
         self.train_df = train_df
-        return self.train_df
+        params["train_df"] = self.train_df
