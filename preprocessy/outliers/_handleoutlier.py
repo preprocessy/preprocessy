@@ -44,7 +44,6 @@ class HandleOutlier:
         self.quartiles = {}
         self.first_quartile = 0.05
         self.third_quartile = 0.95
-        
 
     def __return_quartiles(self, col):
         # return the quartile range or q1 and q3 values for the column passed as parameter
