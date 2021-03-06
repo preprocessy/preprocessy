@@ -56,6 +56,18 @@ class HandleOutlier:
 
     def handle_outliers(self, params):
 
+        self.train_df = params["train_df"]
+        if "cols" in params.keys():
+            self.cols = params["cols"]
+        if "removeoutliers" in params.keys():
+            self.remove_outliers = params["removeoutliers"]
+        if "replace" in params.keys():
+            self.replace = params["replace"]
+        if "q1" in params.keys():
+            self.first_quartile = params["q1"]
+        if "q3" in params.keys():
+            self.third_quartile = params["q3"]
+
         # parameters till now: train_df, cols, removeoutliers, replace
         train_df = self.train_df
         if (
