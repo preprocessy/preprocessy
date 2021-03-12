@@ -20,9 +20,14 @@ class Split:
     """
 
     def __init__(self):
-        pass
+        self.df = None
+        self.X = None
+        self.y = None
+        self.test_size = None
+        self.train_size = None
+        self.random_state = 69
 
-    def __validate_input(self, X, y, test_size, train_size, random_state):
+    def __validate_input(self):
 
         """Function to validate inputs received by train_test_split
 
@@ -57,99 +62,105 @@ class Split:
 
         """
 
-        if X is None:
+        if self.X is None:
             raise ValueError("Feature dataframe should not be of None")
 
-        if type(X) is not pd.core.frame.DataFrame:
+        if not isinstance(self.X, pd.core.frame.DataFrame):
             raise TypeError(
                 "Feature dataframe is not a valid dataframe.\nExpected object"
                 " type: pandas.core.frame.DataFrame"
             )
 
-        n_samples = num_of_samples(X)
+        n_samples = num_of_samples(self.X)
 
-        if y is not None:
-            if n_samples != y.shape[0]:
+        if self.y is not None:
+            if n_samples != self.y.shape[0]:
                 raise ValueError(
                     "Number of samples of target label and feature dataframe"
                     " unequal.\nSamples in feature dataframe:"
-                    f" {X.shape[0]}\nSamples in target label: {y.shape[0]}"
+                    f" {self.X.shape[0]}\nSamples in target label: {self.y.shape[0]}"
                 )
-            if type(y) is not pd.core.series.Series:
+            if not isinstance(self.y, pd.core.series.Series):
                 raise TypeError(
                     "Target label is not a valid dataframe.\nExpected object"
                     " type: pandas.core.series.Series"
                 )
 
-        if test_size and train_size:
-            if type(test_size) is not int or type(test_size) is not float:
+        if self.test_size and self.train_size:
+            if not isinstance(self.test_size, int) or not isinstance(
+                self.test_size, float
+            ):
                 raise TypeError("test_size must be of type int or float")
-            if type(train_size) is not int or type(train_size) is not float:
+            if not isinstance(self.train_size, int) or not isinstance(
+                self.train_size, float
+            ):
                 raise TypeError("train_size must be of type int or float")
-            if type(test_size) != type(train_size):
+            if not isinstance(self.test_size, self.train_size):
                 raise TypeError(
                     "Data types of test_size and train_size do not"
-                    f" match.\ntest_size: {type(test_size)}.\ntrain_size:"
-                    f" {type(train_size)}"
+                    f" match.\ntest_size: {type(self.test_size)}.\ntrain_size:"
+                    f" {type(self.train_size)}"
                 )
-            if type(test_size) is float and test_size + train_size != 1:
+            if (
+                isinstance(self.test_size, float)
+                and self.test_size + self.train_size != 1
+            ):
                 raise ValueError("test_size + train_size should be equal to 1")
             elif (
-                type(test_size) is int and test_size + train_size != n_samples
+                isinstance(self.test_size, int)
+                and self.test_size + self.train_size != n_samples
             ):
                 raise ValueError(
                     "test_size + train_size not equal to number of samples"
                 )
 
-        elif test_size:
-            if type(test_size) is float and (test_size < 0 or test_size > 1):
+        elif self.test_size:
+            if isinstance(self.test_size, float) and (
+                self.test_size < 0 or self.test_size > 1
+            ):
                 raise ValueError("test_size should be between 0 and 1")
-            if type(test_size) is int and (
-                test_size < 0 or test_size > n_samples
+            if isinstance(self.test_size, int) and (
+                self.test_size < 0 or self.test_size > n_samples
             ):
                 raise ValueError(
                     f"test_size should be between 0 and {n_samples}"
                 )
-            train_size = (
-                1 - test_size
-                if type(test_size) is float
-                else n_samples - test_size
+            self.train_size = (
+                1 - self.test_size
+                if isinstance(self.test_size, float)
+                else n_samples - self.test_size
             )
 
-        elif train_size:
-            if type(train_size) is float and (
-                train_size < 0 or train_size > 1
+        elif self.train_size:
+            if isinstance(self.train_size, float) and (
+                self.train_size < 0 or self.train_size > 1
             ):
                 raise ValueError("train_size should be between 0 and 1")
-            if type(train_size) is int and (
-                train_size < 0 or train_size > n_samples
+            if isinstance(self.train_size, int) and (
+                self.train_size < 0 or self.train_size > n_samples
             ):
                 raise ValueError(
                     f"train_size should be between 0 and {n_samples}"
                 )
-            test_size = (
-                1 - train_size
-                if type(train_size) is float
-                else n_samples - train_size
+            self.test_size = (
+                1 - self.train_size
+                if isinstance(self.train_size, float)
+                else n_samples - self.train_size
             )
 
         else:
-            if y is None:
-                test_size = 0.2
-                train_size = 0.8
+            if self.y is None:
+                self.test_size = 0.2
+                self.train_size = 0.8
             else:
-                features = len(X.columns)
-                test_size = float(1 / np.sqrt(features))
-                train_size = 1 - test_size
+                features = len(self.X.columns)
+                self.test_size = float(1 / np.sqrt(features))
+                self.train_size = 1 - self.test_size
 
-        if type(random_state) is not int:
+        if not isinstance(self.random_state, int):
             raise TypeError("random_state should be of type int")
 
-        return train_size, test_size
-
-    def train_test_split(
-        self, X=None, y=None, test_size=None, train_size=None, random_state=69
-    ):
+    def train_test_split(self, params):
         """Performs train test split on the input data
 
         Parameters
@@ -193,31 +204,46 @@ class Split:
 
         """
 
-        train_size, test_size = self.__validate_input(
-            X, y, test_size, train_size, random_state
-        )
+        if "X" in params.keys():
+            self.X = params["X"]
+        if "y" in params.keys():
+            self.y = params["y"]
+        if "test_split" in params.keys():
+            self.test_split = params["test_split"]
+        if "train_split" in params.keys():
+            self.train_split = params["train_split"]
+        if "random_state" in params.keys():
+            self.random_state = params["random_state"]
 
-        np.random.seed(random_state)
+        self.__validate_input()
 
-        if y is not None:
-            df = pd.concat([X, y], axis=1)
+        np.random.seed(self.random_state)
+
+        if self.y is not None:
+            self.df = pd.concat([self.X, self.y], axis=1)
         else:
-            df = X
+            self.df = self.X
 
-        df = df.iloc[np.random.permutation(len(df))].reset_index(drop=True)
-        if type(test_size) is float:
-            index = int(test_size * len(df))
-            train = df.iloc[index:]
-            test = df.iloc[:index]
+        self.df = self.df.iloc[
+            np.random.permutation(len(self.df))
+        ].reset_index(drop=True)
+        if isinstance(self.test_size, float):
+            index = int(self.test_size * len(self.df))
+            train = self.df.iloc[index:]
+            test = self.df.iloc[:index]
         else:
-            train = df.iloc[test_size:]
-            test = df.iloc[:test_size]
+            train = self.df.iloc[self.test_size :]
+            test = self.df.iloc[: self.test_size]
 
-        if y is not None:
-            y_train = train[y.name]
-            X_train = train.drop([y.name], axis=1)
-            y_test = test[y.name]
-            X_test = test.drop([y.name], axis=1)
-            return X_train, X_test, y_train, y_test
+        if self.y is not None:
+            y_train = train[self.y.name]
+            X_train = train.drop([self.y.name], axis=1)
+            y_test = test[self.y.name]
+            X_test = test.drop([self.y.name], axis=1)
+            params["X_train"] = X_train
+            params["X_test"] = X_test
+            params["y_train"] = y_train
+            params["y_test"] = y_test
 
-        return train, test
+        params["train"] = train
+        params["test"] = test
