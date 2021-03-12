@@ -5,111 +5,94 @@ import pytest
 from preprocessy.exceptions import ArgumentsError
 from preprocessy.handlenullvalues import NullValuesHandler
 
-dataframe = pd.read_csv("datasets/encoding/test2.csv")
+dataframe1 = pd.read_csv("datasets/encoding/test2.csv")
+dataframe2 = pd.read_csv("datasets/encoding/testnew.csv")
+array = np.random.random((5, 5))
 
 
-class TestHandlingNullValues:
-    def test_null_dataframe(self):
-        with pytest.raises(ValueError):
-            handler = NullValuesHandler()
-            handler.execute({})
-
-    def test_none_args(self):
-        with pytest.raises(ArgumentsError):
-            handler = NullValuesHandler()
-            handler.execute({"df": dataframe})
-
-    def test_multiple_args(self):
-        with pytest.raises(ArgumentsError):
-            handler = NullValuesHandler()
-            handler.execute(
-                {"df": dataframe, "drop": True, "fill_missing": "mean"}
-            )
-
-        with pytest.raises(ArgumentsError):
-            handler = NullValuesHandler()
-            handler.execute(
-                {
-                    "df": dataframe,
-                    "drop": True,
-                    "fill_values": {"Test": "Tata"},
-                }
-            )
-
-        with pytest.raises(ArgumentsError):
-            handler = NullValuesHandler()
-            handler.execute(
-                {
-                    "df": dataframe,
-                    "drop": True,
-                    "fill_values": {"Test": "Tata"},
-                }
-            )
-
-        with pytest.raises(ArgumentsError):
-            handler = NullValuesHandler()
-            handler.execute(
-                {
-                    "df": dataframe,
-                    "fill_missing": "mean",
-                    "fill_values": {"Test": "Tata"},
-                }
-            )
-
-    def test_incorrect_input_type(self):
-        # for dataframe argument
-        array = np.random.random((5, 5))
-        with pytest.raises(TypeError):
-            handler = NullValuesHandler()
-            handler.execute({"df": array})
-
-        # for drop argument
-        self.dataframe = pd.read_csv("datasets/encoding/testnew.csv")
-
-        with pytest.raises(TypeError):
-            handler = NullValuesHandler()
-            handler.execute({"df": self.dataframe, "drop": "nice"})
-
-        # for fill_missing argument
-        with pytest.raises(TypeError):
-            handler = NullValuesHandler()
-            handler.execute({"df": dataframe, "fill_missing": 3})
-
-        with pytest.raises(ArgumentsError):
-            handler = NullValuesHandler()
-            handler.execute({"df": dataframe, "fill_missing": "sum"})
-
-        # for fill_values argument
-        with pytest.raises(TypeError):
-            value = [5]
-            handler = NullValuesHandler()
-            handler.execute({"df": dataframe, "fill_values": value})
-
-        with pytest.raises(ArgumentsError):
-            value = {"Label": 10}
-            handler = NullValuesHandler()
-            handler.execute({"df": dataframe, "fill_values": value})
-
-    # to test output
-    def test_output(self):
-        params = {"df": dataframe, "drop": True}
+def test_null_dataframe():
+    with pytest.raises(ValueError):
         handler = NullValuesHandler()
-        handler.execute(params=params)
-        assert not params["df"].isnull().values.any()
+        handler.execute({})
 
-        params = {"df": dataframe, "fill_missing": "mean"}
-        handler = NullValuesHandler()
-        handler.execute(params=params)
-        assert not params["df"].isnull().any()["Distance"]
 
-        params = {"df": dataframe, "fill_values": {"Distance": 0}}
+def test_none_args():
+    with pytest.raises(ArgumentsError):
         handler = NullValuesHandler()
-        handler.execute(params=params)
-        assert not params["df"].isnull().any()["Distance"]
+        handler.execute({"df": dataframe1})
 
-    # for dropping list of columns passed by user
-    def test_drop_col(self):
-        params = {"df": dataframe, "drop": True, "column_list": ["Distance"]}
+
+@pytest.mark.parametrize(
+    "test_input",
+    [
+        {"df": dataframe1, "drop": True, "fill_missing": "mean"},
+        {
+            "df": dataframe1,
+            "drop": True,
+            "fill_values": {"Test": "Tata"},
+        },
+        {
+            "df": dataframe1,
+            "drop": True,
+            "fill_values": {"Test": "Tata"},
+        },
+        {
+            "df": dataframe1,
+            "fill_missing": "mean",
+            "fill_values": {"Test": "Tata"},
+        },
+    ],
+)
+def test_multiple_args(test_input):
+    with pytest.raises(ArgumentsError):
         handler = NullValuesHandler()
-        handler.execute(params=params)
-        assert "Distance" not in params["df"].columns
+        handler.execute(params=test_input)
+
+
+@pytest.mark.parametrize(
+    "test_input1",
+    [
+        {"df": array},
+        {"df": dataframe2, "drop": "nice"},
+        {"df": dataframe1, "fill_missing": 3},
+        {"df": dataframe1, "fill_values": [5]},
+    ],
+)
+@pytest.mark.parametrize(
+    "test_input2",
+    [
+        {"df": dataframe1, "fill_missing": "sum"},
+        {"df": dataframe1, "fill_values": {"Label": 10}},
+    ],
+)
+def test_incorrect_input_type(test_input1, test_input2):
+    with pytest.raises(TypeError):
+        handler = NullValuesHandler()
+        handler.execute(params=test_input1)
+
+    with pytest.raises(ArgumentsError):
+        handler = NullValuesHandler()
+        handler.execute(params=test_input2)
+
+
+# to test output
+@pytest.mark.parametrize(
+    "test_input1",
+    [
+        {"df": dataframe1, "drop": True},
+        {"df": dataframe1, "fill_missing": "mean"},
+        {"df": dataframe1, "fill_values": {"Distance": 0}},
+    ],
+)
+def test_output(test_input1):
+    handler = NullValuesHandler()
+    handler.execute(params=test_input1)
+    assert not test_input1["df"].isnull().any()["Distance"]
+
+
+# for dropping list of columns passed by user
+def test_drop_col():
+    params = {"df": dataframe1, "drop": True, "column_list": ["Distance"]}
+    handler = NullValuesHandler()
+    handler.execute(params=params)
+    assert "Distance" not in params["df"].columns
