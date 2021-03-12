@@ -15,38 +15,46 @@ X_class = pd.DataFrame(X_class)
 y_class = pd.Series(y_class)
 
 
-class TestSelectKBest:
-    def test_invalid_input(self):
-        kbest = SelectKBest()
-        with pytest.raises(TypeError):
-            kbest.fit_transform({})
+def test_invalid_input():
+    kbest = SelectKBest()
+    with pytest.raises(TypeError):
+        kbest.fit_transform({})
 
-    def test_score_func(self):
-        with pytest.raises(TypeError):
-            kbest = SelectKBest()
-            kbest.fit({"score_func": 10, "k": 10, "X": X_class, "y": y_reg})
-        with pytest.raises(TypeError):
-            kbest = SelectKBest()
-            kbest.fit(
-                {"score_func": "chi2", "k": 10, "X": X_class, "y": y_reg}
-            )
 
-    def test_default_score_func(self):
+@pytest.mark.parametrize(
+    "test_input",
+    [
+        {"score_func": 10, "k": 10, "X": X_class, "y": y_reg},
+        {"score_func": "chi2", "k": 10, "X": X_class, "y": y_reg},
+    ],
+)
+def test_score_func(test_input):
+    with pytest.raises(TypeError):
         kbest = SelectKBest()
-        kbest.fit({"k": 10, "X": X_reg, "y": y_reg})
-        assert kbest.score_func.__name__ == f_regression.__name__
+        kbest.fit(params=test_input)
 
-        kbest = SelectKBest()
-        kbest.fit({"X": X_class, "y": y_class})
-        assert kbest.score_func.__name__ == f_classif.__name__
 
-    def test_transform_without_fit(self):
-        kbest = SelectKBest()
-        with pytest.raises(ValueError):
-            kbest.transform(X_reg)
+@pytest.mark.parametrize(
+    "test_input, test_output",
+    [
+        ({"k": 10, "X": X_reg, "y": y_reg}, f_regression.__name__),
+        ({"X": X_class, "y": y_class}, f_classif.__name__),
+    ],
+)
+def test_default_score_func(test_input, test_output):
+    kbest = SelectKBest()
+    kbest.fit(params=test_input)
+    assert kbest.score_func.__name__ == test_output
 
-    def test_fit_transform(self):
-        kbest = SelectKBest()
-        params = {"score_func": f_regression, "k": 5, "X": X_reg, "y": y_reg}
-        kbest.fit_transform(params)
-        assert params["X_best"].shape[1] == 5
+
+def test_transform_without_fit():
+    kbest = SelectKBest()
+    with pytest.raises(ValueError):
+        kbest.transform(X_reg)
+
+
+def test_fit_transform():
+    kbest = SelectKBest()
+    params = {"score_func": f_regression, "k": 5, "X": X_reg, "y": y_reg}
+    kbest.fit_transform(params)
+    assert params["X_best"].shape[1] == 5
