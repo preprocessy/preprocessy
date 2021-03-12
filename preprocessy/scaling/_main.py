@@ -5,14 +5,7 @@ from ..exceptions import ArgumentsError
 
 
 class Scaler:
-    def __init__(
-        self,
-        df=None,
-        type=None,
-        columns=None,
-        is_combined=False,
-        critical_value=0,
-    ):
+    def __init__(self):
         """Class for Scaling the columns
 
         Private Methods
@@ -35,13 +28,12 @@ class Scaler:
 
         """
 
-        self.df = df
-        self.type = type
-        self.columns = columns
-        self.is_combined = is_combined
-        self.critical_value = critical_value
+        self.df = None
+        self.type = None
+        self.columns = None
+        self.is_combined = False
+        self.critical_value = 0
         self.new_df = None
-        self.__validate_input()
         self.final_df = None
 
     def __validate_input(self):
@@ -147,7 +139,21 @@ class Scaler:
 
         return self.new_df
 
-    def execute(self):
+    def execute(self, params):
+
+        if "df" in params.keys():
+            self.df = params["df"]
+        if "type" in params.keys():
+            self.type = params["type"]
+        if "columns" in params.keys():
+            self.columns = params["columns"]
+        if "is_combined" in params.keys():
+            self.is_combined = params["is_combined"]
+        if "critical_value" in params.keys():
+            self.critical_value = params["critical_value"]
+
+        self.__validate_input()
+
         if self.type == "MinMaxScaler":
             self.final_df = self.__min_max_scaler()
         elif self.type == "BinaryScaler":
@@ -155,13 +161,4 @@ class Scaler:
         elif self.type == "StandardScaler":
             self.final_df = self.__standard_scaler()
 
-        return self.final_df
-
-
-# df = pd.read_csv(
-#     'C:/Users/yash/Downloads/37281_63530_bundle_archive/test_data9.csv')
-# df = df.dropna()
-# df = Scaler(df=df, type="StandardScaler", columns=[
-#             'Id'], is_combined=True, critical_value=20)
-# df = df.execute()
-# print(df)
+        params["df"] = self.final_df
