@@ -62,6 +62,10 @@ class Scaler:
                 )
 
         if self.columns is not None:
+            if type(self.columns) is not list:
+                raise TypeError(
+                    f"Expected list type for argument columns, got {type(self.columns)}"
+                )
             column_list = list(self.df.keys())
             for column in self.columns:
                 if type(column) != str:
@@ -79,8 +83,8 @@ class Scaler:
         if not self.is_combined:
             for column in self.columns:
                 new_col = np.array([val for val in self.df[column]])
-                max = np.maximum(new_col)
-                min = np.minimum(new_col)
+                max = np.max(new_col)
+                min = np.min(new_col)
                 diff = max - min
                 for i in range(len(new_col)):
                     new_col[i] = (new_col[i] - min) / diff
@@ -91,8 +95,8 @@ class Scaler:
                 for ele in self.df[column]:
                     new_combined_arr.append(ele)
             new_combined_arr = np.array(new_combined_arr)
-            max = np.maximum(new_combined_arr)
-            min = np.minimum(new_combined_arr)
+            max = np.max(new_combined_arr)
+            min = np.min(new_combined_arr)
             diff = max - min
             for column in self.columns:
                 new_col = [val for val in self.df[column]]
