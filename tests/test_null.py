@@ -50,29 +50,20 @@ def test_multiple_args(test_input):
 
 
 @pytest.mark.parametrize(
-    "test_input1",
+    "error, test_input",
     [
-        {"df": array},
-        {"df": dataframe2, "drop": "nice"},
-        {"df": dataframe1, "fill_missing": 3},
-        {"df": dataframe1, "fill_values": [5]},
+        (TypeError, {"df": array}),
+        (TypeError, {"df": dataframe2, "drop": "nice"}),
+        (TypeError, {"df": dataframe1, "fill_missing": 3}),
+        (TypeError, {"df": dataframe1, "fill_values": [5]}),
+        (ArgumentsError, {"df": dataframe1, "fill_missing": "sum"}),
+        (ArgumentsError, {"df": dataframe1, "fill_values": {"Label": 10}}),
     ],
 )
-@pytest.mark.parametrize(
-    "test_input2",
-    [
-        {"df": dataframe1, "fill_missing": "sum"},
-        {"df": dataframe1, "fill_values": {"Label": 10}},
-    ],
-)
-def test_incorrect_input_type(test_input1, test_input2):
-    with pytest.raises(TypeError):
+def test_incorrect_input_type(error, test_input):
+    with pytest.raises(error):
         handler = NullValuesHandler()
-        handler.execute(params=test_input1)
-
-    with pytest.raises(ArgumentsError):
-        handler = NullValuesHandler()
-        handler.execute(params=test_input2)
+        handler.execute(params=test_input)
 
 
 # to test output
