@@ -1,6 +1,6 @@
 # Preprocessy
 
-[![Build Status](https://www.travis-ci.com/preprocessy/preprocessy.svg?branch=master)](https://travis-ci.com/preprocessy/preprocessy)
+[![Workflow](https://github.com/preprocessy/preprocessy/actions/workflows/workflow.yml/badge.svg)](https://github.com/preprocessy/preprocessy/actions/workflows/workflow.yml)
 [![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-sucess.svg)](https://gitHub.com/preprocessy/preprocessy/graphs/commit-activity)
 [![Issues Open](https://img.shields.io/github/issues/preprocessy/preprocessy)](https://github.com/preprocessy/preprocessy/issues)
 [![Forks](https://img.shields.io/github/forks/preprocessy/preprocessy)](https://github.com/preprocessy/preprocessy/network/members)
