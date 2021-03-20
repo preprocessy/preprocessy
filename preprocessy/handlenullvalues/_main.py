@@ -55,6 +55,9 @@ class NullValuesHandler:
         self.new_df = None
         self.final_df = None
 
+    def __repr__(self):
+        return f"NullValuesHandler(df=None, drop={self.drop}, fill_missing={self.fill_missing}, fill_values={self.fill_values})"
+
     def __validate_input(self):
 
         if self.df is None:

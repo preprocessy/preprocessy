@@ -115,6 +115,9 @@ class HandleOutlier:
                 f" type {type(self.third_quartile)}"
             )
 
+    def __repr__(self):
+        return f"HandleOutlier(remove_outliers={self.remove_outliers}, replace={self.replace}, first_quartile={self.first_quartile}, third_quartile={self.third_quartile})"
+
     def __return_quartiles(self, col):
         # return the quartile range or q1 and q3 values for the column passed as parameter
         train_df = self.train_df
@@ -142,10 +145,9 @@ class HandleOutlier:
         self.__validate_input()
 
         # parameters till now: train_df, cols, removeoutliers, replace
+        # if user has marked removeoutliers = True and wants outliers removed..
         train_df = self.train_df
-        if (
-            self.remove_outliers
-        ):  # if user has marked removeoutliers = True and wants outliers removed..
+        if self.remove_outliers:
             if len(self.cols) >= 1:
                 for col in self.cols:
                     self.__return_quartiles(col)
@@ -156,8 +158,8 @@ class HandleOutlier:
                     train_df = train_df[(train_df[col] >= q1)]
                     train_df = train_df[(train_df[col] <= q3)]
 
-        # if removeoutliers = False and replace=True ie user wants outliers replaced by a value to indicate these
-        # are outliers
+        # if removeoutliers = False and replace=True i.e. user wants outliers
+        # replaced by a value to indicate these are outliers
         elif self.replace:
             if len(self.cols) >= 1:
                 for col in self.cols:
@@ -168,6 +170,5 @@ class HandleOutlier:
                     q3 = q[1]
                     train_df[(train_df[col] < q1)] = -999
                     train_df[(train_df[col] > q3)] = -999
-        print(self.quartiles)
         self.train_df = train_df
         params["train_df"] = self.train_df

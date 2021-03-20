@@ -70,6 +70,9 @@ class KFold:
         self.shuffle = shuffle
         self.random_state = random_state
 
+    def __repr__(self):
+        return f"KFold(n_splits={self.n_splits}, shuffle={self.shuffle}, random_state={self.random_state})"
+
     def split(self, X, y=None):
         """Generate indices to split data into training and test set.
 
