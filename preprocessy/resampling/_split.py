@@ -85,7 +85,6 @@ class Split:
                     "Target label is not a valid dataframe.\nExpected object"
                     " type: pandas.core.series.Series"
                 )
-
         if self.test_size and self.train_size:
             if not isinstance(self.test_size, int) or not isinstance(
                 self.test_size, float
@@ -208,10 +207,10 @@ class Split:
             self.X = params["X"]
         if "y" in params.keys():
             self.y = params["y"]
-        if "test_split" in params.keys():
-            self.test_split = params["test_split"]
-        if "train_split" in params.keys():
-            self.train_split = params["train_split"]
+        if "test_size" in params.keys():
+            self.test_size = params["test_size"]
+        if "train_size" in params.keys():
+            self.train_size = params["train_size"]
         if "random_state" in params.keys():
             self.random_state = params["random_state"]
 
@@ -236,6 +235,10 @@ class Split:
             test = self.df.iloc[: self.test_size]
 
         if self.y is not None:
+            if not self.y.name:
+                raise ValueError(
+                    f"Target column needs to have a name. ${self.y.name} was provided."
+                )
             y_train = train[self.y.name]
             X_train = train.drop([self.y.name], axis=1)
             y_test = test[self.y.name]
@@ -245,5 +248,6 @@ class Split:
             params["y_train"] = y_train
             params["y_test"] = y_test
 
-        params["train"] = train
-        params["test"] = test
+        else:
+            params["train"] = train
+            params["test"] = test
