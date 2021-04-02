@@ -1,3 +1,10 @@
+import warnings
+
+import pandas as pd
+
+from ..exceptions import ArgumentsError
+
+
 class HandleOutlier:
 
     """Class for handling outliers on its own or according to users needs.
@@ -45,6 +52,69 @@ class HandleOutlier:
         self.first_quartile = 0.05
         self.third_quartile = 0.95
 
+    def __validate_input(self):
+
+        if self.train_df is None:
+            raise ValueError("Train dataframe should not be of None type")
+
+        if not isinstance(self.train_df, pd.core.frame.DataFrame):
+            raise TypeError(
+                "Train dataframe is not a valid dataframe.\nExpected object"
+                f" type: pandas.core.frame.DataFrame\n Received type {type(self.train_df)} of dataframe"
+            )
+
+        if not isinstance(self.cols, list):
+            raise TypeError(
+                f"'cols' should be of type list. Received {self.cols} of"
+                f" type {type(self.cols)}"
+            )
+
+        else:
+            for c in self.cols:
+                if not isinstance(c, str):
+                    raise TypeError(
+                        f"'column' should be of type str. Received {c} of"
+                        f" type {type(c)}"
+                    )
+                elif c not in self.train_df.columns:
+                    raise KeyError(f" '{c}' column is not present in train_df")
+
+        if not isinstance(self.remove_outliers, bool):
+            raise TypeError(
+                f"'remove_outliers' should be of type bool. Received {self.remove_outliers} of"
+                f" type {type(self.remove_outliers)}"
+            )
+
+        if not isinstance(self.replace, bool):
+            raise TypeError(
+                f"'replace' should be of type bool. Received {self.replace} of"
+                f" type {type(self.replace)}"
+            )
+
+        if self.remove_outliers and self.replace:
+            raise ArgumentsError(
+                "Both remove_outliers and replace arguments cannot be true"
+            )
+
+        if (not self.remove_outliers) and (not self.replace):
+            warnings.warn(
+                "remove_outliers and replace both are False, thus no operation will be performed on"
+                " dataframe, please specify either of the argument as True ",
+                UserWarning,
+            )
+
+        if not isinstance(self.first_quartile, float):
+            raise TypeError(
+                f"'first_quartile' should be of type float. Received {self.first_quartile} of"
+                f" type {type(self.first_quartile)}"
+            )
+
+        if not isinstance(self.third_quartile, float):
+            raise TypeError(
+                f"'third_quartile' should be of type float. Received {self.third_quartile} of"
+                f" type {type(self.third_quartile)}"
+            )
+
     def __return_quartiles(self, col):
         # return the quartile range or q1 and q3 values for the column passed as parameter
         train_df = self.train_df
@@ -56,17 +126,20 @@ class HandleOutlier:
 
     def handle_outliers(self, params):
 
-        self.train_df = params["train_df"]
+        if "train_df" in params.keys():
+            self.train_df = params["train_df"]
         if "cols" in params.keys():
             self.cols = params["cols"]
-        if "removeoutliers" in params.keys():
-            self.remove_outliers = params["removeoutliers"]
+        if "remove_outliers" in params.keys():
+            self.remove_outliers = params["remove_outliers"]
         if "replace" in params.keys():
             self.replace = params["replace"]
-        if "q1" in params.keys():
-            self.first_quartile = params["q1"]
-        if "q3" in params.keys():
-            self.third_quartile = params["q3"]
+        if "first_quartile" in params.keys():
+            self.first_quartile = params["first_quartile"]
+        if "third_quartile" in params.keys():
+            self.third_quartile = params["third_quartile"]
+
+        self.__validate_input()
 
         # parameters till now: train_df, cols, removeoutliers, replace
         train_df = self.train_df
