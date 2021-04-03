@@ -115,6 +115,21 @@ class HandleOutlier:
                 f" type {type(self.third_quartile)}"
             )
 
+        if self.first_quartile >= 1 or self.first_quartile <= 0:
+            raise ValueError(
+                f"Value of first quartile must range between 0-1(exclusive).\n Rececived value {self.first_quartile}"
+            )
+
+        if (self.third_quartile >= 1) or (self.third_quartile <= 0):
+            raise ValueError(
+                f"Value of third quartile must range between 0-1(exclusive).\n Rececived value {self.third_quartile}"
+            )
+
+        if self.first_quartile > self.third_quartile:
+            raise ValueError(
+                "Value of first quartile should not be greater than value of third quartile"
+            )
+
     def __repr__(self):
         return f"HandleOutlier(remove_outliers={self.remove_outliers}, replace={self.replace}, first_quartile={self.first_quartile}, third_quartile={self.third_quartile})"
 
