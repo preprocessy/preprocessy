@@ -5,7 +5,6 @@ import pytest
 from preprocessy.resampling import Split
 
 
-
 def test_without_target_col():
     df = pd.DataFrame(np.arange(1000).reshape(100, 10))
     params = {"X": df, "test_size": 0.2, "random_state": 420}
@@ -16,6 +15,7 @@ def test_without_target_col():
     assert params["test"].shape[0] == 20
     assert params["test"].shape[1] == 10
 
+
 def test_random_state():
     df = pd.DataFrame(np.arange(1000).reshape(100, 10))
     # test passes if function raises a TypeError
@@ -23,6 +23,7 @@ def test_random_state():
         params = {"X": df, "test_size": 0.2, "random_state": "hello"}
         split = Split()
         split.train_test_split(params=params)
+
 
 def test_without_target_label():
     df_x = pd.DataFrame(np.arange(1000).reshape(100, 10))
