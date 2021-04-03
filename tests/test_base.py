@@ -32,7 +32,7 @@ def split(params):
 
 
 @pytest.mark.parametrize(
-    "error, arg1, arg2, arg3, arg4, arg5",
+    "error, df_path, steps, config_file, params, custom_reader",
     [
         (ArgumentsError, None, None, None, None, None),
         (
@@ -69,15 +69,17 @@ def split(params):
         ),
     ],
 )
-def test_pipeline_arguments(error, arg1, arg2, arg3, arg4, arg5):
+def test_pipeline_arguments(
+    error, df_path, steps, config_file, params, custom_reader
+):
 
     with pytest.raises(error):
         Pipeline(
-            df_path=arg1,
-            steps=arg2,
-            config_file=arg3,
-            params=arg4,
-            custom_reader=arg5,
+            df_path=df_path,
+            steps=steps,
+            config_file=config_file,
+            params=params,
+            custom_reader=custom_reader,
         )
 
 
