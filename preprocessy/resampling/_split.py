@@ -27,6 +27,9 @@ class Split:
         self.train_size = None
         self.random_state = 69
 
+    def __repr__(self):
+        return f"Split(test_size={self.test_size}, train_size={self.train_size}, random_state={self.random_state})"
+
     def __validate_input(self):
 
         """Function to validate inputs received by train_test_split

@@ -36,6 +36,9 @@ class Scaler:
         self.new_df = None
         self.final_df = None
 
+    def __repr__(self):
+        return f"Scaler(type={self.type}, is_combined={self.is_combined}, critical_value={self.critical_value})"
+
     def __validate_input(self):
         if self.df is None:
             raise ValueError("Feature dataframe should not be of None type")

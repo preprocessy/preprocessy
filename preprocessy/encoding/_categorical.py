@@ -15,6 +15,9 @@ class EncodeData:
         self.ord_dict = None
         self.one_hot = False
 
+    def __repr__(self):
+        return f"EncodeData(target_label={self.target_label} ,train_df=None, test_df=None, cat_cols=None, ord_dict=None, one_hot={self.one_hot})"
+
     def __validate_inputs(self):
         """
         function to validate inputs
