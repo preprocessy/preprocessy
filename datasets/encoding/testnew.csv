@@ -1,4 +1,4 @@
-Test,Price,Negatives,Profession,Date
-Mahindra,"$12,000",-2,Student,12 Mar 2001
-Tata,"$32,987","-12,000",Teacher,14 Feb 2005
-Honda,$1667,-7,HOD,29 Jun 2016
+Test,Price,Negatives,Profession,Date,Float
+Mahindra,"$12,000",-2,Student,12 Mar 2001,2.3
+Tata,"$32,987","-12,000",Teacher,14 Feb 2005,4.2
+Honda,$1667,-7,HOD,29 Jun 2016,3.6
