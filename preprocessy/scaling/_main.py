@@ -1,7 +1,7 @@
 import numpy as np
 import pandas as pd
 
-from ..exceptions import ArgumentsError
+# from ..exceptions import ArgumentsError
 
 
 class Scaler:
@@ -28,29 +28,56 @@ class Scaler:
 
         """
 
-        self.df = None
+        # self.df = None
+        self.train_df = None
+        self.test_df = None
         self.type = None
         self.columns = None
         self.is_combined = False
-        self.critical_value = 0
-        self.new_df = None
-        self.final_df = None
+        self.threshold = None
+        self.new_train_df = None
+        self.new_test_df = None
+        self.final_train_df = None
+        self.final_test_df = None
+        self.categorical_columns = None
+        self.target_columns = None
 
+    
     def __repr__(self):
-        return f"Scaler(type={self.type}, is_combined={self.is_combined}, critical_value={self.critical_value})"
+        return f"Scaler(type={self.type}, is_combined={self.is_combined}, threshold={self.threshold})"
 
+    
     def __validate_input(self):
-        if self.df is None:
-            raise ValueError("Feature dataframe should not be of None type")
+        if self.train_df is None:
+            raise ValueError("Feature train dataframe should not be of None type")
 
-        if type(self.df) is not pd.core.frame.DataFrame:
+        if type(self.train_df) is not pd.core.frame.DataFrame:
             raise TypeError(
-                "Feature dataframe is not a valid dataframe.\nExpected object"
+                "Feature train dataframe is not a valid dataframe.\nExpected object"
                 " type: pandas.core.frame.DataFrame"
             )
 
+        if self.test_df is not None:
+            if type(self.test_df) is not pd.core.frame.DataFrame:
+                raise TypeError(
+                    "Feature test dataframe is not a valid dataframe.\nExpected object"
+                    " type: pandas.core.frame.DataFrame"
+                )
+        
+        if self.test_df is not None:
+            if not isinstance(self.categorical_columns, list):
+                    raise TypeError(
+                        f"Expected list type for argument columns, got {type(self.columns)}"
+                    )
+
+        if not isinstance(self.target_columns, list):
+               raise TypeError(
+                    f"Expected list type for argument columns, got {type(self.columns)}"
+                )
+
         if self.type is None:
             raise ValueError("Feature type should not be of None type")
+
         else:
             if type(self.type) is not str:
                 raise TypeError('Expected string value for argument "type" ')
@@ -65,11 +92,11 @@ class Scaler:
                 )
 
         if self.columns is not None:
-            if type(self.columns) is not list:
+            if not isinstance(self.columns, list):
                 raise TypeError(
                     f"Expected list type for argument columns, got {type(self.columns)}"
                 )
-            column_list = list(self.df.keys())
+            column_list = list(self.train_df.keys())
             for column in self.columns:
                 if type(column) != str:
                     raise TypeError(
@@ -80,71 +107,133 @@ class Scaler:
                         f"Column {column} does not exist in dataframe"
                     )
 
-        self.new_df = self.df
+        if self.threshold is not None:
+            if type(self.threshold) is not dict:
+                raise TypeError(
+                            f"Expected dict type threshold, got {type(column)}"
+                        )
+            for column in self.threshold.keys():
+                if column not in list(self.train_df.keys()):
+                    raise ArgumentsError(
+                        f"Column {column} does not exist in dataframe"
+                    )
 
-    def __min_max_scaler(self):
+        self.new_train_df = self.train_df
+        self.new_test_df = self.test_df
+
+
+    def isNumeric(self,column):
+        #b => bool, i => int (signed), u => unsigned int, f => float, c => complex
+        return column.dtype.kind in 'biufc'
+
+
+    def __min_max_scaler_helper(self,df):
+        new_df = df.copy()
         if not self.is_combined:
             for column in self.columns:
-                new_col = np.array([val for val in self.df[column]])
-                max = np.max(new_col)
-                min = np.min(new_col)
-                diff = max - min
-                for i in range(len(new_col)):
-                    new_col[i] = (new_col[i] - min) / diff
-                self.new_df[column] = new_col
+                if self.categorical_columns is not None:
+                    if column in self.categorical_columns:
+                        continue
+                    if column in self.target_columns:
+                        continue
+                if not self.isNumeric(df[column]):
+                    raise TypeError(
+                        f"Unexpected datatype of column, {type(column)}"
+                    )
+                cur_col = df[column]
+                max = cur_col.max()
+                min = cur_col.min()
+                cur_col = (cur_col - min) / (max - min)
+                new_df[column] = cur_col
         else:
-            new_combined_arr = []
-            for column in self.columns:
-                for ele in self.df[column]:
-                    new_combined_arr.append(ele)
-            new_combined_arr = np.array(new_combined_arr)
-            max = np.max(new_combined_arr)
-            min = np.min(new_combined_arr)
+            max = df.to_numpy().max()
+            min = df.to_numpy().min()
             diff = max - min
             for column in self.columns:
-                new_col = [val for val in self.df[column]]
-                for i in range(len(new_col)):
-                    new_col[i] = (new_col[i] - min) / diff
-                self.new_df[column] = new_col
+                if column in self.categorical_columns or self.target_columns:
+                    continue
+                if not isNumeric(df[column]):
+                    raise TypeError(
+                        f"Unexpected datatype of column, {type(column)}"
+                    )
+                cur_col = df[column]
+                cur_col = (cur_col - min) / (max - min)
+                new_df[column] = cur_col
+        return new_df
 
-        return self.new_df
+
+    def __min_max_scaler(self):
+        if self.train_df is not None:
+            self.new_train_df = self.__min_max_scaler_helper(self.train_df)
+        if self.test_df is not None:
+            self.new_test_df = self. __min_max_scaler_helper(self.test_df)
+        return self.new_train_df,self.new_test_df
+
+        
+    def __binary_scaler_helper(self,df):
+        new_df = df.copy()
+        for column in self.columns:
+            if not self.isNumeric(df[column]):
+                    raise TypeError(
+                        f"Unexpected datatype of column, {type(column)}"
+                    )
+            cur_col = df[column]
+            cur_thresh = 0
+            if column in self.threshold:
+                cur_thresh = self.threshold[column]
+            new_df[column] = df[column].apply(lambda val: 0 if val <= cur_thresh else 1)
+        return new_df
+
 
     def __binary_scaler(self):
-        for column in self.columns:
-            new_arr = [val for val in self.df[column]]
-            for i in range(len(new_arr)):
-                if new_arr[i] <= self.critical_value:
-                    new_arr[i] = 0
-                else:
-                    new_arr[i] = 1
-            self.new_df[column] = new_arr
+        if self.train_df is not None:
+            self.new_train_df = self.__binary_scaler_helper(self.train_df)
+        if self.test_df is not None:
+            self.new_test_df =  self.__binary_scaler_helper(self.test_df)
+        return self.new_train_df,self.new_test_df
 
-        return self.new_df
+    
 
-    def __standard_scaler(self):
+    def __standard_scaler_helper(self,df):
+        new_df = df.copy()
         if not self.is_combined:
             for column in self.columns:
-                mean = self.new_df[column].mean()
-                std = self.new_df[column].std()
-                new_col = [ele for ele in self.df[column]]
-                for i in range(len(new_col)):
-                    new_col[i] = (new_col[i] - mean) / std
-                self.new_df[column] = new_col
+                if self.categorical_columns is not None:
+                    if column in self.categorical_columns:
+                        continue
+                    if column in self.target_columns:
+                        continue
+                if not self.isNumeric(df[column]):
+                    raise TypeError(
+                        f"Unexpected datatype of column, {type(column)}"
+                    )
+                cur_col = df[column]
+                mean = cur_col.mean()
+                std = cur_col.std()
+                cur_col = (cur_col - mean) / std
+                new_df[column] = cur_col
         else:
-            new_combined_arr = []
+            mean = df.to_numpy().mean()
+            std = df.to_numpy().std()
             for column in self.columns:
-                for ele in self.df[column]:
-                    new_combined_arr.append(ele)
-            new_combined_arr = np.array(new_combined_arr)
-            mean = new_combined_arr.mean()
-            std = new_combined_arr.std()
-            for column in self.columns:
-                new_col = [val for val in self.df[column]]
-                for i in range(len(new_col)):
-                    new_col[i] = (new_col[i] - mean) / std
-                self.new_df[column] = new_col
+                if column in self.categorical_columns or self.target_columns:
+                    continue
+                if not self.isNumeric(df[column]):
+                    raise TypeError(
+                        f"Unexpected datatype of column, {type(column)}"
+                    )
+                cur_col = df[column]
+                cur_col = (cur_col - mean) / std
+        return new_df
 
-        return self.new_df
+
+    def __standard_scaler(self):
+        if self.train_df is not None:
+            self.new_train_df = self.__standard_scaler_helper(self.train_df)
+        if self.test_df is not None:
+            self.new_test_df =  self.__standard_scaler_helper(self.test_df)
+        return self.new_train_df,self.new_test_df
+
 
     def execute(self, params):
 
@@ -156,16 +245,25 @@ class Scaler:
             self.columns = params["columns"]
         if "is_combined" in params.keys():
             self.is_combined = params["is_combined"]
-        if "critical_value" in params.keys():
-            self.critical_value = params["critical_value"]
+        if "threshold" in params.keys():
+            self.threshold = params["threshold"]
+        if "categorical_columns" in params.keys():
+            self.categorical_columns = params["categorical_columns"]
+        if "target_columns" in params.keys():
+            self.target_columns = params["target_columns"]
+        if "train_df" in params.keys():
+            self.train_df = params["train_df"]
+        if "test_df" in params.keys():
+            self.test_df = params["test_df"]
 
         self.__validate_input()
 
         if self.type == "MinMaxScaler":
-            self.final_df = self.__min_max_scaler()
+            self.final_train_df,self.final_test_df = self.__min_max_scaler()
         elif self.type == "BinaryScaler":
-            self.final_df = self.__binary_scaler()
+            self.final_train_df,self.final_test_df = self.__binary_scaler()
         elif self.type == "StandardScaler":
-            self.final_df = self.__standard_scaler()
+            self.final_train_df,self.final_test_df = self.__standard_scaler()
 
-        params["df"] = self.final_df
+        params["train_df"] = self.final_train_df
+        params["test_df"] = self.final_test_df
