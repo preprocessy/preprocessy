@@ -31,7 +31,7 @@ class Scaler:
         # self.df = None
         self.train_df = None
         self.test_df = None
-        self.type = None
+        self.type = "StandardScaler"
         self.columns = None
         self.is_combined = False
         self.threshold = None
@@ -62,17 +62,6 @@ class Scaler:
                 raise TypeError(
                     "Feature test dataframe is not a valid dataframe.\nExpected object"
                     " type: pandas.core.frame.DataFrame"
-                )
-        
-        if self.test_df is not None:
-            if not isinstance(self.categorical_columns, list):
-                    raise TypeError(
-                        f"Expected list type for argument columns, got {type(self.columns)}"
-                    )
-
-        if not isinstance(self.target_columns, list):
-               raise TypeError(
-                    f"Expected list type for argument columns, got {type(self.columns)}"
                 )
 
         if self.type is None:
@@ -117,6 +106,17 @@ class Scaler:
                     raise ArgumentsError(
                         f"Column {column} does not exist in dataframe"
                     )
+
+        if self.categorical_columns is not None:
+            if not isinstance(self.categorical_columns, list):
+                    raise TypeError(
+                        f"Expected list type for argument columns, got {type(self.columns)}"
+                    )
+
+        if not isinstance(self.target_columns, list):
+               raise TypeError(
+                    f"Expected list type for argument columns, got {type(self.columns)}"
+                )
 
         self.new_train_df = self.train_df
         self.new_test_df = self.test_df
@@ -246,16 +246,16 @@ class Scaler:
             self.columns = params["columns"]
         if "is_combined" in params.keys():
             self.is_combined = params["is_combined"]
+        if "train_df" in params.keys():
+            self.train_df = params["train_df"]
+        if "test_df" in params.keys():
+            self.test_df = params["test_df"]
         if "threshold" in params.keys():
             self.threshold = params["threshold"]
         if "categorical_columns" in params.keys():
             self.categorical_columns = params["categorical_columns"]
         if "target_columns" in params.keys():
             self.target_columns = params["target_columns"]
-        if "train_df" in params.keys():
-            self.train_df = params["train_df"]
-        if "test_df" in params.keys():
-            self.test_df = params["test_df"]
 
         self.__validate_input()
 
