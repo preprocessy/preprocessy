@@ -9,6 +9,7 @@ dataframe1 = pd.read_csv("datasets/encoding/test2.csv")
 dataframe2 = pd.read_csv("datasets/encoding/test.csv")
 array = np.random.random((5, 5))
 
+
 @pytest.mark.parametrize(
     "test_input, error",
     [
@@ -32,6 +33,7 @@ def test_incorrect_input_type(test_input, error):
         scaler = Scaler()
         scaler.execute(params=test_input)
 
+
 @pytest.mark.parametrize(
     "test_input",
     [
@@ -42,7 +44,7 @@ def test_incorrect_input_type(test_input, error):
                 "columns": ["Negatives"],
                 "is_combined": True,
                 "threshold": {"Negatives":-10},
-                "target_columns":["Test"],
+                "target_columns": ["Test"],
             }
         ),
         (
@@ -52,7 +54,7 @@ def test_incorrect_input_type(test_input, error):
                 "columns": ["Negatives"],
                 "is_combined": True,
                 "threshold": {"Negatives":-1},
-                "target_columns":["Test"],
+                "target_columns": ["Test"],
             }
         ),
         {
@@ -61,7 +63,7 @@ def test_incorrect_input_type(test_input, error):
             "columns": ["Negatives"],
             "is_combined": True,
             "threshold": {"Negatives":-1300},
-            "target_columns":["Test"],
+            "target_columns": ["Test"],
         },
     ],
 )
@@ -90,8 +92,8 @@ def test_BinaryScaler_output(test_input):
                 "type": "MinMaxScaler",
                 "columns": ["Distance"],
                 "is_combined": False,
-                "target_columns":["Capitals","Other Capitals"],
-                "categorical_columns":["Capitals","Other Capitals"],
+                "target_columns": ["Capitals", "Other Capitals"],
+                "categorical_columns": ["Capitals", "Other Capitals"],
             }
         ),
         (
@@ -100,8 +102,8 @@ def test_BinaryScaler_output(test_input):
                 "type": "MinMaxScaler",
                 "columns": ["Distance"],
                 "is_combined": True,
-                "target_columns":["Capitals","Other Capitals"],
-                "categorical_columns":["Capitals","Other Capitals"],
+                "target_columns": ["Capitals", "Other Capitals"],
+                "categorical_columns": ["Capitals", "Other Capitals"],
             }
         ),
         (
@@ -110,8 +112,8 @@ def test_BinaryScaler_output(test_input):
                 "type": "StandardScaler",
                 "columns": ["Distance"],
                 "is_combined": False,
-                "target_columns":["Capitals","Other Capitals"],
-                "categorical_columns":["Capitals","Other Capitals"],
+                "target_columns": ["Capitals", "Other Capitals"],
+                "categorical_columns": ["Capitals", "Other Capitals"],
             }
         ),
         (
@@ -120,8 +122,8 @@ def test_BinaryScaler_output(test_input):
                 "type": "StandardScaler",
                 "columns": ["Distance"],
                 "is_combined": True,
-                "target_columns":["Capitals","Other Capitals"],
-                "categorical_columns":["Capitals","Other Capitals"],
+                "target_columns": ["Capitals", "Other Capitals"],
+                "categorical_columns": ["Capitals", "Other Capitals"],
             }
         ),
     ],

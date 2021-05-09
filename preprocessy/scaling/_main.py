@@ -39,7 +39,7 @@ class Scaler:
         self.final_test_df = None
         self.categorical_columns = None
         self.target_columns = None
-   
+
     def __repr__(self):
         return f"Scaler(type={self.type}, is_combined={self.is_combined}, threshold={self.threshold})"
 
@@ -95,8 +95,8 @@ class Scaler:
         if self.threshold is not None:
             if type(self.threshold) is not dict:
                 raise TypeError(
-                            f"Expected dict type threshold, got {type(column)}"
-                        )
+                    f"Expected dict type threshold, got {type(column)}"
+                )
             for column in self.threshold.keys():
                 if column not in list(self.train_df.keys()):
                     raise ArgumentsError(
@@ -105,23 +105,23 @@ class Scaler:
 
         if self.categorical_columns is not None:
             if not isinstance(self.categorical_columns, list):
-                    raise TypeError(
-                        f"Expected list type for argument columns, got {type(self.columns)}"
-                    )
-
-        if not isinstance(self.target_columns, list):
-               raise TypeError(
+                raise TypeError(
                     f"Expected list type for argument columns, got {type(self.columns)}"
                 )
+
+        if not isinstance(self.target_columns, list):
+            raise TypeError(
+                f"Expected list type for argument columns, got {type(self.columns)}"
+            )
 
         self.new_train_df = self.train_df
         self.new_test_df = self.test_df
 
-    def isNumeric(self,column):
-        #b => bool, i => int (signed), u => unsigned int, f => float, c => complex
+    def isNumeric(self, column):
+        # b => bool, i => int (signed), u => unsigned int, f => float, c => complex
         return column.dtype.kind in 'biufc'
 
-    def __min_max_scaler_helper(self,df):
+    def __min_max_scaler_helper(self, df):
         new_df = df.copy()
         if not self.is_combined:
             for column in self.columns:
@@ -147,11 +147,10 @@ class Scaler:
                 temp_df = df.copy()
             max = temp_df.to_numpy().max()
             min = temp_df.to_numpy().min()
-            diff = max - min
             for column in self.columns:
                 if column in self.categorical_columns or self.target_columns:
                     continue
-                if not isNumeric(df[column]):
+                if not self.isNumeric(df[column]):
                     raise TypeError(
                         f"Unexpected datatype of column, {type(column)}"
                     )
@@ -167,14 +166,13 @@ class Scaler:
             self.new_test_df = self. __min_max_scaler_helper(self.test_df)
         return self.new_train_df,self.new_test_df
 
-    def __binary_scaler_helper(self,df):
+    def __binary_scaler_helper(self, df):
         new_df = df.copy()
         for column in self.columns:
             if not self.isNumeric(df[column]):
-                    raise TypeError(
-                        f"Unexpected datatype of column, {type(column)}"
-                    )
-            cur_col = df[column]
+                raise TypeError(
+                    f"Unexpected datatype of column, {type(column)}"
+                )
             cur_thresh = 0
             if self.threshold is not None:
                 if column in self.threshold.keys():
@@ -187,10 +185,10 @@ class Scaler:
         if self.train_df is not None:
             self.new_train_df = self.__binary_scaler_helper(self.train_df)
         if self.test_df is not None:
-            self.new_test_df =  self.__binary_scaler_helper(self.test_df)
+            self.new_test_df = self.__binary_scaler_helper(self.test_df)
         return self.new_train_df,self.new_test_df
 
-    def __standard_scaler_helper(self,df):
+    def __standard_scaler_helper(self, df):
         new_df = df.copy()
         if not self.is_combined:
             for column in self.columns:
