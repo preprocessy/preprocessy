@@ -164,7 +164,7 @@ class Scaler:
             self.new_train_df = self.__min_max_scaler_helper(self.train_df)
         if self.test_df is not None:
             self.new_test_df = self. __min_max_scaler_helper(self.test_df)
-        return self.new_train_df,self.new_test_df
+        return self.new_train_df, self.new_test_df
 
     def __binary_scaler_helper(self, df):
         new_df = df.copy()
@@ -186,7 +186,7 @@ class Scaler:
             self.new_train_df = self.__binary_scaler_helper(self.train_df)
         if self.test_df is not None:
             self.new_test_df = self.__binary_scaler_helper(self.test_df)
-        return self.new_train_df,self.new_test_df
+        return self.new_train_df, self.new_test_df
 
     def __standard_scaler_helper(self, df):
         new_df = df.copy()
@@ -207,7 +207,7 @@ class Scaler:
                 cur_col = (cur_col - mean) / std
                 new_df[column] = cur_col
         else:
-            #getting columns rid of categorical ones
+            # getting columns rid of categorical ones
             temp_df = None
             if self.categorical_columns is not None:
                 temp_df = df.drop(columns=self.categorical_columns)
@@ -230,8 +230,8 @@ class Scaler:
         if self.train_df is not None:
             self.new_train_df = self.__standard_scaler_helper(self.train_df)
         if self.test_df is not None:
-            self.new_test_df =  self.__standard_scaler_helper(self.test_df)
-        return self.new_train_df,self.new_test_df
+            self.new_test_df = self.__standard_scaler_helper(self.test_df)
+        return self.new_train_df, self.new_test_df
 
     def execute(self, params):
 
@@ -257,11 +257,11 @@ class Scaler:
         self.__validate_input()
 
         if self.type == "MinMaxScaler":
-            self.final_train_df,self.final_test_df = self.__min_max_scaler()
+            self.final_train_df, self.final_test_df = self.__min_max_scaler()
         elif self.type == "BinaryScaler":
-            self.final_train_df,self.final_test_df = self.__binary_scaler()
+            self.final_train_df, self.final_test_df = self.__binary_scaler()
         elif self.type == "StandardScaler":
-            self.final_train_df,self.final_test_df = self.__standard_scaler()
+            self.final_train_df, self.final_test_df = self.__standard_scaler()
 
         params["train_df"] = self.final_train_df
         params["test_df"] = self.final_test_df
