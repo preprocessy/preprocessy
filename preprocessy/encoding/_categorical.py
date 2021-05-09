@@ -13,6 +13,7 @@ class EncodeData:
 
         self.cat_cols = None
         self.ord_dict = None
+        self.ord_cols = []
         self.one_hot = False
 
     def __repr__(self):
@@ -121,7 +122,7 @@ class EncodeData:
             self.cat_cols = []
             for col in self.train_df.columns:
                 if col not in self.ord_cols:
-                    if (
+                    if self.train_df[col].dtype == "object" and (
                         "$" in self.train_df[col][0]
                         or self.train_df[col].str.contains(",").any()
                     ):
@@ -156,7 +157,6 @@ class EncodeData:
         Function to encode ordinal columns as provided by user in the form of a dictionary. Format for the
         parameter is specified at the top during initialization.
         """
-        self.ord_cols = []
         for key, value in self.ord_dict.items():
             if key in self.train_df.columns:
                 if self.test_df is not None:
