@@ -207,7 +207,7 @@ class Scaler:
                 cur_col = (cur_col - mean) / std
                 new_df[column] = cur_col
         else:
-            # getting columns rid of categorical ones
+            # getting rid of categorical columns
             temp_df = None
             if self.categorical_columns is not None:
                 temp_df = df.drop(columns=self.categorical_columns)
