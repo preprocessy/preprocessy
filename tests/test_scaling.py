@@ -110,7 +110,7 @@ def test_BinaryScaler_output(test_input):
             {
                 "train_df": dataframe2,
                 "type": "MinMaxScaler",
-                "columns": ["Distance"],
+                "columns": ["Negatives"],
                 "is_combined": False,
                 "target_columns": ["Test"],
                 "categorical_columns": ["Price", "Profession", "Date"],
@@ -120,7 +120,7 @@ def test_BinaryScaler_output(test_input):
             {
                 "train_df": dataframe2,
                 "type": "MinMaxScaler",
-                "columns": ["Distance"],
+                "columns": ["Negatives"],
                 "is_combined": True,
                 "target_columns": ["Test"],
                 "categorical_columns": ["Price", "Profession", "Date"],
