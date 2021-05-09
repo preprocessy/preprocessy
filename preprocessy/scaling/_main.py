@@ -1,7 +1,7 @@
 import numpy as np
 import pandas as pd
 
-# from ..exceptions import ArgumentsError
+from ..exceptions import ArgumentsError
 
 
 class Scaler:
