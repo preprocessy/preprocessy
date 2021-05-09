@@ -146,6 +146,10 @@ class Scaler:
                 cur_col = (cur_col - min) / (max - min)
                 new_df[column] = cur_col
         else:
+            #getting columns rid of categorical ones
+            temp_df = df.drop(columns=self.categorical_columns)
+            mean = temp_df.to_numpy().mean()
+            std = temp_df.to_numpy().std()
             max = df.to_numpy().max()
             min = df.to_numpy().min()
             diff = max - min
@@ -215,8 +219,10 @@ class Scaler:
                 cur_col = (cur_col - mean) / std
                 new_df[column] = cur_col
         else:
-            mean = df.to_numpy().mean()
-            std = df.to_numpy().std()
+            #getting columns rid of categorical ones
+            temp_df = df.drop(columns=self.categorical_columns)
+            mean = temp_df.to_numpy().mean()
+            std = temp_df.to_numpy().std()
             for column in self.columns:
                 if column in self.categorical_columns or self.target_columns:
                     continue

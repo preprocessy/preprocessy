@@ -92,7 +92,8 @@ def test_BinaryScaler_output(test_input):
                 "type": "MinMaxScaler",
                 "columns": ["Distance"],
                 "is_combined": False,
-                "target_columns":["Capitals","Other Capitals"]
+                "target_columns":["Capitals","Other Capitals"],
+                "categorical_columns":["Capitals","Other Capitals"]
             }
         ),
         (
@@ -101,7 +102,8 @@ def test_BinaryScaler_output(test_input):
                 "type": "MinMaxScaler",
                 "columns": ["Distance"],
                 "is_combined": True,
-                "target_columns":["Capitals","Other Capitals"]
+                "target_columns":["Capitals","Other Capitals"],
+                "categorical_columns":["Capitals","Other Capitals"]
             }
         ),
         (
@@ -110,7 +112,8 @@ def test_BinaryScaler_output(test_input):
                 "type": "StandardScaler",
                 "columns": ["Distance"],
                 "is_combined": False,
-                "target_columns":["Capitals","Other Capitals"]
+                "target_columns":["Capitals","Other Capitals"],
+                "categorical_columns":["Capitals","Other Capitals"]
             }
         ),
         (
@@ -119,7 +122,8 @@ def test_BinaryScaler_output(test_input):
                 "type": "StandardScaler",
                 "columns": ["Distance"],
                 "is_combined": True,
-                "target_columns":["Capitals","Other Capitals"]
+                "target_columns":["Capitals","Other Capitals"],
+                "categorical_columns":["Capitals","Other Capitals"]
             }
         ),
     ],
