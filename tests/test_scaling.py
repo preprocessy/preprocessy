@@ -14,7 +14,7 @@ array = np.random.random((5, 5))
     "test_input, error",
     [
         ({}, ValueError),
-        ({"train_df": dataframe1}, ValueError),
+        ({"train_df": dataframe1}, TypeError),
         ({"train_df": array}, TypeError),
         ({"train_df": dataframe1, "type": [5]}, TypeError),
         (
