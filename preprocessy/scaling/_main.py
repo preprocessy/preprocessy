@@ -147,7 +147,11 @@ class Scaler:
                 new_df[column] = cur_col
         else:
             #getting columns rid of categorical ones
-            temp_df = df.drop(columns=self.categorical_columns)
+            temp_df = None
+            if self.categorical_columns is not None:
+                temp_df = df.drop(columns=self.categorical_columns)
+            else:
+                temp_df = df.copy()
             mean = temp_df.to_numpy().mean()
             std = temp_df.to_numpy().std()
             max = df.to_numpy().max()
@@ -220,7 +224,11 @@ class Scaler:
                 new_df[column] = cur_col
         else:
             #getting columns rid of categorical ones
-            temp_df = df.drop(columns=self.categorical_columns)
+            temp_df = None
+            if self.categorical_columns is not None:
+                temp_df = df.drop(columns=self.categorical_columns)
+            else:
+                temp_df = df.copy()
             mean = temp_df.to_numpy().mean()
             std = temp_df.to_numpy().std()
             for column in self.columns:
