@@ -269,3 +269,17 @@ class Scaler:
 
         params["train_df"] = self.final_train_df
         params["test_df"] = self.final_test_df
+
+# df = pd.read_csv('test.csv')
+# print(df.head())
+# scaler = Scaler()
+# params = {
+#                 "train_df": df,
+#                 "type": "BinaryScaler",
+#                 "columns": ["Negatives"],
+#                 "is_combined": True,
+#                 "threshold": {"Negatives":-10},
+#                 "target_columns":["Test"]
+#         }
+# scaler.execute(params)
+# print(params['train_df'].head())
