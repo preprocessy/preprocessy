@@ -38,7 +38,7 @@ class Scaler:
         self.final_train_df = None
         self.final_test_df = None
         self.categorical_columns = None
-        self.target_columns = None
+        self.target_col = None
 
     def __repr__(self):
         return f"Scaler(type={self.type}, is_combined={self.is_combined}, threshold={self.threshold})"
@@ -60,21 +60,18 @@ class Scaler:
                     " type: pandas.core.frame.DataFrame"
                 )
 
-        if self.type is None:
-            raise ValueError("Feature type should not be of None type")
+        if type(self.type) is not str:
+            raise TypeError('Expected string value for argument "type" ')
 
-        else:
-            if type(self.type) is not str:
-                raise TypeError('Expected string value for argument "type" ')
-            if self.type not in [
-                "MinMaxScaler",
-                "BinaryScaler",
-                "StandardScaler",
-            ]:
-                raise ArgumentsError(
-                    'Allowed argument for type is "MinMaxScaler" or'
-                    f' "BinaryScaler" or "StandardScaler", got {self.type}'
-                )
+        if self.type not in [
+            "MinMaxScaler",
+            "BinaryScaler",
+            "StandardScaler",
+        ]:
+            raise ArgumentsError(
+                'Allowed argument for type is "MinMaxScaler" or'
+                f' "BinaryScaler" or "StandardScaler", got {self.type}'
+            )
 
         if self.columns is not None:
             if not isinstance(self.columns, list):
@@ -106,30 +103,31 @@ class Scaler:
         if self.categorical_columns is not None:
             if not isinstance(self.categorical_columns, list):
                 raise TypeError(
-                    f"Expected list type for argument columns, got {type(self.columns)}"
+                    f"Expected list type for argument categorical_columns, got {type(self.columns)}"
                 )
 
-        if not isinstance(self.target_columns, list):
+        if not isinstance(self.target_col, str):
             raise TypeError(
-                f"Expected list type for argument columns, got {type(self.columns)}"
+                f"Expected str type for argument target_col, got {type(self.columns)}"
             )
 
         self.new_train_df = self.train_df
         self.new_test_df = self.test_df
 
     def isNumeric(self, column):
-        # b => bool, i => int (signed), u => unsigned int, f => float, c => complex
-        return column.dtype.kind in 'biufc'
+        # i => int (signed), u => unsigned int, f => float, c => complex
+        return column.dtype.kind in 'iufc'
 
     def __min_max_scaler_helper(self, df):
         new_df = df.copy()
+        to_be_dropped_columns = list()
+        if self.categorical_columns is not None:
+            to_be_dropped_columns = self.categorical_columns
+        to_be_dropped_columns.append(self.target_col)
         if not self.is_combined:
             for column in self.columns:
-                if self.categorical_columns is not None:
-                    if column in self.categorical_columns:
-                        continue
-                    if column in self.target_columns:
-                        continue
+                if column in to_be_dropped_columns:
+                    continue
                 if not self.isNumeric(df[column]):
                     raise TypeError(
                         f"Unexpected datatype of column, {type(column)}"
@@ -140,13 +138,11 @@ class Scaler:
                 cur_col = (cur_col - min) / (max - min)
                 new_df[column] = cur_col
         else:
-            temp_df = df.copy()
-            dropped_columns = list(set(self.categorical_columns + self.target_columns))
-            temp_df = temp_df.drop(columns=dropped_columns)
+            temp_df = new_df.drop(columns=to_be_dropped_columns)
             max = temp_df.to_numpy().max()
             min = temp_df.to_numpy().min()
             for column in self.columns:
-                if column in (self.categorical_columns or self.target_columns):
+                if column in to_be_dropped_columns:
                     continue
                 if not self.isNumeric(df[column]):
                     raise TypeError(
@@ -164,16 +160,21 @@ class Scaler:
 
     def __binary_scaler_helper(self, df):
         new_df = df.copy()
+        to_be_dropped_columns = list()
+        if self.categorical_columns is not None:
+            to_be_dropped_columns = self.categorical_columns
+        to_be_dropped_columns.append(self.target_col)
         for column in self.columns:
             if not self.isNumeric(df[column]):
                 raise TypeError(
                     f"Unexpected datatype of column, {type(column)}"
                 )
+            if column in to_be_dropped_columns:
+                continue
             cur_thresh = 0
             if self.threshold is not None:
                 if column in self.threshold.keys():
                     cur_thresh = self.threshold[column]
-            print(cur_thresh)
             new_df[column] = df[column].apply(lambda val: 0 if val <= cur_thresh else 1)
         return new_df
 
@@ -186,13 +187,14 @@ class Scaler:
 
     def __standard_scaler_helper(self, df):
         new_df = df.copy()
+        to_be_dropped_columns = list()
+        if self.categorical_columns is not None:
+            to_be_dropped_columns = self.categorical_columns
+        to_be_dropped_columns.append(self.target_col)
         if not self.is_combined:
             for column in self.columns:
-                if self.categorical_columns is not None:
-                    if column in self.categorical_columns:
-                        continue
-                    if column in self.target_columns:
-                        continue
+                if column in to_be_dropped_columns:
+                    continue
                 if not self.isNumeric(df[column]):
                     raise TypeError(
                         f"Unexpected datatype of column, {type(column)}"
@@ -203,14 +205,11 @@ class Scaler:
                 cur_col = (cur_col - mean) / std
                 new_df[column] = cur_col
         else:
-            # getting rid of categorical columns
-            temp_df = df.copy()
-            dropped_columns = list(set(self.categorical_columns + self.target_columns))
-            temp_df = temp_df.drop(columns=dropped_columns)
+            temp_df = new_df.drop(columns=to_be_dropped_columns)
             mean = temp_df.stack().mean()
             std = temp_df.stack().std()
             for column in self.columns:
-                if column in (self.categorical_columns or self.target_columns):
+                if column in to_be_dropped_columns:
                     continue
                 if not self.isNumeric(df[column]):
                     raise TypeError(
@@ -228,8 +227,6 @@ class Scaler:
 
     def execute(self, params):
 
-        if "df" in params.keys():
-            self.df = params["df"]
         if "type" in params.keys():
             self.type = params["type"]
         if "columns" in params.keys():
@@ -244,8 +241,8 @@ class Scaler:
             self.threshold = params["threshold"]
         if "categorical_columns" in params.keys():
             self.categorical_columns = params["categorical_columns"]
-        if "target_columns" in params.keys():
-            self.target_columns = params["target_columns"]
+        if "target_col" in params.keys():
+            self.target_col = params["target_col"]
 
         self.__validate_input()
 
