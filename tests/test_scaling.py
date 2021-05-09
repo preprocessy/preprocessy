@@ -131,5 +131,9 @@ def test_BinaryScaler_output(test_input):
 def test_MinMaxScaler_output(test_input):
     scaler = Scaler()
     scaler.execute(params=test_input)
-    assert test_input["train_df"]["Distance"].values.all() >= 0
-    assert test_input["train_df"]["Distance"].values.all() <= 1
+    if "Distance" in test_input["train_df"].keys():   
+        assert test_input["train_df"]["Distance"].values.all() >= 0
+        assert test_input["train_df"]["Distance"].values.all() <= 1
+    else:
+        assert test_input["train_df"]["Negatives"].values.all() >= 0
+        assert test_input["train_df"]["Negatives"].values.all() <= 1
