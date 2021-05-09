@@ -152,10 +152,8 @@ class Scaler:
                 temp_df = df.drop(columns=self.categorical_columns)
             else:
                 temp_df = df.copy()
-            mean = temp_df.to_numpy().mean()
-            std = temp_df.to_numpy().std()
-            max = df.to_numpy().max()
-            min = df.to_numpy().min()
+            max = temp_df.to_numpy().max()
+            min = temp_df.to_numpy().min()
             diff = max - min
             for column in self.columns:
                 if column in self.categorical_columns or self.target_columns:
