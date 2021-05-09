@@ -108,22 +108,22 @@ def test_BinaryScaler_output(test_input):
         ),
         (
             {
-                "train_df": dataframe1,
-                "type": "StandardScaler",
+                "train_df": dataframe2,
+                "type": "MinMaxScaler",
                 "columns": ["Distance"],
                 "is_combined": False,
-                "target_columns": ["Capitals", "Other Capitals"],
-                "categorical_columns": ["Capitals", "Other Capitals"],
+                "target_columns": ["Test"],
+                "categorical_columns": ["Price", "Profession", "Date"],
             }
         ),
         (
             {
-                "train_df": dataframe1,
-                "type": "StandardScaler",
+                "train_df": dataframe2,
+                "type": "MinMaxScaler",
                 "columns": ["Distance"],
                 "is_combined": True,
-                "target_columns": ["Capitals", "Other Capitals"],
-                "categorical_columns": ["Capitals", "Other Capitals"],
+                "target_columns": ["Test"],
+                "categorical_columns": ["Price", "Profession", "Date"],
             }
         ),
     ],
