@@ -14,16 +14,16 @@ array = np.random.random((5, 5))
     "test_input, error",
     [
         ({}, ValueError),
-        ({"df": dataframe1}, ValueError),
-        ({"df": array}, TypeError),
-        ({"df": dataframe1, "type": [5]}, TypeError),
+        ({"train_df": dataframe1}, ValueError),
+        ({"train_df": array}, TypeError),
+        ({"train_df": dataframe1, "type": [5]}, TypeError),
         (
-            {"df": dataframe1, "type": "MinMaxScaler", "columns": "Distance"},
+            {"train_df": dataframe1, "type": "MinMaxScaler", "columns": "Distance"},
             TypeError,
         ),
-        ({"df": dataframe1, "type": "nice"}, ArgumentsError),
+        ({"train_df": dataframe1, "type": "nice"}, ArgumentsError),
         (
-            {"df": dataframe1, "type": "MinMaxScaler", "columns": ["Area"]},
+            {"train_df": dataframe1, "type": "MinMaxScaler", "columns": ["Area"]},
             ArgumentsError,
         ),
     ],
@@ -39,28 +39,28 @@ def test_incorrect_input_type(test_input, error):
     [
         (
             {
-                "df": dataframe2,
+                "train_df": dataframe2,
                 "type": "BinaryScaler",
                 "columns": ["Negatives"],
                 "is_combined": True,
-                "critical_value": -10,
+                "threshold": {"Negatives":-10},
             }
         ),
         (
             {
-                "df": dataframe2,
+                "train_df": dataframe2,
                 "type": "BinaryScaler",
                 "columns": ["Negatives"],
                 "is_combined": True,
-                "critical_value": -1,
+                "threshold": {"Negatives":-1},
             }
         ),
         {
-            "df": dataframe2,
+            "train_df": dataframe2,
             "type": "BinaryScaler",
             "columns": ["Negatives"],
             "is_combined": True,
-            "critical_value": -13000,
+            "threshold": {"Negatives":-1300},
         },
     ],
 )
@@ -68,13 +68,13 @@ def test_BinaryScaler_output(test_input):
     scaler = Scaler()
     scaler.execute(params=test_input)
     assert (
-        test_input["df"]["Negatives"].values.any() == 1
-        or test_input["df"]["Negatives"].values.any() == 0
+        test_input["train_df"]["Negatives"].values.any() == 1
+        or test_input["train_df"]["Negatives"].values.any() == 0
     )
     assert not (
-        test_input["df"]["Negatives"].between(0, 1, inclusive=False).any()
+        test_input["train_df"]["Negatives"].between(0, 1, inclusive=False).any()
     )
-    assert test_input["df"]["Negatives"][0] == 1
+    assert test_input["train_df"]["Negatives"][0] == 1
 
 
 @pytest.mark.parametrize(
@@ -82,7 +82,7 @@ def test_BinaryScaler_output(test_input):
     [
         (
             {
-                "df": dataframe1,
+                "train_df": dataframe1,
                 "type": "MinMaxScaler",
                 "columns": ["Distance"],
                 "is_combined": False,
@@ -90,7 +90,7 @@ def test_BinaryScaler_output(test_input):
         ),
         (
             {
-                "df": dataframe1,
+                "train_df": dataframe1,
                 "type": "MinMaxScaler",
                 "columns": ["Distance"],
                 "is_combined": True,
@@ -98,7 +98,7 @@ def test_BinaryScaler_output(test_input):
         ),
         (
             {
-                "df": dataframe1,
+                "train_df": dataframe1,
                 "type": "StandardScaler",
                 "columns": ["Distance"],
                 "is_combined": False,
@@ -106,7 +106,7 @@ def test_BinaryScaler_output(test_input):
         ),
         (
             {
-                "df": dataframe1,
+                "train_df": dataframe1,
                 "type": "StandardScaler",
                 "columns": ["Distance"],
                 "is_combined": True,
@@ -117,5 +117,5 @@ def test_BinaryScaler_output(test_input):
 def test_MinMaxScaler_output(test_input):
     scaler = Scaler()
     scaler.execute(params=test_input)
-    assert test_input["df"]["Distance"].values.all() >= 0
-    assert test_input["df"]["Distance"].values.all() <= 1
+    assert test_input["train_df"]["Distance"].values.all() >= 0
+    assert test_input["train_df"]["Distance"].values.all() <= 1
