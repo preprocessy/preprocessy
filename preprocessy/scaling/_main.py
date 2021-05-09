@@ -1,4 +1,3 @@
-import numpy as np
 import pandas as pd
 
 from ..exceptions import ArgumentsError
@@ -28,7 +27,6 @@ class Scaler:
 
         """
 
-        # self.df = None
         self.train_df = None
         self.test_df = None
         self.type = "StandardScaler"
@@ -41,12 +39,10 @@ class Scaler:
         self.final_test_df = None
         self.categorical_columns = None
         self.target_columns = None
-
-    
+   
     def __repr__(self):
         return f"Scaler(type={self.type}, is_combined={self.is_combined}, threshold={self.threshold})"
 
-    
     def __validate_input(self):
         if self.train_df is None:
             raise ValueError("Feature train dataframe should not be of None type")
@@ -121,11 +117,9 @@ class Scaler:
         self.new_train_df = self.train_df
         self.new_test_df = self.test_df
 
-
     def isNumeric(self,column):
         #b => bool, i => int (signed), u => unsigned int, f => float, c => complex
         return column.dtype.kind in 'biufc'
-
 
     def __min_max_scaler_helper(self,df):
         new_df = df.copy()
@@ -146,7 +140,6 @@ class Scaler:
                 cur_col = (cur_col - min) / (max - min)
                 new_df[column] = cur_col
         else:
-            #getting columns rid of categorical ones
             temp_df = None
             if self.categorical_columns is not None:
                 temp_df = df.drop(columns=self.categorical_columns)
@@ -167,7 +160,6 @@ class Scaler:
                 new_df[column] = cur_col
         return new_df
 
-
     def __min_max_scaler(self):
         if self.train_df is not None:
             self.new_train_df = self.__min_max_scaler_helper(self.train_df)
@@ -175,7 +167,6 @@ class Scaler:
             self.new_test_df = self. __min_max_scaler_helper(self.test_df)
         return self.new_train_df,self.new_test_df
 
-        
     def __binary_scaler_helper(self,df):
         new_df = df.copy()
         for column in self.columns:
@@ -192,15 +183,12 @@ class Scaler:
             new_df[column] = df[column].apply(lambda val: 0 if val <= cur_thresh else 1)
         return new_df
 
-
     def __binary_scaler(self):
         if self.train_df is not None:
             self.new_train_df = self.__binary_scaler_helper(self.train_df)
         if self.test_df is not None:
             self.new_test_df =  self.__binary_scaler_helper(self.test_df)
         return self.new_train_df,self.new_test_df
-
-    
 
     def __standard_scaler_helper(self,df):
         new_df = df.copy()
@@ -240,14 +228,12 @@ class Scaler:
                 cur_col = (cur_col - mean) / std
         return new_df
 
-
     def __standard_scaler(self):
         if self.train_df is not None:
             self.new_train_df = self.__standard_scaler_helper(self.train_df)
         if self.test_df is not None:
             self.new_test_df =  self.__standard_scaler_helper(self.test_df)
         return self.new_train_df,self.new_test_df
-
 
     def execute(self, params):
 
@@ -281,17 +267,3 @@ class Scaler:
 
         params["train_df"] = self.final_train_df
         params["test_df"] = self.final_test_df
-
-# df = pd.read_csv('test.csv')
-# print(df.head())
-# scaler = Scaler()
-# params = {
-#                 "train_df": df,
-#                 "type": "BinaryScaler",
-#                 "columns": ["Negatives"],
-#                 "is_combined": True,
-#                 "threshold": {"Negatives":-10},
-#                 "target_columns":["Test"]
-#         }
-# scaler.execute(params)
-# print(params['train_df'].head())
