@@ -137,3 +137,57 @@ def test_MinMaxScaler_output(test_input):
     else:
         assert test_input["train_df"]["Negatives"].values.all() >= 0
         assert test_input["train_df"]["Negatives"].values.all() <= 1
+
+
+@pytest.mark.parametrize(
+    "test_input",
+    [
+        (
+            {
+                "train_df": dataframe1,
+                "type": "StandardScaler",
+                "columns": ["Distance"],
+                "is_combined": False,
+                "target_columns": ["Capitals", "Other Capitals"],
+                "categorical_columns": ["Capitals", "Other Capitals"],
+            }
+        ),
+        (
+            {
+                "train_df": dataframe1,
+                "type": "StandardScaler",
+                "columns": ["Distance"],
+                "is_combined": True,
+                "target_columns": ["Capitals", "Other Capitals"],
+                "categorical_columns": ["Capitals", "Other Capitals"],
+            }
+        ),
+        (
+            {
+                "train_df": dataframe2,
+                "type": "StandardScaler",
+                "columns": ["Negatives"],
+                "is_combined": False,
+                "target_columns": ["Test"],
+                "categorical_columns": ["Price", "Profession", "Date"],
+            }
+        ),
+        (
+            {
+                "train_df": dataframe2,
+                "type": "StandardScaler",
+                "columns": ["Negatives"],
+                "is_combined": True,
+                "target_columns": ["Test"],
+                "categorical_columns": ["Price", "Profession", "Date"],
+            }
+        ),
+    ],
+)
+def test_StandardScaler_output(test_input):
+    scaler = Scaler()
+    scaler.execute(params=test_input)
+    if "Distance" in test_input["train_df"].keys():   
+        assert round(test_input["train_df"]["Distance"][0],5) == 1.08006
+    else:
+        assert round(test_input["train_df"]["Negatives"][0],5) == 0.57771

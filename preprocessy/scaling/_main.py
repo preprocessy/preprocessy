@@ -140,23 +140,19 @@ class Scaler:
                 cur_col = (cur_col - min) / (max - min)
                 new_df[column] = cur_col
         else:
-            temp_df = None
-            if self.categorical_columns is not None:
-                temp_df = df.drop(columns=self.categorical_columns)
-            else:
-                temp_df = df.copy()
+            temp_df = df.copy()
+            dropped_columns = list(set(self.categorical_columns + self.target_columns))
+            temp_df = temp_df.drop(columns=dropped_columns)
             max = temp_df.to_numpy().max()
             min = temp_df.to_numpy().min()
             for column in self.columns:
-                if column in self.categorical_columns or self.target_columns:
+                if column in (self.categorical_columns or self.target_columns):
                     continue
                 if not self.isNumeric(df[column]):
                     raise TypeError(
                         f"Unexpected datatype of column, {type(column)}"
                     )
-                cur_col = df[column]
-                cur_col = (cur_col - min) / (max - min)
-                new_df[column] = cur_col
+                new_df[column] = (temp_df[column] - min) / (max - min)
         return new_df
 
     def __min_max_scaler(self):
@@ -208,22 +204,19 @@ class Scaler:
                 new_df[column] = cur_col
         else:
             # getting rid of categorical columns
-            temp_df = None
-            if self.categorical_columns is not None:
-                temp_df = df.drop(columns=self.categorical_columns)
-            else:
-                temp_df = df.copy()
-            mean = temp_df.to_numpy().mean()
-            std = temp_df.to_numpy().std()
+            temp_df = df.copy()
+            dropped_columns = list(set(self.categorical_columns + self.target_columns))
+            temp_df = temp_df.drop(columns=dropped_columns)
+            mean = temp_df.stack().mean()
+            std = temp_df.stack().std()
             for column in self.columns:
-                if column in self.categorical_columns or self.target_columns:
+                if column in (self.categorical_columns or self.target_columns):
                     continue
                 if not self.isNumeric(df[column]):
                     raise TypeError(
                         f"Unexpected datatype of column, {type(column)}"
                     )
-                cur_col = df[column]
-                cur_col = (cur_col - mean) / std
+                new_df[column] = (temp_df[column] - mean) / std
         return new_df
 
     def __standard_scaler(self):
