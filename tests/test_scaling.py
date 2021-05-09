@@ -78,9 +78,9 @@ def test_BinaryScaler_output(test_input):
         test_input["train_df"]["Negatives"].between(0, 1, inclusive=False).any()
     )
     if test_input["threshold"]["Negatives"] is not -1:
-        assert test_input["train_df"]["Negatives"][0] == 0
-    else:
         assert test_input["train_df"]["Negatives"][0] == 1
+    else:
+        assert test_input["train_df"]["Negatives"][0] == 0
 
 
 @pytest.mark.parametrize(
