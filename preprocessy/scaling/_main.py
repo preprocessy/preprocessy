@@ -182,6 +182,7 @@ class Scaler:
             if self.threshold is not None:
                 if column in self.threshold.keys():
                     cur_thresh = self.threshold[column]
+            print(cur_thresh)
             new_df[column] = df[column].apply(lambda val: 0 if val <= cur_thresh else 1)
         return new_df
 
