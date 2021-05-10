@@ -118,7 +118,7 @@ class Scaler:
 
     def isNumeric(self, column):
         # i => int (signed), u => unsigned int, f => float, c => complex
-        return column.dtype.kind in "iufc"
+        return column.dtype.kind in 'iufc'
 
     def __min_max_scaler_helper(self, df):
         new_df = df.copy()
