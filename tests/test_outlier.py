@@ -11,16 +11,23 @@ train_df = pd.read_csv("datasets/encoding/test2.csv")
     "test_input",
     [
         {},
-        {"train_df": train_df, "cols": ["Distance"], "first_quartile": 1.3},
         {
             "train_df": train_df,
-            "cols": ["Distance"],
+            "cat_cols": ["Capitals"],
+            "target": "Other Capitals",
+            "first_quartile": 1.3,
+        },
+        {
+            "train_df": train_df,
+            "cat_cols": ["Capitals"],
+            "target": "Other Capitals",
             "first_quartile": 0.3,
             "third_quartile": 1.54,
         },
         {
             "train_df": train_df,
-            "cols": ["Distance"],
+            "cat_cols": ["Capitals"],
+            "target": "Other Capitals",
             "first_quartile": 0.7,
             "third_quartile": 0.3,
         },
@@ -39,7 +46,7 @@ def test_false_arguments():
         outlier.handle_outliers(
             params={
                 "train_df": train_df,
-                "cols": ["Distance"],
+                "cat_cols": ["Capitals", "Other Capitals"],
                 "remove_outliers": False,
                 "replace": False,
             }
@@ -53,7 +60,7 @@ def test_true_arguments():
         outlier.handle_outliers(
             params={
                 "train_df": train_df,
-                "cols": ["Distance"],
+                "cat_cols": ["Capitals", "Other Capitals"],
                 "replace": True,
             }
         )
@@ -63,27 +70,27 @@ def test_true_arguments():
     "test_input",
     [
         {"train_df": 5},
-        {"train_df": train_df, "cols": "Distance"},
-        {"train_df": train_df, "cols": [5]},
+        {"train_df": train_df, "cat_cols": "Capitals"},
+        {"train_df": train_df, "cat_cols": [5]},
         {
             "train_df": train_df,
-            "cols": ["Distance"],
+            "cat_cols": ["Capitals", "Other Capitals"],
             "remove_outliers": "True",
         },
         {
             "train_df": train_df,
-            "cols": ["Distance"],
+            "cat_cols": ["Capitals", "Other Capitals"],
             "remove_outliers": False,
             "replace": "True",
         },
         {
             "train_df": train_df,
-            "cols": ["Distance"],
+            "cat_cols": ["Capitals", "Other Capitals"],
             "first_quartile": "0.24",
         },
         {
             "train_df": train_df,
-            "cols": ["Distance"],
+            "cat_cols": ["Capitals", "Other Capitals"],
             "first_quartile": 0.24,
             "third_quartile": "0.76",
         },
@@ -104,7 +111,8 @@ def test_incorrect_input_key():
 
 
 @pytest.mark.parametrize(
-    "test_input", [{"train_df": train_df, "cols": ["Distance"]}]
+    "test_input",
+    [{"train_df": train_df, "cat_cols": ["Capitals", "Other Capitals"]}],
 )
 def test_removeoutliers_output(test_input):
     outlier = HandleOutlier()
@@ -117,7 +125,8 @@ def test_removeoutliers_output(test_input):
     [
         {
             "train_df": train_df,
-            "cols": ["Distance"],
+            "cat_cols": ["Capitals"],
+            "target": "Other Capitals",
             "remove_outliers": False,
             "replace": True,
         }
@@ -128,3 +137,25 @@ def test_replace_output(test_input):
     outlier.handle_outliers(params=test_input)
     assert test_input["train_df"].shape == train_df.shape
     assert -999 in test_input["train_df"]["Distance"].values
+    assert "-999" not in test_input["train_df"]["Capitals"].values
+    assert "-999" not in test_input["train_df"]["Other Capitals"].values
+
+
+@pytest.mark.parametrize(
+    "test_input",
+    [
+        {
+            "train_df": train_df,
+            "test_df": train_df,
+            "cat_cols": ["Capitals", "Other Capitals"],
+            "remove_outliers": False,
+            "replace": True,
+        }
+    ],
+)
+def test_all(test_input):
+    outlier = HandleOutlier()
+    outlier.handle_outliers(params=test_input)
+    assert -999 in test_input["train_df"]["Distance"].values
+    assert -999 in test_input["test_df"]["Distance"].values
+    assert test_input["train_df"].equals(test_input["test_df"])

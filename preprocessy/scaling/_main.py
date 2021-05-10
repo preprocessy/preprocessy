@@ -45,7 +45,9 @@ class Scaler:
 
     def __validate_input(self):
         if self.train_df is None:
-            raise ValueError("Feature train dataframe should not be of None type")
+            raise ValueError(
+                "Feature train dataframe should not be of None type"
+            )
 
         if type(self.train_df) is not pd.core.frame.DataFrame:
             raise TypeError(
@@ -155,7 +157,7 @@ class Scaler:
         if self.train_df is not None:
             self.new_train_df = self.__min_max_scaler_helper(self.train_df)
         if self.test_df is not None:
-            self.new_test_df = self. __min_max_scaler_helper(self.test_df)
+            self.new_test_df = self.__min_max_scaler_helper(self.test_df)
         return self.new_train_df, self.new_test_df
 
     def __binary_scaler_helper(self, df):
@@ -175,7 +177,9 @@ class Scaler:
             if self.threshold is not None:
                 if column in self.threshold.keys():
                     cur_thresh = self.threshold[column]
-            new_df[column] = df[column].apply(lambda val: 0 if val <= cur_thresh else 1)
+            new_df[column] = df[column].apply(
+                lambda val: 0 if val <= cur_thresh else 1
+            )
         return new_df
 
     def __binary_scaler(self):
