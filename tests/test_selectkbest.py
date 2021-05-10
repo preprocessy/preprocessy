@@ -9,10 +9,11 @@ from preprocessy.feature_selection import SelectKBest
 
 X_reg, y_reg = make_regression(n_samples=1000, n_features=50)
 X_reg = pd.DataFrame(X_reg)
-y_reg = pd.Series(y_reg)
+X_reg["target"] = pd.Series(y_reg)
+
 X_class, y_class = make_classification(n_samples=1000, n_features=50)
 X_class = pd.DataFrame(X_class)
-y_class = pd.Series(y_class)
+X_class["target"] = pd.Series(y_class)
 
 
 def test_invalid_input():
@@ -24,8 +25,13 @@ def test_invalid_input():
 @pytest.mark.parametrize(
     "test_input",
     [
-        {"score_func": 10, "k": 10, "X": X_class, "y": y_reg},
-        {"score_func": "chi2", "k": 10, "X": X_class, "y": y_reg},
+        {"score_func": 10, "k": 10, "train_df": X_reg, "target_col": "target"},
+        {
+            "score_func": "chi2",
+            "k": 10,
+            "train_df": X_reg,
+            "target_col": "target",
+        },
     ],
 )
 def test_score_func(test_input):
@@ -37,8 +43,11 @@ def test_score_func(test_input):
 @pytest.mark.parametrize(
     "test_input, test_output",
     [
-        ({"k": 10, "X": X_reg, "y": y_reg}, f_regression.__name__),
-        ({"X": X_class, "y": y_class}, f_classif.__name__),
+        (
+            {"k": 10, "train_df": X_reg, "target_col": "target"},
+            f_regression.__name__,
+        ),
+        ({"train_df": X_class, "target_col": "target"}, f_classif.__name__),
     ],
 )
 def test_default_score_func(test_input, test_output):
@@ -50,11 +59,39 @@ def test_default_score_func(test_input, test_output):
 def test_transform_without_fit():
     kbest = SelectKBest()
     with pytest.raises(ValueError):
-        kbest.transform(X_reg)
+        kbest.transform({"train_df": X_reg, "target_col": "target"})
 
 
-def test_fit_transform():
+@pytest.mark.parametrize(
+    "params, split_size",
+    [
+        ({"train_df": X_reg, "target_col": "target", "k": 10}, 1000),
+        ({"train_df": X_class, "target_col": "target", "k": 10}, 1000),
+        (
+            {
+                "train_df": X_reg.iloc[:800, :],
+                "test_df": X_reg.iloc[800:, :],
+                "target_col": "target",
+                "k": 10,
+                "score_func": f_regression,
+            },
+            800,
+        ),
+        (
+            {
+                "train_df": X_class.iloc[:800, :],
+                "test_df": X_class.iloc[800:, :],
+                "target_col": "target",
+                "k": 10,
+                "score_func": f_classif,
+            },
+            800,
+        ),
+    ],
+)
+def test_fit_transform(params, split_size):
     kbest = SelectKBest()
-    params = {"score_func": f_regression, "k": 5, "X": X_reg, "y": y_reg}
     kbest.fit_transform(params)
-    assert params["X_best"].shape[1] == 5
+    assert params["train_df"].shape == (split_size, params["k"] + 1)
+    if "test_df" in params.keys():
+        assert params["test_df"].shape == (1000 - split_size, params["k"] + 1)
