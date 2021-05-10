@@ -32,10 +32,8 @@ class HandleOutlier:
 
         Parameters to be entered by the user include :
             -The dataset
-            -cols: Any specific columns in dataset the user wants to
-                   remove outliers from. If not entered columns will be
-                   selected based on their dtype(int and float only) and
-                   outliers will be removed from them
+            -cat_cols: Columns that are categorical should not be touched.
+            -target : The target column
             -removeoutliers : default = True
             -replace : default = False => if user wants to replace
                        outliers with -999 everywhere instead of
@@ -45,7 +43,10 @@ class HandleOutlier:
 
         """
         self.train_df = None
+        self.test_df = None
+        self.cat_cols = []
         self.cols = []
+        self.target = []
         self.remove_outliers = True
         self.replace = False
         self.quartiles = {}
@@ -56,13 +57,21 @@ class HandleOutlier:
 
         if self.train_df is None:
             raise ValueError("Train dataframe should not be of None type")
+        # not adding validation for whether test_df is included or not since
+        # user choice
 
         if not isinstance(self.train_df, pd.core.frame.DataFrame):
             raise TypeError(
                 "Train dataframe is not a valid dataframe.\nExpected object"
                 f" type: pandas.core.frame.DataFrame\n Received type {type(self.train_df)} of dataframe"
             )
-
+        if self.test_df is not None and not isinstance(
+            self.test_df, pd.core.frame.DataFrame
+        ):
+            raise TypeError(
+                "Test dataframe is not a valid datafram.\nExpected Object"
+                f" type: pandas.core.frame.DataFrame\n Received type {type(self.test_df)} of dataframe"
+            )
         if not isinstance(self.cols, list):
             raise TypeError(
                 f"'cols' should be of type list. Received {self.cols} of"
@@ -135,10 +144,9 @@ class HandleOutlier:
 
     def __return_quartiles(self, col):
         # return the quartile range or q1 and q3 values for the column passed as parameter
-        train_df = self.train_df
-        q1 = train_df[col].quantile(self.first_quartile)
+        q1 = self.train_df[col].quantile(self.first_quartile)
         q1 = round(q1)
-        q3 = train_df[col].quantile(self.third_quartile)
+        q3 = self.train_df[col].quantile(self.third_quartile)
         q3 = round(q3)
         self.quartiles[col] = [q1, q3]
 
@@ -146,8 +154,12 @@ class HandleOutlier:
 
         if "train_df" in params.keys():
             self.train_df = params["train_df"]
-        if "cols" in params.keys():
-            self.cols = params["cols"]
+        if "test_df" in params.keys():
+            self.test_df = params["test_df"]
+        if "target" in params.keys():
+            self.target.append(params["target"])
+        if "cat_cols" in params.keys():
+            self.cat_cols = params["cat_cols"]
         if "remove_outliers" in params.keys():
             self.remove_outliers = params["remove_outliers"]
         if "replace" in params.keys():
@@ -159,20 +171,33 @@ class HandleOutlier:
 
         self.__validate_input()
 
-        # parameters till now: train_df, cols, removeoutliers, replace
+        if "cols" in params.keys():
+            self.cols = params["cols"]
+            self.cols = [
+                item
+                for item in self.cols
+                if item not in self.cat_cols and item not in self.target
+            ]
+        else:
+            self.cols = [
+                item
+                for item in self.train_df.columns
+                if item not in self.cat_cols and item not in self.target
+            ]
+
+        # parameters till now: train_df, test_df, cols, removeoutliers, replace
         # if user has marked removeoutliers = True and wants outliers removed..
-        train_df = self.train_df
         if self.remove_outliers:
             if len(self.cols) >= 1:
                 for col in self.cols:
                     self.__return_quartiles(col)
                 for col in self.cols:
-                    q = self.quartiles[col]
-                    q1 = q[0]
-                    q3 = q[1]
-                    train_df = train_df[(train_df[col] >= q1)]
-                    train_df = train_df[(train_df[col] <= q3)]
-
+                    q1, q3 = self.quartiles[col]
+                    self.train_df = self.train_df[(self.train_df[col] >= q1)]
+                    self.train_df = self.train_df[(self.train_df[col] <= q3)]
+                    if self.test_df is not None:
+                        self.test_df = self.test_df[(self.test_df[col] <= q1)]
+                        self.test_df = self.test_df[(self.test_df[col] >= q3)]
         # if removeoutliers = False and replace=True i.e. user wants outliers
         # replaced by a value to indicate these are outliers
         elif self.replace:
@@ -180,10 +205,13 @@ class HandleOutlier:
                 for col in self.cols:
                     self.__return_quartiles(col)
                 for col in self.cols:
-                    q = self.quartiles[col]
-                    q1 = q[0]
-                    q3 = q[1]
-                    train_df[(train_df[col] < q1)] = -999
-                    train_df[(train_df[col] > q3)] = -999
-        self.train_df = train_df
+                    q1, q3 = self.quartiles[col]
+                    self.train_df[(self.train_df[col] < q1)] = -999
+                    self.train_df[(self.train_df[col] > q3)] = -999
+                    if self.test_df is not None:
+                        self.test_df[(self.test_df[col] <= q1)] = -999
+                        self.test_df[(self.test_df[col] >= q3)] = -999
+
         params["train_df"] = self.train_df
+        if self.test_df is not None:
+            params["test_df"] = self.test_df
