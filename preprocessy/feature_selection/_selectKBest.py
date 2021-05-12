@@ -151,7 +151,7 @@ class SelectKBest:
         self.y = self.train_df[self.target_col]
 
         if self.score_func is None:
-            if self.y.nunique() <= 15:
+            if (self.y.nunique() // self.X.shape[0]) <= 0.2:
                 self.score_func = f_classif
             else:
                 self.score_func = f_regression
