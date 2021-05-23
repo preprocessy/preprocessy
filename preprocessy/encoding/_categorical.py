@@ -1,9 +1,11 @@
 import warnings
 
 import pandas as pd
+from pandas.api.types import is_numeric_dtype
+from pandas.api.types import is_string_dtype
 
 
-class EncodeData:
+class Encoder:
     """A class to encode categorical and ordinal features"""
 
     def __init__(self):
@@ -17,7 +19,7 @@ class EncodeData:
         self.one_hot = False
 
     def __repr__(self):
-        return f"EncodeData(target_label={self.target_label} ,train_df=None, test_df=None, cat_cols=None, ord_dict=None, one_hot={self.one_hot})"
+        return f"Encoder(target_label={self.target_label} ,train_df=None, test_df=None, cat_cols=None, ord_dict=None, one_hot={self.one_hot})"
 
     def __validate_inputs(self):
         """
@@ -38,7 +40,6 @@ class EncodeData:
             raise KeyError(
                 "Target variable in still present in one of the datasets or"
                 " the number of columns in both test and train are not equal."
-                " Rectify"
             )
 
         # target_label should not be in list of columns
@@ -51,12 +52,14 @@ class EncodeData:
                 " dataframe or provide explicit list of columns for encoding.",
                 UserWarning,
             )
-        for key, mapping in self.ord_dict.items():
-            if mapping is None or mapping == {}:
-                raise ValueError(
-                    f"Expected a weight mapping for ordinal column {key}."
-                    f" Received {self.ord_dict[key]}"
-                )
+
+        if self.ord_dict is not None:
+            for key, mapping in self.ord_dict.items():
+                if mapping is None or mapping == {}:
+                    raise ValueError(
+                        f"Expected a weight mapping for ordinal column {key}."
+                        f" Received {self.ord_dict[key]}"
+                    )
 
     def __encode_categorical_util(self):
         """
@@ -133,14 +136,15 @@ class EncodeData:
                             )
                             .astype("float")
                         )
-                    elif pd.to_datetime(
-                        self.train_df[col], errors="coerce"
-                    ).isnull().sum() < 0.7 * len(self.train_df[col]):
-                        self.train_df[col] = pd.to_datetime(
-                            self.train_df[col], errors="coerce"
-                        )
+                    # elif pd.to_datetime(
+                    #     self.train_df[col], errors="coerce"
+                    # ).isnull().sum() < 0.7 * len(self.train_df[col]):
+                    #     self.train_df[col] = pd.to_datetime(
+                    #         self.train_df[col], errors="coerce"
+                    #     )
                     elif (
-                        type(self.train_df[col][0]) in ["int", "str"]
+                        is_numeric_dtype(self.train_df[col])
+                        or is_string_dtype(self.train_df[col])
                     ) and self.train_df[col].nunique() < rows:
                         self.cat_cols.append(col)
                 else:

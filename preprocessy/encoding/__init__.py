@@ -1,3 +1,3 @@
-from ._categorical import EncodeData
+from ._categorical import Encoder
 
-__all__ = ["EncodeData"]
+__all__ = ["Encoder"]

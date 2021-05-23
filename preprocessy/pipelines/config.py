@@ -27,7 +27,7 @@ def read_config(file_path):
             f"Error occurred while reading the config file : {str(e)}"
         )
 
-    if "df_path" in content:
+    if "train_df_path" in content:
         warnings.warn(
             "The dataset has to be passed as param to the Pipeline class, any"
             " value provided here will be overridden."
@@ -40,7 +40,10 @@ def save_config(file_path, params):
     try:
         with open(file_path, "w") as f:
             params_copy = copy.deepcopy(params)
-            params_copy.pop("df")
+            if "train_df" in params_copy.keys():
+                params_copy.pop("train_df")
+            if "test_df" in params_copy.keys():
+                params_copy.pop("test_df")
             json.dump(params_copy, f, indent=2)
     except Exception as e:
         print(f"Error occurred while saving config to file : {str(e)}")
