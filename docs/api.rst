@@ -11,3 +11,6 @@ Resampling
 
 .. autoclass:: Split
   :members:
+
+.. autoclass:: KFold
+  :members:

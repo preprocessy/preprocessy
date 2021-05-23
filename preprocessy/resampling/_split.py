@@ -157,17 +157,17 @@ class Split:
         :type X: pandas.core.frames.DataFrame
 
         :param y: Target label series. If ``None`` then ``X`` consists target label
-        :type y: pandas.core.series.Series
+        :type y: pandas.core.series.Series, optional
 
         :param test_size: Size of test set after splitting. Can take values from
                           0 - 1 for float point values, 0 - Number of samples for
                           integer values. Is complementary to train size.
-        :type test_size: float or int
+        :type test_size: float, int
 
         :param train_size: Size of train set after splitting. Can take values from
                            0 - 1 for float point values, 0 - Number of samples for
                            integer values. Is complementary to test size.
-        :type train_size: float or int
+        :type train_size: float, int
 
         :param random_state: Seeding to be provided for shuffling before splitting.
         :type random_state: int
