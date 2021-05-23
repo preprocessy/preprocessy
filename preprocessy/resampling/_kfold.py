@@ -9,27 +9,18 @@ class KFold:
     """Class for splitting input data into K-folds. Split
     dataset into K consecutive folds (without shuffling by default).
 
-    Each fold is then used once as a validation while the k - 1 remaining
+    Each fold is then used once as a validation while the ``k - 1`` remaining
     folds form the training set.
 
-    Parameters
-    ----------
+    :param n_splits: Number of folds. Must be at least 2, defaults to 5
+    :type n_splits: int
 
-    n_splits : int, default=5 Number of folds. Must be at least 2.
+    :param shuffle: Whether to shuffle the data before splitting
+                    into folds, defaults to ``False``
+    :type shuffle: bool
 
-    shuffle : bool, default=False Whether to shuffle the data before splitting into folds.
-
-    random_state : int or None, default=None
-
-    Private Methods
-    ---------------
-
-    __iter_test_indices() : generator for getting mask of current fold that is going to be used as test set.
-
-    Public Methods
-    --------------
-
-    split() : generator for getting train and test indices for each fold.
+    :param random_state: Random state used for shuffling, defaults to ``None``
+    :type random_state: int
 
     """
 
@@ -76,21 +67,21 @@ class KFold:
     def split(self, X, y=None):
         """Generate indices to split data into training and test set.
 
-        Parameters
-        ----------
+        :param X: Input dataframe, may or may not consist of the target label.
+                  Should not be ``None``
+        :type X: pandas.core.frames.DataFrame
 
-        X : pandas.core.frames.DataFrame
-            Input dataframe, may or may not consist of the target label.
+        :param y: Target label series. If ``None`` then ``X`` consists target label,
+                  defaults to ``None``
+        :type y: pandas.core.series.Series, optional
 
-        y : pandas.core.series.Series
-            Target label series. If None then X consists target label
+        :yield: The training set indices for that split
+        :rtype: ndarray
 
-        Yields
-        ------
+        :yield: The testing set indices for that split
+        :rtype: ndarray
 
-        train_indices : ndarray The training set indices for that split.
-
-        test_indices : ndarray The testing set indices for that split.
+        :raises ValueError: If ``n_splits > n_samples``, then a ``ValueError`` is raised
 
         """
 
@@ -143,9 +134,7 @@ class KFold:
     def get_n_splits(self):
         """Returns the number of splitting iterations in the cross-validator
 
-        Returns
-        -------
-        n_splits : int Returns the number of splitting iterations in the cross-validator.
-
+        :return: Returns the number of splitting iterations in the cross-validator.
+        :rtype: int
         """
         return self.n_splits
