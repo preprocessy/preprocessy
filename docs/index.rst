@@ -35,3 +35,10 @@ Miscellaneous Pages
    license
    contributing
    changes
+
+Indices and tables
+==================
+
+* :ref:`genindex`
+* :ref:`modindex`
+* :ref:`search`
