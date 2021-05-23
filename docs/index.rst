@@ -17,6 +17,15 @@ the users can customise them by adding their processing functions or removing
 pipeline functions according to their needs. The pipelines thus provide an abstract
 and high-level interface to the users.
 
+API Reference
+-------------
+
+.. toctree::
+   :maxdepth: 2
+
+   api
+
+
 Miscellaneous Pages
 -------------------
 

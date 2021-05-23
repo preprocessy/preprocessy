@@ -5,19 +5,7 @@ from ..utils import num_of_samples
 
 
 class Split:
-    """Class for resampling and splitting input data
-
-    Private Methods
-    ---------------
-
-    __validate__input() : validates input received by train_test_split()
-
-    Public Methods
-    --------------
-
-    train_test_split() : Splits input data into train and test sets
-
-    """
+    """Class for resampling and splitting input data"""
 
     def __init__(self):
         self.df = None
@@ -31,7 +19,6 @@ class Split:
         return f"Split(test_size={self.test_size}, train_size={self.train_size}, random_state={self.random_state})"
 
     def __validate_input(self):
-
         """Function to validate inputs received by train_test_split
 
         Parameters
@@ -165,44 +152,46 @@ class Split:
     def train_test_split(self, params):
         """Performs train test split on the input data
 
-        Parameters
-        ----------
-        X : pandas.core.frames.DataFrame
-            Input dataframe, may or may not consist of the target label.
-            Should not be None
+        :param X: Input dataframe, may or may not consist of the target label.
+                  Should not be ``None``
+        :type X: pandas.core.frames.DataFrame
 
-        y : pandas.core.series.Series
-            Target label series. If None then X consists target label
+        :param y: Target label series. If ``None`` then ``X`` consists target label
+        :type y: pandas.core.series.Series
 
-        test_size : float or int
-            Size of test set after splitting. Can take values from 0 - 1 for float point values,
-            0 - Number of samples for integer values. Is complementary to train size.
+        :param test_size: Size of test set after splitting. Can take values from
+                          0 - 1 for float point values, 0 - Number of samples for
+                          integer values. Is complementary to train size.
+        :type test_size: float or int
 
-        train_size : float or int
-            Size of train set after splitting. Can take values from 0 - 1 for float point values,
-            0 - Number of samples for integer values. Is complementary to test size.
+        :param train_size: Size of train set after splitting. Can take values from
+                           0 - 1 for float point values, 0 - Number of samples for
+                           integer values. Is complementary to test size.
+        :type train_size: float or int
 
-        random_state : int
-            Seeding to be provided for shuffling before splitting.
+        :param random_state: Seeding to be provided for shuffling before splitting.
+        :type random_state: int
 
-        Returns
-        -------
+        The functions inserts the following into ``params`` -
 
-        If target label provided
+        If target label is provided
 
-            X_train : pandas.core.frames.DataFrame
+        - **X_train** : pandas.core.frames.DataFrame
 
-            y_train : pandas.core.series.Series
+        - **y_train** : pandas.core.series.Series
 
-            X_test : pandas.core.frames.DataFrame
+        - **X_test** : pandas.core.frames.DataFrame
 
-            y_test : pandas.core.series.Series
+        - **y_test** : pandas.core.series.Series
 
         Else
 
-            train : pandas.core.frames.DataFrame
+        - **train**: pandas.core.frames.DataFrame
 
-            test : pandas.core.frames.DataFrame
+        - **test**: pandas.core.frames.DataFrame
+
+        :raises ValueError: If the target column does not have a ``name`` property
+                            ``ValueError`` is raised.
 
         """
 
