@@ -54,7 +54,6 @@ class Parser:
                     "$" in self.train_df[col][0]
                     or self.train_df[col].str.contains(",").any()
                 ):
-                    print("money")
                     self.train_df[col] = (
                         self.train_df[col]
                         .apply(lambda x: x.replace("$", "").replace(",", ""))

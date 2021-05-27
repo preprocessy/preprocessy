@@ -48,3 +48,16 @@ def test_parser():
     parser = Parser()
     parser.parse_dataset(params=params)
     assert "B" in params["cat_cols"]
+
+
+def test_invalid_user_cat_cols():
+    train_df = pd.DataFrame(
+        {
+            "A": [i for i in range(100)],
+            "B": ["hello" if i % 2 == 0 else "bye" for i in range(100)],
+        }
+    )
+    params = {"train_df": train_df, "target_label": "C", "cat_cols": ["C"]}
+    parser = Parser()
+    with pytest.raises(ValueError):
+        parser.parse_dataset(params=params)
