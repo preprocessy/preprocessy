@@ -70,6 +70,10 @@ class Parser:
         return self.cat_cols
 
     def parse_dataset(self, params):
+        if "train_df" in params.keys():
+            self.train_df = params["train_df"]
+        if "test_df" in params.keys():
+            self.test_df = params["test_df"]
         if "cat_cols" in params.keys():
             self.cat_cols = params["cat_cols"]
             for col in self.cat_cols:
@@ -80,10 +84,6 @@ class Parser:
                         f"Column {col} is not present in the given dataset"
                     )
             return
-        if "train_df" in params.keys():
-            self.train_df = params["train_df"]
-        if "test_df" in params.keys():
-            self.test_df = params["test_df"]
 
         if "ord_dict" in params.keys():
             self.ord_dict = params["ord_dict"]
