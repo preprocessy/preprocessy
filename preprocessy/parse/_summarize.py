@@ -73,6 +73,11 @@ class Parser:
             self.train_df = params["train_df"]
         if "test_df" in params.keys():
             self.test_df = params["test_df"]
+        if "ord_dict" in params.keys():
+            self.ord_dict = params["ord_dict"]
+
+        self.__validate_input()
+
         if "cat_cols" in params.keys():
             self.cat_cols = params["cat_cols"]
             for col in self.cat_cols:
@@ -84,11 +89,7 @@ class Parser:
                     )
             return
 
-        if "ord_dict" in params.keys():
-            self.ord_dict = params["ord_dict"]
-
-        self.__validate_input()
-
         if self.ord_dict:
             self.ord_cols = [k for k in self.ord_dict.keys()]
+
         params["cat_cols"] = self.__get_cat_cols()
