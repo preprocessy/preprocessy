@@ -1,3 +1,3 @@
-from ._read import ReadData
+from ._read import Reader
 
-__all__ = ["ReadData"]
+__all__ = ["Reader"]

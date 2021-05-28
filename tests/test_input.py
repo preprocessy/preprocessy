@@ -1,14 +1,18 @@
 import pandas as pd
 import pytest
 
-from preprocessy.input import ReadData
+from preprocessy.input import Reader
 
-reader = ReadData()
+reader = Reader()
 
 
 @pytest.mark.parametrize(
     "test_input",
-    [{"df_path": None}, {"df_path": ["datasets/encoding/test.csv"]}],
+    [
+        {"train_df_path": None},
+        {"train_df_path": None, "test_df_path": None},
+        {"train_df_path": ["datasets/encoding/test.csv"]},
+    ],
 )
 def test_incorrect_file_name_type(test_input):
     with pytest.raises(TypeError):
@@ -17,16 +21,25 @@ def test_incorrect_file_name_type(test_input):
 
 def test_incorrect_file_type():
     with pytest.raises(ValueError):
-        reader.read_file({"df_path": "datasets"})
+        reader.read_file({"train_df_path": "datasets"})
 
 
-def test_reader():
-    reader.read_file({"df_path": "datasets/encoding/test.csv"})
-    assert isinstance(reader.df, pd.core.frame.DataFrame)
-    assert reader.df.shape == (3, 5)
-    assert reader.stats.iloc[1, 0] == -4003
+@pytest.mark.parametrize(
+    "test_input",
+    [
+        {"train_df_path": "datasets/encoding/test.csv"},
+        {
+            "train_df_path": "datasets/encoding/test.csv",
+            "test_df_path": "datasets/encoding/test.csv",
+        },
+    ],
+)
+def test_reader(test_input):
+    reader.read_file(test_input)
+    assert isinstance(test_input["train_df"], pd.core.frame.DataFrame)
+    assert test_input["train_df"].shape == (3, 5)
 
 
 def test_file_not_exists():
     with pytest.raises(FileNotFoundError):
-        reader.read_file({"df_path": "hello.csv"})
+        reader.read_file({"train_df_path": "hello.csv"})

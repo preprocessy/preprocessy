@@ -1,14 +1,15 @@
 import warnings
 
 from ..exceptions import ArgumentsError
-from ..input import ReadData
+from ..input import Reader
 from .config import read_config
 
 
 class Pipeline:
     def __init__(
         self,
-        df_path=None,
+        train_df_path=None,
+        test_df_path=None,
         steps=None,
         config_file=None,
         params=None,
@@ -16,7 +17,8 @@ class Pipeline:
     ):
 
         self.params = params
-        self.df_path = df_path
+        self.train_df_path = train_df_path
+        self.test_df_path = test_df_path
         self.config_file = config_file
         self.steps = steps
         self.custom_reader = custom_reader
@@ -25,12 +27,17 @@ class Pipeline:
         if self.config_file and not self.params:
             self.params = read_config(self.config_file)
 
-        self.params["df_path"] = self.df_path
-
         if self.custom_reader is None:
-            self.custom_reader = ReadData().read_file
+            self.custom_reader = Reader().read_file
 
-        self.add(self.custom_reader, {}, index=0)
+        self.add(
+            self.custom_reader,
+            {
+                "train_df_path": self.train_df_path,
+                "test_df_path": self.test_df_path,
+            },
+            index=0,
+        )
 
     def __validate_input(self):
 
@@ -79,14 +86,21 @@ class Pipeline:
                 f" {self.config_file} of type: {type(self.config_file)}"
             )
 
-        if not self.df_path:
-            raise ArgumentsError("'df_path' should not be None.")
+        if not self.train_df_path:
+            raise ArgumentsError("'train_df_path' should not be None.")
 
-        if not isinstance(self.df_path, str):
+        if not isinstance(self.train_df_path, str):
             raise TypeError(
-                f"'df_path' should be of type str. Received {self.df_path} of"
-                f" type {type(self.df_path)}"
+                f"'train_df_path' should be of type str. Received {self.train_df_path} "
+                f"of type {type(self.train_df_path)}"
             )
+
+        if self.test_df_path:
+            if not isinstance(self.test_df_path, str):
+                raise TypeError(
+                    f"'test_df_path' should be of type str. Received {self.test_df_path} "
+                    f"of type {type(self.test_df_path)}"
+                )
 
         if self.custom_reader and not callable(self.custom_reader):
             raise TypeError(
