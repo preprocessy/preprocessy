@@ -7,7 +7,7 @@ from preprocessy.resampling import Split
 
 def test_without_target_col():
     df = pd.DataFrame(np.arange(1000).reshape(100, 10))
-    params = {"X": df, "test_size": 0.2, "random_state": 420}
+    params = {"train_df": df, "test_size": 0.2, "random_state": 420}
     split = Split()
     split.train_test_split(params=params)
     assert params["train"].shape[0] == 80
@@ -20,7 +20,7 @@ def test_random_state():
     df = pd.DataFrame(np.arange(1000).reshape(100, 10))
     # test passes if function raises a TypeError
     with pytest.raises(TypeError):
-        params = {"X": df, "test_size": 0.2, "random_state": "hello"}
+        params = {"train_df": df, "test_size": 0.2, "random_state": "hello"}
         split = Split()
         split.train_test_split(params=params)
 
@@ -30,8 +30,8 @@ def test_without_target_label():
     df_y = pd.Series(np.arange(100))
     with pytest.raises(ValueError):
         params = {
-            "X": df_x,
-            "y": df_y,
+            "train_df": df_x,
+            "train_y": df_y,
             "test_size": 0.2,
             "random_state": 420,
         }

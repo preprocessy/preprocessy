@@ -46,7 +46,7 @@ class HandleOutlier:
         self.test_df = None
         self.cat_cols = []
         self.cols = []
-        self.target = []
+        self.target_label = []
         self.remove_outliers = True
         self.replace = False
         self.quartiles = {}
@@ -156,8 +156,8 @@ class HandleOutlier:
             self.train_df = params["train_df"]
         if "test_df" in params.keys():
             self.test_df = params["test_df"]
-        if "target" in params.keys():
-            self.target.append(params["target"])
+        if "target_label" in params.keys():
+            self.target_label.append(params["target_label"])
         if "cat_cols" in params.keys():
             self.cat_cols = params["cat_cols"]
         if "remove_outliers" in params.keys():
@@ -176,16 +176,15 @@ class HandleOutlier:
             self.cols = [
                 item
                 for item in self.cols
-                if item not in self.cat_cols and item not in self.target
+                if item not in self.cat_cols and item not in self.target_label
             ]
         else:
             self.cols = [
                 item
                 for item in self.train_df.columns
-                if item not in self.cat_cols and item not in self.target
+                if item not in self.cat_cols and item not in self.target_label
             ]
 
-        # parameters till now: train_df, test_df, cols, removeoutliers, replace
         # if user has marked removeoutliers = True and wants outliers removed..
         if self.remove_outliers:
             if len(self.cols) >= 1:

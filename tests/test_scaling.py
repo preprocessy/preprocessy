@@ -52,7 +52,7 @@ def test_incorrect_input_type(test_input, error):
                 "columns": ["Negatives"],
                 "is_combined": True,
                 "threshold": {"Negatives": -10},
-                "target_col": "Test",
+                "target_label": "Test",
             }
         ),
         (
@@ -62,7 +62,7 @@ def test_incorrect_input_type(test_input, error):
                 "columns": ["Negatives"],
                 "is_combined": True,
                 "threshold": {"Negatives": -1},
-                "target_col": "Test",
+                "target_label": "Test",
             }
         ),
         {
@@ -71,7 +71,7 @@ def test_incorrect_input_type(test_input, error):
             "columns": ["Negatives"],
             "is_combined": True,
             "threshold": {"Negatives": -1300},
-            "target_col": "Test",
+            "target_label": "Test",
         },
     ],
 )
@@ -102,8 +102,8 @@ def test_BinaryScaler_output(test_input):
                 "type": "MinMaxScaler",
                 "columns": ["Distance"],
                 "is_combined": False,
-                "target_col": "Capitals",
-                "categorical_columns": ["Capitals", "Other Capitals"],
+                "target_label": "Capitals",
+                "cat_cols": ["Capitals", "Other Capitals"],
             }
         ),
         (
@@ -112,8 +112,8 @@ def test_BinaryScaler_output(test_input):
                 "type": "MinMaxScaler",
                 "columns": ["Distance"],
                 "is_combined": True,
-                "target_col": "Capitals",
-                "categorical_columns": ["Capitals", "Other Capitals"],
+                "target_label": "Capitals",
+                "cat_cols": ["Capitals", "Other Capitals"],
             }
         ),
         (
@@ -122,8 +122,8 @@ def test_BinaryScaler_output(test_input):
                 "type": "MinMaxScaler",
                 "columns": ["Negatives"],
                 "is_combined": False,
-                "target_col": "Test",
-                "categorical_columns": ["Price", "Profession", "Date"],
+                "target_label": "Test",
+                "cat_cols": ["Price", "Profession", "Date"],
             }
         ),
         (
@@ -132,8 +132,8 @@ def test_BinaryScaler_output(test_input):
                 "type": "MinMaxScaler",
                 "columns": ["Negatives"],
                 "is_combined": True,
-                "target_col": "Test",
-                "categorical_columns": ["Price", "Profession", "Date"],
+                "target_label": "Test",
+                "cat_cols": ["Price", "Profession", "Date"],
             }
         ),
     ],
@@ -158,8 +158,8 @@ def test_MinMaxScaler_output(test_input):
                 "type": "StandardScaler",
                 "columns": ["Distance"],
                 "is_combined": False,
-                "target_col": "Other Capitals",
-                "categorical_columns": ["Capitals", "Other Capitals"],
+                "target_label": "Other Capitals",
+                "cat_cols": ["Capitals", "Other Capitals"],
             }
         ),
         (
@@ -168,8 +168,8 @@ def test_MinMaxScaler_output(test_input):
                 "type": "StandardScaler",
                 "columns": ["Distance"],
                 "is_combined": True,
-                "target_col": "Capitals",
-                "categorical_columns": ["Capitals", "Other Capitals"],
+                "target_label": "Capitals",
+                "cat_cols": ["Capitals", "Other Capitals"],
             }
         ),
         (
@@ -178,8 +178,8 @@ def test_MinMaxScaler_output(test_input):
                 "type": "StandardScaler",
                 "columns": ["Negatives"],
                 "is_combined": False,
-                "target_col": "Test",
-                "categorical_columns": ["Price", "Profession", "Date"],
+                "target_label": "Test",
+                "cat_cols": ["Price", "Profession", "Date"],
             }
         ),
         (
@@ -188,8 +188,8 @@ def test_MinMaxScaler_output(test_input):
                 "type": "StandardScaler",
                 "columns": ["Negatives"],
                 "is_combined": True,
-                "target_col": "Test",
-                "categorical_columns": ["Price", "Profession", "Date"],
+                "target_label": "Test",
+                "cat_cols": ["Price", "Profession", "Date"],
             }
         ),
     ],
