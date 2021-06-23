@@ -26,6 +26,7 @@ def test_null_dataframe():
 #         handler = NullValuesHandler()
 #         handler.execute({"train_df":dataframe1,'test_df':dataframe2})
 
+
 @pytest.mark.parametrize(
     "test_input",
     [
@@ -62,11 +63,15 @@ def test_multiple_args(test_input):
         (TypeError, {"train_df": dataframe1, "fill_values": [5]}),
         (TypeError, {"train_df": dataframe1, "drop": True, "cat_cols": 4}),
         (ArgumentsError, {"train_df": dataframe1, "fill_missing": "sum"}),
-        (ArgumentsError, {"train_df": dataframe1,
-         "drop": True, "cat_cols": ["xyz"]}),
-        (ArgumentsError, {"train_df": dataframe1,
-         "fill_values": {"Label": 10}}),
-        (ArgumentsError, {"train_df": dataframe1, 'test_df': dataframe2})
+        (
+            ArgumentsError,
+            {"train_df": dataframe1, "drop": True, "cat_cols": ["xyz"]},
+        ),
+        (
+            ArgumentsError,
+            {"train_df": dataframe1, "fill_values": {"Label": 10}},
+        ),
+        (ArgumentsError, {"train_df": dataframe1, "test_df": dataframe2}),
     ],
 )
 def test_incorrect_input_type(error, test_input):
@@ -79,54 +84,91 @@ def test_incorrect_input_type(error, test_input):
 @pytest.mark.parametrize(
     "test_input1",
     [
-        {"train_df": dataframe1, "test_df": dataframe1, "fill_values": {
-            "Other Capitals": "0"}, "cat_cols": ["Other Capitals"]},
-        {"train_df": dataframe1, "test_df": dataframe1, "fill_missing": "mean"},
-        {"train_df": dataframe1, "test_df": dataframe1, "fill_values": {"Distance": 0}},
+        {
+            "train_df": dataframe1,
+            "test_df": dataframe1,
+            "fill_values": {"Other Capitals": "0"},
+            "cat_cols": ["Other Capitals"],
+        },
+        {
+            "train_df": dataframe1,
+            "test_df": dataframe1,
+            "fill_missing": "mean",
+        },
+        {
+            "train_df": dataframe1,
+            "test_df": dataframe1,
+            "fill_values": {"Distance": 0},
+        },
     ],
 )
-
 def test_categorical_drops(test_input1):
-    l = (test_input1["train_df"].shape)[0]
-    s = (test_input1["test_df"].shape)[0]
+    train_row_count = (test_input1["train_df"].shape)[0]
+    test_row_count = (test_input1["test_df"].shape)[0]
     handler = NullValuesHandler()
     handler.execute(params=test_input1)
     assert "0" not in test_input1["train_df"]["Other Capitals"]
-    assert (test_input1["train_df"].shape)[0] <= l
+    assert (test_input1["train_df"].shape)[0] <= train_row_count
     assert "0" not in test_input1["test_df"]["Other Capitals"]
-    assert (test_input1["test_df"].shape)[0] <= l
+    assert (test_input1["test_df"].shape)[0] <= test_row_count
 
 
 @pytest.mark.parametrize(
     "test_input2",
     [
-        {"train_df": dataframe1, "test_df": dataframe1, "fill_values": {"Other Capitals": "0"},
-            "cat_cols": ["Capitals"], "replace_cat_nulls":"xyz"},
-    ]
+        {
+            "train_df": dataframe1,
+            "test_df": dataframe1,
+            "fill_values": {"Other Capitals": "0"},
+            "cat_cols": ["Capitals"],
+            "replace_cat_nulls": "xyz",
+        },
+    ],
 )
-
 def test_categorical_replace(test_input2):
     test_input2["train_df"] = pd.read_csv("datasets/encoding/test2.csv")
     test_input2["test_df"] = pd.read_csv("datasets/encoding/test2.csv")
     handler = NullValuesHandler()
     handler.execute(params=test_input2)
-    assert len(test_input2["train_df"]
-               [test_input2["train_df"].Capitals == "xyz"]["Capitals"]) == 9
-    assert len(test_input2["test_df"]
-               [test_input2["test_df"].Capitals == "xyz"]["Capitals"]) == 9
+    assert (
+        len(
+            test_input2["train_df"][test_input2["train_df"].Capitals == "xyz"][
+                "Capitals"
+            ]
+        )
+        == 9
+    )
+    assert (
+        len(
+            test_input2["test_df"][test_input2["test_df"].Capitals == "xyz"][
+                "Capitals"
+            ]
+        )
+        == 9
+    )
 
 
 @pytest.mark.parametrize(
     "test_input3",
     [
-        {"train_df": dataframe1, "test_df": dataframe1, "fill_values": {
-            "Other Capitals": "0"}, "cat_cols": ["Other Capitals"]},
-        {"train_df": dataframe1, "test_df": dataframe1, "fill_missing": "mean"},
-        {"train_df": dataframe1, "test_df": dataframe1,
-            "fill_values": {"Distance": 0}},
-    ]
+        {
+            "train_df": dataframe1,
+            "test_df": dataframe1,
+            "fill_values": {"Other Capitals": "0"},
+            "cat_cols": ["Other Capitals"],
+        },
+        {
+            "train_df": dataframe1,
+            "test_df": dataframe1,
+            "fill_missing": "mean",
+        },
+        {
+            "train_df": dataframe1,
+            "test_df": dataframe1,
+            "fill_values": {"Distance": 0},
+        },
+    ],
 )
-
 def test_output(test_input3):
     handler = NullValuesHandler()
     handler.execute(params=test_input3)
@@ -136,12 +178,17 @@ def test_output(test_input3):
 
 # for dropping list of columns passed by user
 def test_drop_col():
-    params = {"train_df": dataframe1, "test_df": dataframe1,
-              "drop": True, "column_list": ["Distance"]}
+    params = {
+        "train_df": dataframe1,
+        "test_df": dataframe1,
+        "drop": True,
+        "column_list": ["Distance"],
+    }
     handler = NullValuesHandler()
     handler.execute(params=params)
     assert "Distance" not in params["train_df"].columns
     assert "Distance" not in params["test_df"].columns
+
 
 def test_auto():
     params = {"train_df": dataframe1, "test_df": dataframe1}
@@ -153,4 +200,3 @@ def test_auto():
     rt_new = (params["test_df"].shape)[0]
     assert r_new == r
     assert rt_new == rt
-

@@ -219,7 +219,7 @@ class Split:
             params["X_test"] = self.test_df
             params["y_train"] = self.train_y
             params["y_test"] = self.test_y
-        
+
         else:
 
             np.random.seed(self.random_state)
