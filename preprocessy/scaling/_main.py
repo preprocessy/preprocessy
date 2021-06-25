@@ -30,7 +30,7 @@ class Scaler:
         self.train_df = None
         self.test_df = None
         self.type = "StandardScaler"
-        self.columns = None
+        self.columns = []
         self.is_combined = False
         self.threshold = None
         self.new_train_df = None
@@ -42,6 +42,10 @@ class Scaler:
 
     def __repr__(self):
         return f"Scaler(type={self.type}, is_combined={self.is_combined}, threshold={self.threshold})"
+
+    def isNumeric(self, column):
+        # i => int (signed), u => unsigned int, f => float, c => complex
+        return column.dtype.kind in "iufc"
 
     def __validate_input(self):
         if self.train_df is None:
@@ -90,6 +94,11 @@ class Scaler:
                     raise ArgumentsError(
                         f"Column {column} does not exist in dataframe"
                     )
+        else:
+            cols = list(self.train_df.keys())
+            for col in cols:
+                if self.isNumeric(self.train_df[col]):
+                    self.columns.append(col)
 
         if self.threshold is not None:
             if type(self.threshold) is not dict:
@@ -115,10 +124,6 @@ class Scaler:
 
         self.new_train_df = self.train_df
         self.new_test_df = self.test_df
-
-    def isNumeric(self, column):
-        # i => int (signed), u => unsigned int, f => float, c => complex
-        return column.dtype.kind in "iufc"
 
     def __min_max_scaler_helper(self, df):
         new_df = df.copy()
