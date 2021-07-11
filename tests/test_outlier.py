@@ -14,20 +14,20 @@ train_df = pd.read_csv("datasets/encoding/test2.csv")
         {
             "train_df": train_df,
             "cat_cols": ["Capitals"],
-            "target": "Other Capitals",
+            "target_label": "Other Capitals",
             "first_quartile": 1.3,
         },
         {
             "train_df": train_df,
             "cat_cols": ["Capitals"],
-            "target": "Other Capitals",
+            "target_label": "Other Capitals",
             "first_quartile": 0.3,
             "third_quartile": 1.54,
         },
         {
             "train_df": train_df,
             "cat_cols": ["Capitals"],
-            "target": "Other Capitals",
+            "target_label": "Other Capitals",
             "first_quartile": 0.7,
             "third_quartile": 0.3,
         },
@@ -126,7 +126,7 @@ def test_removeoutliers_output(test_input):
         {
             "train_df": train_df,
             "cat_cols": ["Capitals"],
-            "target": "Other Capitals",
+            "target_label": "Other Capitals",
             "remove_outliers": False,
             "replace": True,
         }

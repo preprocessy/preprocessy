@@ -67,7 +67,10 @@ class Encoder:
         original columns. Instead a new column will be made with the name 'col_nameEncoding'.
         """
         for col in self.cat_cols:
-            if col in self.train_df and col not in self.ord_cols:
+            if (
+                col in self.train_df
+                and col + str("Encoded") not in self.ord_cols
+            ):
                 if self.test_df is not None:
                     self.test_df[col + str("Encoded")] = pd.factorize(
                         self.train_df[col]

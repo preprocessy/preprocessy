@@ -9,8 +9,10 @@ class Split:
 
     def __init__(self):
         self.df = None
-        self.X = None
-        self.y = None
+        self.train_df = None
+        self.train_y = None
+        self.test_df = None
+        self.test_y = None
         self.test_size = None
         self.train_size = None
         self.random_state = 69
@@ -52,25 +54,25 @@ class Split:
 
         """
 
-        if self.X is None:
+        if self.train_df is None:
             raise ValueError("Feature dataframe should not be of None")
 
-        if not isinstance(self.X, pd.core.frame.DataFrame):
+        if not isinstance(self.train_df, pd.core.frame.DataFrame):
             raise TypeError(
                 "Feature dataframe is not a valid dataframe.\nExpected object"
                 " type: pandas.core.frame.DataFrame"
             )
 
-        n_samples = num_of_samples(self.X)
+        n_samples = num_of_samples(self.train_df)
 
-        if self.y is not None:
-            if n_samples != self.y.shape[0]:
+        if self.train_y is not None:
+            if n_samples != self.train_y.shape[0]:
                 raise ValueError(
                     "Number of samples of target label and feature dataframe"
                     " unequal.\nSamples in feature dataframe:"
                     f" {self.X.shape[0]}\nSamples in target label: {self.y.shape[0]}"
                 )
-            if not isinstance(self.y, pd.core.series.Series):
+            if not isinstance(self.train_y, pd.core.series.Series):
                 raise TypeError(
                     "Target label is not a valid dataframe.\nExpected object"
                     " type: pandas.core.series.Series"
@@ -138,11 +140,11 @@ class Split:
             )
 
         else:
-            if self.y is None:
+            if self.train_y is None:
                 self.test_size = 0.2
                 self.train_size = 0.8
             else:
-                features = len(self.X.columns)
+                features = len(self.train_df.columns)
                 self.test_size = float(1 / np.sqrt(features))
                 self.train_size = 1 - self.test_size
 
@@ -195,10 +197,14 @@ class Split:
 
         """
 
-        if "X" in params.keys():
-            self.X = params["X"]
-        if "y" in params.keys():
-            self.y = params["y"]
+        if "train_df" in params.keys():
+            self.train_df = params["train_df"]
+        if "train_y" in params.keys():
+            self.train_y = params["train_y"]
+        if "test_df" in params.keys():
+            self.test_df = params["test_df"]
+        if "test_y" in params.keys():
+            self.test_y = params["test_y"]
         if "test_size" in params.keys():
             self.test_size = params["test_size"]
         if "train_size" in params.keys():
@@ -208,38 +214,46 @@ class Split:
 
         self.__validate_input()
 
-        np.random.seed(self.random_state)
-
-        if self.y is not None:
-            self.df = pd.concat([self.X, self.y], axis=1)
-        else:
-            self.df = self.X
-
-        self.df = self.df.iloc[
-            np.random.permutation(len(self.df))
-        ].reset_index(drop=True)
-        if isinstance(self.test_size, float):
-            index = int(self.test_size * len(self.df))
-            train = self.df.iloc[index:]
-            test = self.df.iloc[:index]
-        else:
-            train = self.df.iloc[self.test_size :]
-            test = self.df.iloc[: self.test_size]
-
-        if self.y is not None:
-            if not self.y.name:
-                raise ValueError(
-                    f"Target column needs to have a name. ${self.y.name} was provided."
-                )
-            y_train = train[self.y.name]
-            X_train = train.drop([self.y.name], axis=1)
-            y_test = test[self.y.name]
-            X_test = test.drop([self.y.name], axis=1)
-            params["X_train"] = X_train
-            params["X_test"] = X_test
-            params["y_train"] = y_train
-            params["y_test"] = y_test
+        if self.test_df is not None and self.test_y is not None:
+            params["X_train"] = self.train_df
+            params["X_test"] = self.test_df
+            params["y_train"] = self.train_y
+            params["y_test"] = self.test_y
 
         else:
-            params["train"] = train
-            params["test"] = test
+
+            np.random.seed(self.random_state)
+
+            if self.train_y is not None:
+                self.df = pd.concat([self.train_df, self.train_y], axis=1)
+            else:
+                self.df = self.train_df
+
+            self.df = self.df.iloc[
+                np.random.permutation(len(self.df))
+            ].reset_index(drop=True)
+            if isinstance(self.test_size, float):
+                index = int(self.test_size * len(self.df))
+                train = self.df.iloc[index:]
+                test = self.df.iloc[:index]
+            else:
+                train = self.df.iloc[self.test_size :]
+                test = self.df.iloc[: self.test_size]
+
+            if self.train_y is not None:
+                if not self.train_y.name:
+                    raise ValueError(
+                        f"Target column needs to have a name. ${self.train_y.name} was provided."
+                    )
+                y_train = train[self.train_y.name]
+                X_train = train.drop([self.train_y.name], axis=1)
+                y_test = test[self.train_y.name]
+                X_test = test.drop([self.train_y.name], axis=1)
+                params["X_train"] = X_train
+                params["X_test"] = X_test
+                params["y_train"] = y_train
+                params["y_test"] = y_test
+
+            else:
+                params["train"] = train
+                params["test"] = test

@@ -30,18 +30,22 @@ class Scaler:
         self.train_df = None
         self.test_df = None
         self.type = "StandardScaler"
-        self.columns = None
+        self.columns = []
         self.is_combined = False
         self.threshold = None
         self.new_train_df = None
         self.new_test_df = None
         self.final_train_df = None
         self.final_test_df = None
-        self.categorical_columns = None
-        self.target_col = None
+        self.cat_cols = None
+        self.target_label = None
 
     def __repr__(self):
         return f"Scaler(type={self.type}, is_combined={self.is_combined}, threshold={self.threshold})"
+
+    def isNumeric(self, column):
+        # i => int (signed), u => unsigned int, f => float, c => complex
+        return column.dtype.kind in "iufc"
 
     def __validate_input(self):
         if self.train_df is None:
@@ -90,6 +94,11 @@ class Scaler:
                     raise ArgumentsError(
                         f"Column {column} does not exist in dataframe"
                     )
+        else:
+            cols = list(self.train_df.keys())
+            for col in cols:
+                if self.isNumeric(self.train_df[col]):
+                    self.columns.append(col)
 
         if self.threshold is not None:
             if type(self.threshold) is not dict:
@@ -102,13 +111,13 @@ class Scaler:
                         f"Column {column} does not exist in dataframe"
                     )
 
-        if self.categorical_columns is not None:
-            if not isinstance(self.categorical_columns, list):
+        if self.cat_cols is not None:
+            if not isinstance(self.cat_cols, list):
                 raise TypeError(
-                    f"Expected list type for argument categorical_columns, got {type(self.columns)}"
+                    f"Expected list type for argument categorical_columns, got {type(self.cat_cols)}"
                 )
 
-        if not isinstance(self.target_col, str):
+        if not isinstance(self.target_label, str):
             raise TypeError(
                 f"Expected str type for argument target_col, got {type(self.columns)}"
             )
@@ -116,16 +125,12 @@ class Scaler:
         self.new_train_df = self.train_df
         self.new_test_df = self.test_df
 
-    def isNumeric(self, column):
-        # i => int (signed), u => unsigned int, f => float, c => complex
-        return column.dtype.kind in "iufc"
-
     def __min_max_scaler_helper(self, df):
         new_df = df.copy()
         to_be_dropped_columns = list()
-        if self.categorical_columns is not None:
-            to_be_dropped_columns = self.categorical_columns
-        to_be_dropped_columns.append(self.target_col)
+        if self.cat_cols is not None:
+            to_be_dropped_columns = self.cat_cols
+        to_be_dropped_columns.append(self.target_label)
         if not self.is_combined:
             for column in self.columns:
                 if column in to_be_dropped_columns:
@@ -163,9 +168,9 @@ class Scaler:
     def __binary_scaler_helper(self, df):
         new_df = df.copy()
         to_be_dropped_columns = list()
-        if self.categorical_columns is not None:
-            to_be_dropped_columns = self.categorical_columns
-        to_be_dropped_columns.append(self.target_col)
+        if self.cat_cols is not None:
+            to_be_dropped_columns = self.cat_cols
+        to_be_dropped_columns.append(self.target_label)
         for column in self.columns:
             if not self.isNumeric(df[column]):
                 raise TypeError(
@@ -192,9 +197,9 @@ class Scaler:
     def __standard_scaler_helper(self, df):
         new_df = df.copy()
         to_be_dropped_columns = list()
-        if self.categorical_columns is not None:
-            to_be_dropped_columns = self.categorical_columns
-        to_be_dropped_columns.append(self.target_col)
+        if self.cat_cols is not None:
+            to_be_dropped_columns = self.cat_cols
+        to_be_dropped_columns.append(self.target_label)
         if not self.is_combined:
             for column in self.columns:
                 if column in to_be_dropped_columns:
@@ -243,10 +248,10 @@ class Scaler:
             self.test_df = params["test_df"]
         if "threshold" in params.keys():
             self.threshold = params["threshold"]
-        if "categorical_columns" in params.keys():
-            self.categorical_columns = params["categorical_columns"]
-        if "target_col" in params.keys():
-            self.target_col = params["target_col"]
+        if "cat_cols" in params.keys():
+            self.cat_cols = params["cat_cols"]
+        if "target_label" in params.keys():
+            self.target_label = params["target_label"]
 
         self.__validate_input()
 
