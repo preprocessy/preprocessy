@@ -10,6 +10,7 @@ class Split:
     def __init__(self):
         self.df = None
         self.train_df = None
+        self.target_label = None
         self.train_y = None
         self.test_df = None
         self.test_y = None
@@ -154,12 +155,16 @@ class Split:
     def train_test_split(self, params):
         """Performs train test split on the input data
 
-        :param X: Input dataframe, may or may not consist of the target label.
+        :param train_df: Input dataframe, may or may not consist of the target label.
                   Should not be ``None``
-        :type X: pandas.core.frames.DataFrame
+        :type train_df: pandas.core.frames.DataFrame
 
-        :param y: Target label series. If ``None`` then ``X`` consists target label
-        :type y: pandas.core.series.Series, optional
+        :param test_df: Input dataframe, may or may not consist of the target label.
+                  Should not be ``None``
+        :type test_df: pandas.core.frames.DataFrame
+
+        :param target_label: Name of the Target Column.
+        :type target_label: str
 
         :param test_size: Size of test set after splitting. Can take values from
                           0 - 1 for float point values, 0 - Number of samples for
@@ -199,18 +204,20 @@ class Split:
 
         if "train_df" in params.keys():
             self.train_df = params["train_df"]
-        if "train_y" in params.keys():
-            self.train_y = params["train_y"]
         if "test_df" in params.keys():
             self.test_df = params["test_df"]
-        if "test_y" in params.keys():
-            self.test_y = params["test_y"]
+        if "target_label" in params.keys():
+            self.target_label = params["target_label"]
         if "test_size" in params.keys():
             self.test_size = params["test_size"]
         if "train_size" in params.keys():
             self.train_size = params["train_size"]
         if "random_state" in params.keys():
             self.random_state = params["random_state"]
+        if self.target_label:
+            self.train_y = self.train_df[self.target_label]
+            if self.test_df:
+                self.test_y = self.test_df[self.target_label]
 
         self.__validate_input()
 

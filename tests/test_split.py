@@ -18,22 +18,7 @@ def test_without_target_col():
 
 def test_random_state():
     df = pd.DataFrame(np.arange(1000).reshape(100, 10))
-    # test passes if function raises a TypeError
     with pytest.raises(TypeError):
         params = {"train_df": df, "test_size": 0.2, "random_state": "hello"}
-        split = Split()
-        split.train_test_split(params=params)
-
-
-def test_without_target_label():
-    df_x = pd.DataFrame(np.arange(1000).reshape(100, 10))
-    df_y = pd.Series(np.arange(100))
-    with pytest.raises(ValueError):
-        params = {
-            "train_df": df_x,
-            "train_y": df_y,
-            "test_size": 0.2,
-            "random_state": 420,
-        }
         split = Split()
         split.train_test_split(params=params)

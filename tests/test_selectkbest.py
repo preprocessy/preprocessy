@@ -25,12 +25,17 @@ def test_invalid_input():
 @pytest.mark.parametrize(
     "test_input",
     [
-        {"score_func": 10, "k": 10, "train_df": X_reg, "target_col": "target"},
+        {
+            "score_func": 10,
+            "k": 10,
+            "train_df": X_reg,
+            "target_label": "target",
+        },
         {
             "score_func": "chi2",
             "k": 10,
             "train_df": X_reg,
-            "target_col": "target",
+            "target_label": "target",
         },
     ],
 )
@@ -44,10 +49,10 @@ def test_score_func(test_input):
     "test_input, test_output",
     [
         (
-            {"k": 10, "train_df": X_reg, "target_col": "target"},
+            {"k": 10, "train_df": X_reg, "target_label": "target"},
             f_regression.__name__,
         ),
-        ({"train_df": X_class, "target_col": "target"}, f_classif.__name__),
+        ({"train_df": X_class, "target_label": "target"}, f_classif.__name__),
     ],
 )
 def test_default_score_func(test_input, test_output):
@@ -59,19 +64,19 @@ def test_default_score_func(test_input, test_output):
 def test_transform_without_fit():
     kbest = SelectKBest()
     with pytest.raises(ValueError):
-        kbest.transform({"train_df": X_reg, "target_col": "target"})
+        kbest.transform({"train_df": X_reg, "target_label": "target"})
 
 
 @pytest.mark.parametrize(
     "params, split_size",
     [
-        ({"train_df": X_reg, "target_col": "target", "k": 10}, 1000),
-        ({"train_df": X_class, "target_col": "target", "k": 10}, 1000),
+        ({"train_df": X_reg, "target_label": "target", "k": 10}, 1000),
+        ({"train_df": X_class, "target_label": "target", "k": 10}, 1000),
         (
             {
                 "train_df": X_reg.iloc[:800, :],
                 "test_df": X_reg.iloc[800:, :],
-                "target_col": "target",
+                "target_label": "target",
                 "k": 10,
                 "score_func": f_regression,
             },
@@ -81,7 +86,7 @@ def test_transform_without_fit():
             {
                 "train_df": X_class.iloc[:800, :],
                 "test_df": X_class.iloc[800:, :],
-                "target_col": "target",
+                "target_label": "target",
                 "k": 10,
                 "score_func": f_classif,
             },
