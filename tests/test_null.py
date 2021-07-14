@@ -136,7 +136,7 @@ def test_categorical_replace(test_input2):
                 "Capitals"
             ]
         )
-        == 9
+        == 8
     )
     assert (
         len(
@@ -144,7 +144,7 @@ def test_categorical_replace(test_input2):
                 "Capitals"
             ]
         )
-        == 9
+        == 8
     )
 
 
@@ -191,6 +191,7 @@ def test_drop_col():
 
 
 def test_auto():
+    dataframe1 = pd.read_csv("datasets/encoding/test2.csv")
     params = {"train_df": dataframe1, "test_df": dataframe1}
     r = (params["train_df"].shape)[0]
     rt = (params["test_df"].shape)[0]
@@ -198,5 +199,5 @@ def test_auto():
     handler.execute(params=params)
     r_new = (params["train_df"].shape)[0]
     rt_new = (params["test_df"].shape)[0]
-    assert r_new == r
-    assert rt_new == rt
+    assert r_new != r
+    assert rt_new != rt

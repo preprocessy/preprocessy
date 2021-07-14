@@ -1,5 +1,6 @@
 import errno
 import os
+from datetime import datetime
 
 import pandas as pd
 
@@ -58,6 +59,7 @@ class Reader(object):
         return df
 
     def read_file(self, params):
+        start = datetime.now()
         if "train_df_path" in params.keys():
             self.train_df_path = params["train_df_path"]
         if "test_df_path" in params.keys():
@@ -66,3 +68,10 @@ class Reader(object):
         params["train_df"] = self.__read_file_util(self.train_df_path)
         if self.test_df_path:
             params["test_df"] = self.__read_file_util(self.test_df_path)
+        end = datetime.now()
+        duration = end - start
+        print(
+            "-------------Completed reading and loading the .csv file in "
+            + str(duration)
+            + " -------------"
+        )
