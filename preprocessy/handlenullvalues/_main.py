@@ -168,9 +168,7 @@ class NullValuesHandler:
 
     # function to drop all rows with nan values
     def __drop_all_rows_with_null_values(self):
-        print(self.new_train.shape)
         self.new_train = self.train_df.dropna()
-
         if self.test_df is not None:
             self.new_test = self.test_df.dropna()
             print(self.new_train.shape)
@@ -241,6 +239,7 @@ class NullValuesHandler:
 
     # main function
     def execute(self, params):
+
         start = datetime.now()
         if "train_df" in params.keys():
             self.train_df = params["train_df"]

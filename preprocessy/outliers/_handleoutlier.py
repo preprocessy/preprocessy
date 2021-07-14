@@ -209,6 +209,7 @@ class HandleOutlier:
                 ):
                     self.cols.append(col)
 
+
         # if user has marked removeoutliers = True and wants outliers removed..
         if self.remove_outliers:
             if len(self.cols) >= 1:
