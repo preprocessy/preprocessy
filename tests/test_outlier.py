@@ -106,7 +106,7 @@ def test_incorrect_input_key():
     with pytest.raises(KeyError):
         outlier = HandleOutlier()
         outlier.handle_outliers(
-            params={"train_df": train_df, "cols": ["Place"]}
+            params={"train_df": train_df, "out_cols": ["Place"]}
         )
 
 

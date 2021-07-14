@@ -1,4 +1,5 @@
 import warnings
+from datetime import datetime
 
 import pandas as pd
 from pandas.api.types import is_numeric_dtype
@@ -66,6 +67,8 @@ class Encoder:
         Helper function to encode categorical columns using pd.factorize. Encoding will not affect the
         original columns. Instead a new column will be made with the name 'col_nameEncoding'.
         """
+        cat = []
+        # cat = self.cat_cols
         for col in self.cat_cols:
             if (
                 col in self.train_df
@@ -73,7 +76,7 @@ class Encoder:
             ):
                 if self.test_df is not None:
                     self.test_df[col + str("Encoded")] = pd.factorize(
-                        self.train_df[col]
+                        self.test_df[col]
                     )[0]
                     self.test_df[col + str("Encoded")] = self.test_df[
                         col + str("Encoded")
@@ -84,6 +87,8 @@ class Encoder:
                 self.train_df[col + str("Encoded")] = self.train_df[
                     col + str("Encoded")
                 ].astype("category")
+                cat.append(str(col + str("Encoded")))
+        self.cat_cols += cat
 
     def __encode_one_hot_util(self):
         """
@@ -124,11 +129,14 @@ class Encoder:
         """
         if self.cat_cols is None:
             rows = self.train_df.shape[0]
-            rows = 0.5 * rows
+            rows = 0.09 * rows
             self.cat_cols = []
             for col in self.train_df.columns:
                 if col not in self.ord_cols:
-                    if self.train_df[col].dtype == "object" and (
+                    if (
+                        self.train_df[col].dtype == "object"
+                        and type(self.train_df[col][0]) == "str"
+                    ) and (
                         "$" in self.train_df[col][0]
                         or self.train_df[col].str.contains(",").any()
                     ):
@@ -148,7 +156,7 @@ class Encoder:
                     elif (
                         is_numeric_dtype(self.train_df[col])
                         or is_string_dtype(self.train_df[col])
-                    ) and self.train_df[col].nunique() < rows:
+                    ) and self.train_df[col].dropna().nunique() < rows:
                         self.cat_cols.append(col)
                 else:
                     continue
@@ -225,7 +233,7 @@ class Encoder:
         self.test_df: Modified test set
         cat_cols: Columns which were taken as categorical
         """
-
+        start = datetime.now()
         if "test_df" in params.keys():
             self.test_df = params["test_df"]
         if "train_df" in params.keys():
@@ -248,3 +256,11 @@ class Encoder:
         params["train_df"] = self.train_df
         params["test_df"] = self.test_df
         params["cat_cols"] = self.cat_cols
+        params["ord_cols"] = self.ord_cols
+        end = datetime.now()
+        duration = end - start
+        print(
+            "-------------Completed encoding categorical columns in "
+            + str(duration)
+            + " ---------------"
+        )

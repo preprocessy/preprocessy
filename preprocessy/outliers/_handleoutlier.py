@@ -1,4 +1,5 @@
 import warnings
+from datetime import datetime
 
 import pandas as pd
 
@@ -45,13 +46,14 @@ class HandleOutlier:
         self.train_df = None
         self.test_df = None
         self.cat_cols = []
+        self.ord_cols = []
         self.cols = []
         self.target_label = []
         self.remove_outliers = True
         self.replace = False
         self.quartiles = {}
-        self.first_quartile = 0.05
-        self.third_quartile = 0.95
+        self.first_quartile = 0.01
+        self.third_quartile = 0.99
 
     def __validate_input(self):
 
@@ -80,6 +82,21 @@ class HandleOutlier:
 
         else:
             for c in self.cols:
+                if not isinstance(c, str):
+                    raise TypeError(
+                        f"'column' should be of type str. Received {c} of"
+                        f" type {type(c)}"
+                    )
+                elif c not in self.train_df.columns:
+                    raise KeyError(f" '{c}' column is not present in train_df")
+        if not isinstance(self.cat_cols, list):
+            raise TypeError(
+                f"'cols' should be of type list. Received {self.cat_cols} of"
+                f" type {type(self.cat_cols)}"
+            )
+
+        else:
+            for c in self.cat_cols:
                 if not isinstance(c, str):
                     raise TypeError(
                         f"'column' should be of type str. Received {c} of"
@@ -151,7 +168,7 @@ class HandleOutlier:
         self.quartiles[col] = [q1, q3]
 
     def handle_outliers(self, params):
-
+        start = datetime.now()
         if "train_df" in params.keys():
             self.train_df = params["train_df"]
         if "test_df" in params.keys():
@@ -160,6 +177,8 @@ class HandleOutlier:
             self.target_label.append(params["target_label"])
         if "cat_cols" in params.keys():
             self.cat_cols = params["cat_cols"]
+        if "ord_cols" in params.keys():
+            self.ord_cols = params["ord_cols"]
         if "remove_outliers" in params.keys():
             self.remove_outliers = params["remove_outliers"]
         if "replace" in params.keys():
@@ -171,19 +190,24 @@ class HandleOutlier:
 
         self.__validate_input()
 
-        if "cols" in params.keys():
-            self.cols = params["cols"]
+        if "out_cols" in params.keys():
+            self.cols = params["out_cols"]
             self.cols = [
                 item
                 for item in self.cols
                 if item not in self.cat_cols and item not in self.target_label
             ]
+
         else:
-            self.cols = [
-                item
-                for item in self.train_df.columns
-                if item not in self.cat_cols and item not in self.target_label
-            ]
+            self.cols = []
+            for col in self.train_df.columns:
+                if (
+                    col not in self.cat_cols
+                    and col not in self.ord_cols
+                    and col not in self.target_label
+                    and not isinstance(self.train_df.iloc[0][col], str)
+                ):
+                    self.cols.append(col)
 
         # if user has marked removeoutliers = True and wants outliers removed..
         if self.remove_outliers:
@@ -192,11 +216,16 @@ class HandleOutlier:
                     self.__return_quartiles(col)
                 for col in self.cols:
                     q1, q3 = self.quartiles[col]
-                    self.train_df = self.train_df[(self.train_df[col] >= q1)]
-                    self.train_df = self.train_df[(self.train_df[col] <= q3)]
+
+                    self.train_df_new = self.train_df[
+                        (self.train_df[col] > q1)
+                    ]
+                    self.train_df_new = self.train_df[
+                        (self.train_df[col] <= q3)
+                    ]
                     if self.test_df is not None:
-                        self.test_df = self.test_df[(self.test_df[col] <= q1)]
-                        self.test_df = self.test_df[(self.test_df[col] >= q3)]
+                        self.test_df = self.test_df[(self.test_df[col] > q1)]
+                        self.test_df = self.test_df[(self.test_df[col] <= q3)]
         # if removeoutliers = False and replace=True i.e. user wants outliers
         # replaced by a value to indicate these are outliers
         elif self.replace:
@@ -212,5 +241,11 @@ class HandleOutlier:
                         self.test_df[(self.test_df[col] >= q3)] = -999
 
         params["train_df"] = self.train_df
-        if self.test_df is not None:
-            params["test_df"] = self.test_df
+        params["test_df"] = self.test_df
+        end = datetime.now()
+        duration = end - start
+        print(
+            "-------------Completed handling outliers in "
+            + str(duration)
+            + " -------------"
+        )

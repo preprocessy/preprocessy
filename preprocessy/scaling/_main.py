@@ -1,3 +1,5 @@
+from datetime import datetime
+
 import pandas as pd
 
 from ..exceptions import ArgumentsError
@@ -235,7 +237,7 @@ class Scaler:
         return self.new_train_df, self.new_test_df
 
     def execute(self, params):
-
+        start = datetime.now()
         if "type" in params.keys():
             self.type = params["type"]
         if "columns" in params.keys():
@@ -264,3 +266,10 @@ class Scaler:
 
         params["train_df"] = self.final_train_df
         params["test_df"] = self.final_test_df
+        end = datetime.now()
+        duration = end - start
+        print(
+            "-------------Completed scaling values in dataframe in "
+            + str(duration)
+            + " -------------"
+        )
