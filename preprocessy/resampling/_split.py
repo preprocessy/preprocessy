@@ -216,16 +216,19 @@ class Split:
             self.random_state = params["random_state"]
         if self.target_label:
             self.train_y = self.train_df[self.target_label]
-            if self.test_df:
+            if self.test_df is not None:
                 self.test_y = self.test_df[self.target_label]
 
         self.__validate_input()
-
         if self.test_df is not None and self.test_y is not None:
             params["X_train"] = self.train_df
             params["X_test"] = self.test_df
             params["y_train"] = self.train_y
             params["y_test"] = self.test_y
+
+        elif self.test_df is not None:
+            params["X_train"] = self.train_df
+            params["X_test"] = self.test_df
 
         else:
 
@@ -262,5 +265,5 @@ class Split:
                 params["y_test"] = y_test
 
             else:
-                params["train"] = train
-                params["test"] = test
+                params["X_train"] = train
+                params["X_test"] = test

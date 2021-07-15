@@ -107,7 +107,6 @@ class Parser:
                 + str(duration)
                 + " -------------"
             )
-            print(self.cat_cols)
             return
 
         if self.ord_dict:

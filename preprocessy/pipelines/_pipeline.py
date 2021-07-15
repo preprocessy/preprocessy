@@ -16,13 +16,13 @@ class Preprocessy(Pipeline):
         params=None,
         custom_reader=None,
     ):
-        print("----------Initializing pipeline----------")
+        print("-------------Initializing pipeline-------------")
         steps = [
             Parser().parse_dataset,
             NullValuesHandler().execute,
             Encoder().encode,
-            Scaler().execute,
             HandleOutlier().handle_outliers,
+            Scaler().execute,
             Split().train_test_split,
         ]
         super().__init__(

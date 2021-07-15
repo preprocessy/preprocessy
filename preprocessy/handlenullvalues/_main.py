@@ -171,7 +171,6 @@ class NullValuesHandler:
         self.new_train = self.train_df.dropna()
         if self.test_df is not None:
             self.new_test = self.test_df.dropna()
-            print(self.new_train.shape)
             return self.new_train, self.new_test
         return self.new_train, None
 
@@ -323,7 +322,6 @@ class NullValuesHandler:
         params["test_df"] = self.final_test
         end = datetime.now()
         duration = end - start
-        print(self.final_train.shape)
         print(
             "-------------Completed handling the null values in dataframe in "
             + str(duration)

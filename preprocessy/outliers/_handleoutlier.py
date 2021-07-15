@@ -209,7 +209,6 @@ class HandleOutlier:
                 ):
                     self.cols.append(col)
 
-
         # if user has marked removeoutliers = True and wants outliers removed..
         if self.remove_outliers:
             if len(self.cols) >= 1:
@@ -217,7 +216,6 @@ class HandleOutlier:
                     self.__return_quartiles(col)
                 for col in self.cols:
                     q1, q3 = self.quartiles[col]
-
                     self.train_df_new = self.train_df[
                         (self.train_df[col] > q1)
                     ]
