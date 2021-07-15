@@ -10,10 +10,10 @@ def test_without_target_col():
     params = {"train_df": df, "test_size": 0.2, "random_state": 420}
     split = Split()
     split.train_test_split(params=params)
-    assert params["train"].shape[0] == 80
-    assert params["train"].shape[1] == 10
-    assert params["test"].shape[0] == 20
-    assert params["test"].shape[1] == 10
+    assert params["X_train"].shape[0] == 80
+    assert params["X_train"].shape[1] == 10
+    assert params["X_test"].shape[0] == 20
+    assert params["X_test"].shape[1] == 10
 
 
 def test_random_state():

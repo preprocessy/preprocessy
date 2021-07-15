@@ -52,8 +52,8 @@ class HandleOutlier:
         self.remove_outliers = True
         self.replace = False
         self.quartiles = {}
-        self.first_quartile = 0.01
-        self.third_quartile = 0.99
+        self.first_quartile = 0.05
+        self.third_quartile = 0.95
 
     def __validate_input(self):
 
@@ -216,12 +216,8 @@ class HandleOutlier:
                     self.__return_quartiles(col)
                 for col in self.cols:
                     q1, q3 = self.quartiles[col]
-                    self.train_df_new = self.train_df[
-                        (self.train_df[col] > q1)
-                    ]
-                    self.train_df_new = self.train_df[
-                        (self.train_df[col] <= q3)
-                    ]
+                    self.train_df = self.train_df[(self.train_df[col] > q1)]
+                    self.train_df = self.train_df[(self.train_df[col] <= q3)]
                     if self.test_df is not None:
                         self.test_df = self.test_df[(self.test_df[col] > q1)]
                         self.test_df = self.test_df[(self.test_df[col] <= q3)]
