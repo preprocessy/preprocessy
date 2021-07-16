@@ -1,5 +1,4 @@
 import warnings
-from datetime import datetime
 
 from pandas.api.types import is_numeric_dtype
 from pandas.api.types import is_string_dtype
@@ -80,7 +79,6 @@ class Parser:
         return self.cat_cols
 
     def parse_dataset(self, params):
-        start = datetime.now()
         if "train_df" in params.keys():
             self.train_df = params["train_df"]
         if "test_df" in params.keys():
@@ -99,24 +97,9 @@ class Parser:
                     raise ValueError(
                         f"Column {col} is not present in the given dataset"
                     )
-
-            end = datetime.now()
-            duration = end - start
-            print(
-                "-------------Completed calculating the categorical columns in "
-                + str(duration)
-                + " -------------"
-            )
             return
 
         if self.ord_dict:
             self.ord_cols = [k for k in self.ord_dict.keys()]
 
         params["cat_cols"] = self.__get_cat_cols()
-        end = datetime.now()
-        duration = end - start
-        print(
-            "-------------Completed calculating the categorical columns in "
-            + str(duration)
-            + " -------------"
-        )

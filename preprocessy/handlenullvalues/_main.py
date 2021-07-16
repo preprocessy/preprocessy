@@ -1,5 +1,4 @@
 import warnings
-from datetime import datetime
 
 import pandas as pd
 
@@ -239,7 +238,6 @@ class NullValuesHandler:
     # main function
     def execute(self, params):
 
-        start = datetime.now()
         if "train_df" in params.keys():
             self.train_df = params["train_df"]
         if "test_df" in params.keys():
@@ -320,10 +318,3 @@ class NullValuesHandler:
         ) = self.__drop_all_rows_with_null_values()
         params["train_df"] = self.final_train
         params["test_df"] = self.final_test
-        end = datetime.now()
-        duration = end - start
-        print(
-            "-------------Completed handling the null values in dataframe in "
-            + str(duration)
-            + " -------------"
-        )

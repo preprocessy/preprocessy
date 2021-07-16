@@ -16,7 +16,6 @@ class Preprocessy(Pipeline):
         params=None,
         custom_reader=None,
     ):
-        print("-------------Initializing pipeline-------------")
         steps = [
             Parser().parse_dataset,
             NullValuesHandler().execute,
@@ -31,4 +30,5 @@ class Preprocessy(Pipeline):
             steps=steps,
             config_file=config_file,
             params=params,
+            custom_reader=custom_reader,
         )

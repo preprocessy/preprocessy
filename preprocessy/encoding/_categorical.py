@@ -1,5 +1,4 @@
 import warnings
-from datetime import datetime
 
 import pandas as pd
 from pandas.api.types import is_numeric_dtype
@@ -233,7 +232,6 @@ class Encoder:
         self.test_df: Modified test set
         cat_cols: Columns which were taken as categorical
         """
-        start = datetime.now()
         if "test_df" in params.keys():
             self.test_df = params["test_df"]
         if "train_df" in params.keys():
@@ -257,10 +255,3 @@ class Encoder:
         params["test_df"] = self.test_df
         params["cat_cols"] = self.cat_cols
         params["ord_cols"] = self.ord_cols
-        end = datetime.now()
-        duration = end - start
-        print(
-            "-------------Completed encoding categorical columns in "
-            + str(duration)
-            + " ---------------"
-        )

@@ -1,5 +1,4 @@
 import warnings
-from datetime import datetime
 
 import pandas as pd
 
@@ -168,7 +167,6 @@ class HandleOutlier:
         self.quartiles[col] = [q1, q3]
 
     def handle_outliers(self, params):
-        start = datetime.now()
         if "train_df" in params.keys():
             self.train_df = params["train_df"]
         if "test_df" in params.keys():
@@ -237,10 +235,3 @@ class HandleOutlier:
 
         params["train_df"] = self.train_df
         params["test_df"] = self.test_df
-        end = datetime.now()
-        duration = end - start
-        print(
-            "-------------Completed handling outliers in "
-            + str(duration)
-            + " -------------"
-        )
