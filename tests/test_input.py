@@ -1,6 +1,5 @@
 import pandas as pd
 import pytest
-
 from preprocessy.input import Reader
 
 reader = Reader()

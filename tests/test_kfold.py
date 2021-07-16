@@ -1,6 +1,5 @@
 import numpy as np
 import pytest
-
 from preprocessy.resampling import KFold
 
 

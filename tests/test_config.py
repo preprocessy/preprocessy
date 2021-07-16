@@ -1,5 +1,4 @@
 import pytest
-
 from preprocessy.pipelines.config import read_config
 from preprocessy.pipelines.config import save_config
 

@@ -1,7 +1,6 @@
 import numpy as np
 import pandas as pd
 import pytest
-
 from preprocessy.exceptions import ArgumentsError
 from preprocessy.handlenullvalues import NullValuesHandler
 
