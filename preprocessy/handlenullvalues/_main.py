@@ -171,7 +171,7 @@ class NullValuesHandler:
         if self.test_df is not None:
             self.new_test = self.test_df.dropna()
             return self.new_train, self.new_test
-        return self.new_df, None
+        return self.new_train, None
 
     # function to drop a particular column
     def __drop_column_with_null_values(self):
@@ -261,11 +261,9 @@ class NullValuesHandler:
             and self.column_list is None
             and self.fill_missing is None
             and self.fill_values is None
-            and self.replace_cat_nulls is None
         ):
-            self.fill_missing = "median"
+            self.drop = True
 
-        print(self.fill_missing)
         self.__validate_input()
 
         self.__categoricalnull()
@@ -302,6 +300,7 @@ class NullValuesHandler:
             and self.column_list is not None
             and len(self.column_list) != 0
         ):
+
             (
                 self.final_train,
                 self.final_test,
@@ -311,5 +310,11 @@ class NullValuesHandler:
             self.final_train = self.train_df
             self.final_test = self.test_df
 
+        self.train_df = self.final_train
+        self.test_df = self.final_test
+        (
+            self.final_train,
+            self.final_test,
+        ) = self.__drop_all_rows_with_null_values()
         params["train_df"] = self.final_train
         params["test_df"] = self.final_test

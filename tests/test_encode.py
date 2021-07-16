@@ -43,6 +43,35 @@ def test_mapping():
     )
 
 
+def test_ordinal_vs_categorical():
+    train_csv = pd.read_csv("datasets/encoding/testnew.csv")
+    params = {
+        "train_df": train_csv,
+        "target_label": "Price",
+        "cat_cols": ["Profession"],
+        "ord_dict": ord_dict,
+        "one_hot": False,
+    }
+
+    encoder = Encoder()
+    encoder.encode(params=params)
+    assert params["train_df"]["ProfessionEncoded"][0] == 1
+
+
+def test_categorical_encoding():
+    train_csv = pd.read_csv("datasets/encoding/testnew.csv")
+    params = {
+        "train_df": train_csv,
+        "target_label": "Price",
+        "cat_cols": ["Profession"],
+        "one_hot": False,
+    }
+    encoder = Encoder()
+    encoder.encode(params=params)
+    assert "ProfessionEncoded" in params["train_df"].columns
+    assert params["train_df"]["ProfessionEncoded"][0] == 0
+
+
 # test for empty mapping
 def test_empty_weight_mapping():
     train_csv = pd.read_csv("datasets/encoding/testnew.csv")

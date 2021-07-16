@@ -235,7 +235,6 @@ class Scaler:
         return self.new_train_df, self.new_test_df
 
     def execute(self, params):
-
         if "type" in params.keys():
             self.type = params["type"]
         if "columns" in params.keys():

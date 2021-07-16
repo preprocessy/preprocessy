@@ -15,7 +15,6 @@ class Pipeline:
         params=None,
         custom_reader=None,
     ):
-
         self.params = params
         self.train_df_path = train_df_path
         self.test_df_path = test_df_path

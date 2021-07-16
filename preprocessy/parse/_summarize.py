@@ -26,14 +26,20 @@ class Parser:
                 " the number of columns in both test and train are not equal."
             )
 
-        if self.target_label is None or (
-            self.target_label in self.train_df.columns
+        if self.target_label is None:
+            warnings.warn(
+                "Parameter 'target_label' is empty. If not provided and is present in dataframe, it may get encoded. "
+                "To mitigate, provide the target_label from dataframe or provide explicit list of columns for encoding "
+                "via the 'cat_cols' parameter",
+                UserWarning,
+            )
+        if (
+            self.target_label is not None
+            and self.target_label in self.train_df.columns
             and (self.cat_cols is None or self.target_label in self.cat_cols)
         ):
-            warnings.warn(
-                "target_label may get encoded. Please remove target_label from"
-                " dataframe or provide explicit list of columns for encoding.",
-                UserWarning,
+            raise ValueError(
+                f"Target column: {self.target_label} will be encoded. Remove it from cat_cols if in there or remove from dataframe"
             )
 
         if self.ord_dict is not None:
@@ -46,14 +52,18 @@ class Parser:
 
     def __get_cat_cols(self):
         rows = self.train_df.shape[0]
-        rows = 0.5 * rows
+        rows = 0.2 * rows
         self.cat_cols = []
         for col in self.train_df.columns:
             if col not in self.ord_cols:
-                if self.train_df[col].dtype == "object" and (
+                if (
+                    self.train_df[col].dtype == "object"
+                    and type(self.train_df[col][0]) == "str"
+                ) and (
                     "$" in self.train_df[col][0]
                     or self.train_df[col].str.contains(",").any()
                 ):
+
                     self.train_df[col] = (
                         self.train_df[col]
                         .apply(lambda x: x.replace("$", "").replace(",", ""))
@@ -62,7 +72,7 @@ class Parser:
                 elif (
                     is_numeric_dtype(self.train_df[col])
                     or is_string_dtype(self.train_df[col])
-                ) and self.train_df[col].nunique() < rows:
+                ) and self.train_df[col].dropna().nunique() < rows:
                     self.cat_cols.append(col)
             else:
                 continue
@@ -82,7 +92,7 @@ class Parser:
             self.cat_cols = params["cat_cols"]
             for col in self.cat_cols:
                 if col not in self.train_df or (
-                    self.test_df and col not in self.test_df
+                    self.test_df is not None and col not in self.test_df
                 ):
                     raise ValueError(
                         f"Column {col} is not present in the given dataset"
