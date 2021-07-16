@@ -82,9 +82,7 @@ def test_BinaryScaler_output(test_input):
         or test_input["train_df"]["Negatives"].values.any() == 0
     )
     assert not (
-        test_input["train_df"]["Negatives"]
-        .between(0, 1, inclusive=False)
-        .any()
+        test_input["train_df"]["Negatives"].between(0, 1, inclusive=False).any()
     )
     if test_input["threshold"]["Negatives"] != -1:
         assert test_input["train_df"]["Negatives"][0] == 1

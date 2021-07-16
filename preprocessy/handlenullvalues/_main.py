@@ -218,9 +218,7 @@ class NullValuesHandler:
         self.new_train = self.train_df
         for col in self.cat_cols:
             if self.replace_cat_nulls is not None:
-                self.new_train[col].fillna(
-                    self.replace_cat_nulls, inplace=True
-                )
+                self.new_train[col].fillna(self.replace_cat_nulls, inplace=True)
             else:
                 self.new_train.dropna(axis=0, subset=[col], inplace=True)
         if self.test_df is not None:
