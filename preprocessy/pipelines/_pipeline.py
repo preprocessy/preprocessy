@@ -1,10 +1,11 @@
-from ._base import Pipeline
 from preprocessy.encoding import Encoder
 from preprocessy.handlenullvalues import NullValuesHandler
 from preprocessy.outliers import HandleOutlier
 from preprocessy.parse import Parser
 from preprocessy.resampling import Split
 from preprocessy.scaling import Scaler
+
+from ._base import Pipeline
 
 
 class Preprocessy(Pipeline):

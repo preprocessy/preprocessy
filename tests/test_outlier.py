@@ -1,6 +1,5 @@
 import pandas as pd
 import pytest
-
 from preprocessy.exceptions import ArgumentsError
 from preprocessy.outliers import HandleOutlier
 

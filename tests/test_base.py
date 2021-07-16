@@ -1,7 +1,6 @@
 import numpy as np
 import pandas as pd
 import pytest
-
 from preprocessy.exceptions import ArgumentsError
 from preprocessy.pipelines import Pipeline
 from preprocessy.pipelines.config import save_config

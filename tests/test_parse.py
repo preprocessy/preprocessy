@@ -1,6 +1,5 @@
 import pandas as pd
 import pytest
-
 from preprocessy.parse import Parser
 
 ord_dict = {"Profession": {"Student": 1, "Teacher": 2, "HOD": 3}}

@@ -2,7 +2,6 @@ from collections import Counter
 
 import pandas as pd
 import pytest
-
 from preprocessy.encoding import Encoder
 
 ord_dict = {"Profession": {"Student": 1, "Teacher": 2, "HOD": 3}}

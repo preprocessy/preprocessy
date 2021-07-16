@@ -1,11 +1,10 @@
 import pandas as pd
 import pytest
+from preprocessy.feature_selection import SelectKBest
 from sklearn.datasets import make_classification
 from sklearn.datasets import make_regression
 from sklearn.feature_selection import f_classif
 from sklearn.feature_selection import f_regression
-
-from preprocessy.feature_selection import SelectKBest
 
 X_reg, y_reg = make_regression(n_samples=1000, n_features=50)
 X_reg = pd.DataFrame(X_reg)
