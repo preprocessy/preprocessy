@@ -5,7 +5,7 @@ from ..input import Reader
 from .config import read_config
 
 
-class Pipeline:
+class BasePipeline:
     def __init__(
         self,
         train_df_path=None,

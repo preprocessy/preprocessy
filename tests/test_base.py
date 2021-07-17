@@ -2,7 +2,7 @@ import numpy as np
 import pandas as pd
 import pytest
 from preprocessy.exceptions import ArgumentsError
-from preprocessy.pipelines import Pipeline
+from preprocessy.pipelines import BasePipeline
 from preprocessy.pipelines.config import save_config
 from preprocessy.utils import num_of_samples
 
@@ -76,7 +76,7 @@ def test_pipeline_arguments(
 ):
 
     with pytest.raises(error):
-        Pipeline(
+        BasePipeline(
             train_df_path=train_df_path,
             steps=steps,
             config_file=config_file,
@@ -95,7 +95,7 @@ def test_pipeline_with_default_reader():
         "test_size": 0.2,
     }
 
-    pipeline = Pipeline(
+    pipeline = BasePipeline(
         train_df_path="./datasets/configs/dataset.csv",
         steps=[times_two, squared, split],
         params=params,
@@ -115,7 +115,7 @@ def test_pipeline_with_custom_reader():
         "test_size": 0.2,
     }
 
-    pipeline = Pipeline(
+    pipeline = BasePipeline(
         train_df_path="./datasets/configs/dataset.csv",
         steps=[times_two, squared, split],
         params=params,
@@ -142,7 +142,7 @@ def test_add():
         "col_1": "A",
         "test_size": 0.2,
     }
-    pipeline = Pipeline(
+    pipeline = BasePipeline(
         train_df_path="./datasets/configs/dataset.csv",
         steps=[times_two, split],
         params=params,
@@ -176,7 +176,7 @@ def test_remove():
         "col_2": "B",
         "test_size": 0.2,
     }
-    pipeline = Pipeline(
+    pipeline = BasePipeline(
         train_df_path="./datasets/configs/dataset.csv",
         steps=[times_two, squared, split],
         params=params,
@@ -198,7 +198,7 @@ def test_config():
     }
     config_path = "./datasets/configs/pipeline_config.json"
     save_config(config_path, params)
-    pipeline = Pipeline(
+    pipeline = BasePipeline(
         train_df_path="./datasets/configs/dataset.csv",
         steps=[times_two, squared, split],
         config_file=config_path,

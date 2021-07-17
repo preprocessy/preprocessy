@@ -1,18 +1,20 @@
 from preprocessy.encoding import Encoder
+from preprocessy.feature_selection import SelectKBest
 from preprocessy.handlenullvalues import NullValuesHandler
 from preprocessy.outliers import HandleOutlier
 from preprocessy.parse import Parser
 from preprocessy.resampling import Split
 from preprocessy.scaling import Scaler
 
-from ._base import Pipeline
+from ._base import BasePipeline
 
 
-class Preprocessy(Pipeline):
+class FeatureSelectionPipeline(BasePipeline):
     def __init__(
         self,
-        train_df_path,
+        train_df_path=None,
         test_df_path=None,
+        steps=None,
         config_file=None,
         params=None,
         custom_reader=None,
@@ -23,6 +25,7 @@ class Preprocessy(Pipeline):
             Encoder().encode,
             HandleOutlier().handle_outliers,
             Scaler().execute,
+            SelectKBest().fit_transform,
             Split().train_test_split,
         ]
         super().__init__(
