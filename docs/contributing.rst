@@ -39,32 +39,45 @@ Workflow for submitting a PR
     $ git clone https://github.com/your-username/repository-name
 
 
-1. Create a virtual environment (always a good practice!) and install the
-development dependencies
+3. Create a virtual environment (always a good practice!)
+
+4. Install the development dependencies
+
+Using Poetry
+
+You can use `poetry`_ to install the dependencies of the projects
+
+.. code-block:: text
+
+    $ poetry install
+
+Using Pip
 
 .. code-block:: text
 
     $ pip install -r requirements_dev.txt
 
 
-1. Install pre-commit hooks
+5. Install pre-commit hooks
 
 .. code-block:: text
 
     $ pre-commit install
 
-5. Make the necessary changes
+6. Make the necessary changes
 
-6. Run the tests
+7. Run the tests
 
 .. code-block:: text
 
     $ pytest -W ignore::DeprecationWarning
 
 
-7. Create a new pull request with an appropriate title, detailed explanation of
+8. Create a new pull request with an appropriate title, detailed explanation of
 what the pull request does and attach links to other issues or pull requests
 related to your pull request
+
+.. _poetry: https://python-poetry.org
 
 Running test coverage
 ---------------------

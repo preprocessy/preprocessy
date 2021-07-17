@@ -24,27 +24,39 @@ Before submitting an issue please make sure:
     $ git clone https://github.com/your-username/repository-name
 ```
 
-3. Create a virtual environment (always a good practice!) and install the development dependencies
+3. Create a virtual environment (always a good practice!)
+
+4. Install the development dependencies
+
+Using Poetry
+
+You can use [poetry](https://python-poetry.org) to install the dependencies of the projects
+
+```bash
+    $ poetry install
+```
+
+Using Pip
 
 ```bash
     $ pip install -r requirements_dev.txt
 ```
 
-4. Install pre-commit hooks
+5. Install pre-commit hooks
 
 ```bash
     $ pre-commit install
 ```
 
-5. Make the necessary changes
+6. Make the necessary changes
 
-6. Run the tests
+7. Run the tests
 
 ```bash
     $ pytest -W ignore::DeprecationWarning
 ```
 
-7. Create a new pull request with an appropriate title, detailed explanation of what the pull request does and attach links to other issues or pull requests related to your pull request
+8. Create a new pull request with an appropriate title, detailed explanation of what the pull request does and attach links to other issues or pull requests related to your pull request
 
 ## Running test coverage
 
