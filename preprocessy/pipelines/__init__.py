@@ -1,4 +1,5 @@
-from ._base import Pipeline
-from ._pipeline import Preprocessy
+from ._base import BasePipeline
+from ._feature_selection_pipeline import FeatureSelectionPipeline
+from ._standard_pipeline import StandardPipeline
 
-__all__ = ["Pipeline", "Preprocessy"]
+__all__ = ["BasePipeline", "StandardPipeline", "FeatureSelectionPipeline"]
