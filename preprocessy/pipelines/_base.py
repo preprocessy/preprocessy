@@ -1,8 +1,17 @@
 import warnings
 
+import stringcase
+from alive_progress import alive_bar
+from colorama import Fore
+from colorama import init
+from colorama import Style
+from prettytable import PrettyTable
+
 from ..exceptions import ArgumentsError
 from ..input import Reader
 from .config import read_config
+
+init()
 
 
 class BasePipeline:
@@ -108,8 +117,23 @@ class BasePipeline:
             )
 
     def process(self):
-        for step in self.steps:
-            step(self.params)
+        self.print_info()
+        with alive_bar(
+            len(self.steps),
+            title="Pipeline Stages",
+            enrich_print=False,
+            force_tty=True,
+        ) as bar:
+            print("\nProcessing...\n")
+            for step in self.steps:
+                step(self.params)
+                print(
+                    f"==> Completed Stage: {stringcase.sentencecase(step.__name__)}\n"
+                )
+                bar()
+        print(
+            Fore.GREEN + "\nPipeline Completed Successfully\n" + Style.RESET_ALL
+        )
 
     def __insert(self, index, func, params):
         self.steps.insert(index, func)
@@ -183,7 +207,24 @@ class BasePipeline:
 
         self.steps.remove(func)
 
-    def info(self):
-        # TODO: Formatting the output
-        print(self.steps)
-        print(self.params)
+    def print_info(self):
+        print(f"\nPipeline Class: {self.__class__.__name__}\n")
+        table = PrettyTable(["Pipeline Property", "Value"])
+        table.align = "l"
+        table.add_row(["Train Dataframe Path", self.train_df_path])
+        table.add_row(["Test Dataframe Path", self.test_df_path])
+        table.add_row(["Config File Path", self.config_file])
+        table.add_row(
+            [
+                "Pipeline Stages",
+                ", ".join(
+                    [
+                        stringcase.sentencecase(stage.__name__)
+                        for stage in self.steps
+                    ]
+                ),
+            ]
+        )
+        table.add_row(["Total Pipeline Stages", len(self.steps)])
+        table.add_row(["Total Params", len(self.params.keys())])
+        print(table)
