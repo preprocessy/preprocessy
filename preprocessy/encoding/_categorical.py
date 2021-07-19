@@ -220,7 +220,6 @@ class Encoder:
         :param one_hot: This parameter takes True or False to indicate whether the user wants to encode using one-hot.
         :type one-hot: bool
 
-        \*target_label parameter is needed to ensure that the target column isn't identified as categorical and encoded.
         """
         if "test_df" in params.keys():
             self.test_df = params["test_df"]
