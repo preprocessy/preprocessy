@@ -8,21 +8,12 @@ from ..exceptions import ArgumentsError
 class HandleOutlier:
 
     """Class for handling outliers on its own or according to users needs.
+    This class handles outlers using the percentile concept. The 2 percentile markers
+    will represent the data to be kept ie if one marker is 5th percentile and other is 95th
+    percentile then the data between this range is kept.
 
-     Private methods
-    _ _ _ _ _ _ _ _ _ _
-
-    __return_quartiles() : returns the 5% and 95% mark in the distribution
-                          of data(Values above are default values)
-
-     Public Methods
-    _ _ _ _ _ _ _ _ _
-
-    handle_outliers() : Takes in the dataset as input, finds the quartiles
-                       and returns the dataset within the interquartile
-                       range. Function run only on int64 and float64
-                       specified columns.
-
+    Here we use the percentile to calculate the data points they point to and keep those data points
+    that are in the range of the 2 calculated data points
     """
 
     def __init__(self):
@@ -167,6 +158,42 @@ class HandleOutlier:
         self.quartiles[col] = [q1, q3]
 
     def handle_outliers(self, params):
+        """This function is used to handle outliers is flexible in how to calculate the percentiles and what to do
+        about the outliers.
+
+        :param train_df: Input dataframe, may or may not consist of the target label.
+                  Should not be ``None``
+        :type train_df: pandas.core.frames.DataFrame
+
+        :param test_df: Input dataframe, may or may not consist of the target label.
+                  Should not be ``None``
+        :type test_df: pandas.core.frames.DataFrame
+
+        :param \*target_label: Name of the Target Column.
+        :type target_label: str
+
+        :param \*cat_cols: List containing the column names to be encoded categorically
+        :type cat_cols: List
+
+        :param remove_outliers: Boolean value to indicate whether user wants to remove outlier or not. Default \: True
+        :type remove_outliers: bool
+
+        :param \*ord_cols: List containing the column names to be encoded ordinally.
+        :type ord_cols: List
+
+        :param replace: Integer value to indicate the value with which to replace the identified outliers.
+                        This will replace and will not remove the outliers
+        :type replace: int
+
+        :param first_quartile: Float value <1 representing the first percentile marker
+        :type first_quartile: float
+
+        :param third_quartile: Float value <1 representing the other percentile marker.
+        :type third_quartile: float
+
+        \*target_label,cat_cols and ord_cols parameter is needed to ensure that the target column isn't identified as categorical and encoded.
+
+        """
         if "train_df" in params.keys():
             self.train_df = params["train_df"]
         if "test_df" in params.keys():
