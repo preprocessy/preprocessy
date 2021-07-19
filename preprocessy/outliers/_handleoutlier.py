@@ -8,7 +8,7 @@ from ..exceptions import ArgumentsError
 class HandleOutlier:
 
     """Class for handling outliers on its own or according to users needs.
-    This class handles outlers using the percentile concept. The 2 percentile markers
+    This class handles outliers using the percentile concept. The 2 percentile markers
     will represent the data to be kept ie if one marker is 5th percentile and other is 95th
     percentile then the data between this range is kept.
 
@@ -169,16 +169,16 @@ class HandleOutlier:
                   Should not be ``None``
         :type test_df: pandas.core.frames.DataFrame
 
-        :param \*target_label: Name of the Target Column.
+        :param target_label: Name of the Target Column. This parameter is needed to ensure that the target column isn't included in the outlier removing process.
         :type target_label: str
 
-        :param \*cat_cols: List containing the column names to be encoded categorically
+        :param cat_cols: List containing the column names to be encoded categorically. This parameter is needed to ensure that the categorical columns isn't included in the outlier removing process.
         :type cat_cols: List
 
-        :param remove_outliers: Boolean value to indicate whether user wants to remove outlier or not. Default \: True
-        :type remove_outliers: bool
+        :param remove_outliers: Boolean value to indicate whether user wants to remove outlier or not.
+        :type remove_outliers: bool, default=True
 
-        :param \*ord_cols: List containing the column names to be encoded ordinally.
+        :param ord_cols: List containing the column names to be encoded ordinally.This parameter is needed to ensure that the ordinal columns isn't included in the outlier removing process.
         :type ord_cols: List
 
         :param replace: Integer value to indicate the value with which to replace the identified outliers.
@@ -190,8 +190,6 @@ class HandleOutlier:
 
         :param third_quartile: Float value <1 representing the other percentile marker.
         :type third_quartile: float
-
-        \*target_label,cat_cols and ord_cols parameter is needed to ensure that the target column isn't identified as categorical and encoded.
 
         """
         if "train_df" in params.keys():

@@ -5,18 +5,9 @@ import pandas as pd
 
 
 class Reader(object):
-    """Standard Reader Class that serves to read and load numeric data into pandas Dataframe.
+    """Standard Reader Class that serves to read and load numeric data into pandas dataframe.
 
-    The file extensions allowed are:
-
-    1. csv
-    2. xls
-    3. xlxs
-    4. xlsm
-    5. xlsb
-    6. odf
-    7. ods
-    8. odt
+    The file extensions allowed are: .csv, .xls, .xlxs, .xlsm, .xlsb, .odf, .ods, .odt
     """
 
     def __init__(self):

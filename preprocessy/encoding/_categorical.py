@@ -7,7 +7,7 @@ from pandas.api.types import is_string_dtype
 
 class Encoder:
     """Class to encode categorical and ordinal features.
-    Categorical encoding options include : normal and one-hot"""
+    Categorical encoding options include: ``normal`` and ``one-hot``"""
 
     def __init__(self):
         self.test_df = None
@@ -165,7 +165,6 @@ class Encoder:
                         self.cat_cols.append(col)
                 else:
                     continue
-                print(self.cat_cols)
 
         if self.one_hot:
             self.__encode_one_hot_util()
@@ -208,7 +207,8 @@ class Encoder:
                   Should not be ``None``
         :type test_df: pandas.core.frames.DataFrame
 
-        :param \*target_label: Name of the Target Column.
+        :param target_label: Name of the Target Column. This parameter is needed to ensure that the target column
+                            isn't identified as categorical and encoded.
         :type target_label: str
 
         :param cat_cols: List containing the column names to be encoded categorically
@@ -219,16 +219,6 @@ class Encoder:
 
         :param one_hot: This parameter takes True or False to indicate whether the user wants to encode using one-hot.
         :type one-hot: bool
-
-        **Example of ordinal dict** :
-
-        If Column Vehicle has 3 classes -> {'Car','Bike','Truck'}
-
-        ord_dict = {
-
-        'Vehicle': {'Car':1,'Bike':2,'Truck':3}
-
-        }
 
         \*target_label parameter is needed to ensure that the target column isn't identified as categorical and encoded.
         """
