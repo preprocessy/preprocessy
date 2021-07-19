@@ -7,45 +7,6 @@ from ..exceptions import ArgumentsError
 
 class NullValuesHandler:
 
-    """Class for handling null values
-
-    Parameters
-    ---------------
-    df : pandas.core.frames.DataFrame
-         The input dataframe
-
-    drop : boolean
-           Controlling whether to drop rows/columns with null values or not.
-
-    fill_missing : string
-                   can be "mean" or "median", determines the value to be filled in place of null values.
-
-    fill_values : dict
-                  Column and value mapping, where the key is the column name and value is the custom value to be filled in place of null values
-
-    column_list : list
-                  List of column names which have to be dropped, if this parameter is not used, the dropping of values will occur on rows
-
-    Private Methods
-    ---------------
-
-    __validate_input() : validates the input
-
-    __drop_all_rows_with_null_values() : function to drop all rows with nan values
-
-    __drop_column_with_null_values(column_name) : function to drop a particular column
-
-    __fill_missing_with_mean_or_median() : function to fill the missing values with mean or median as per the arguments passed
-
-    __fill_values_columns() : function to fill columns with null values with user specified value for corresponding columns
-
-    Public Methods
-    --------------
-
-    execute(params) : Main function that performs the operations on supplied dataframe and returns a new dataframe
-
-    """
-
     def __init__(self):
         self.train_df = None
         self.test_df = None
@@ -235,6 +196,36 @@ class NullValuesHandler:
 
     # main function
     def execute(self, params):
+
+        """Function that handles null values in the supplied dataframe and returns a new dataframe. If no user parameters are supplied, the rows containing null values are dropped by default.
+
+        :param train_df: Input dataframe
+                  Should not be ``None``
+        :type train_df: pandas.core.frames.DataFrame
+
+        :param test_df: Input dataframe
+                  Should not be ``None``
+        :type test_df: pandas.core.frames.DataFrame
+
+        :param cat_cols: List containing the names of categorical columns
+        :type cat_cols: List
+
+        :param replace_cat_nulls: The value which will replace null values in the categorical columns 
+        :type replace_cat_nulls: str
+
+        :param drop: Indicates if the null values in the dataframe should be dropped
+        :type drop: bool
+
+        :param fill_missing: Indicates if the null values should be filled with ``mean`` or ``median``
+        :type fill_missing: str
+
+        :param fill_values: Column and value mapping, where the key is the column name and value is the custom value to be filled in place of null values
+        :type fill_values: Dict
+
+        :param column_list: List of column names which have to be dropped, if this parameter is not used, the dropping of values will occur on rows
+        :type column_list: List
+
+        """
 
         if "train_df" in params.keys():
             self.train_df = params["train_df"]
