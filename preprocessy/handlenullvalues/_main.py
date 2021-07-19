@@ -256,7 +256,6 @@ class NullValuesHandler:
         # automatic = drop rows with null values
         if (
             self.drop is None
-            and self.column_list is None
             and self.fill_missing is None
             and self.fill_values is None
         ):

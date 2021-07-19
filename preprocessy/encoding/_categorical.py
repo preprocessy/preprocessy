@@ -6,7 +6,8 @@ from pandas.api.types import is_string_dtype
 
 
 class Encoder:
-    """A class to encode categorical and ordinal features"""
+    """Class to encode categorical and ordinal features.
+    Categorical encoding options include: ``normal`` and ``one-hot``"""
 
     def __init__(self):
         self.test_df = None
@@ -26,7 +27,6 @@ class Encoder:
         function to validate inputs
         - check if training dataset is given(crucial)
         - check if test df is provided then whether the number of columns are same
-        - check if target variable is still not removed from training set
         - check if mapping dictionary is provided for every ordinal column specified
 
         """
@@ -43,14 +43,20 @@ class Encoder:
             )
 
         # target_label should not be in list of columns
-        if self.target_label is None or (
-            self.target_label in self.train_df.columns
-            and (self.cat_cols is None or self.target_label in self.cat_cols)
-        ):
+        if self.target_label is None:
             warnings.warn(
-                "target_label may get encoded. Please remove target_label from"
-                " dataframe or provide explicit list of columns for encoding.",
+                "Parameter 'target_label' is empty. If not provided and is present in dataframe, it may get encoded. "
+                "To mitigate, provide the target_label from dataframe or provide explicit list of columns for encoding "
+                "via the 'cat_cols' parameter",
                 UserWarning,
+            )
+        if (
+            self.target_label is not None
+            and self.cat_cols is not None
+            and (self.target_label in self.cat_cols)
+        ):
+            raise ValueError(
+                f"Target column: {self.target_label} will be encoded. Remove it from cat_cols if in there."
             )
 
         if self.ord_dict is not None:
@@ -128,7 +134,7 @@ class Encoder:
         """
         if self.cat_cols is None:
             rows = self.train_df.shape[0]
-            rows = 0.09 * rows
+            rows = 0.2 * rows
             self.cat_cols = []
             for col in self.train_df.columns:
                 if col not in self.ord_cols:
@@ -191,46 +197,29 @@ class Encoder:
 
     def encode(self, params):
         """
-        params for initializing:
-        params = {
-            cat_cols: list of categorical columns as perceived by the user
-            ord_dict: dictionary of dictionary of key and value for ordinal columns in the said format
-                        dict = {
-                            'col1' = dict_col1,
-                            'col2' = dict_col2
-                        }
-                        where dict_col1 = {
-                            'key1': 'value1',
-                            ...
-                            ...
-                            ...
-                        }
-            one_hot:  boolean parameter to detect if one_hot_encoding is to be done
+        Function to encode categorical or ordinal columns.
 
-            train_df    : training dataset (pandas.core.frames.DataFrame)
-            test_df     : test dataset (pandas.core.frames.DataFrame)
-            target_label: name of target column so as to ensure that target columns isn't present in
-                          train_df
-        }
+        :param train_df: Input dataframe, may or may not consist of the target label.
+                  Should not be ``None``
+        :type train_df: pandas.core.frames.DataFrame
 
-        Function to encode columns
-        - ordinal: mapping dictionary needed and mapping will be done accordingly
-        - categorical: cat_cols can be provided by user else the code will determine which
-                      columns can be categorical.
-        - one_hot encoding: bool value can be provided by user for one_hot categorical encoding else
-                      default is set to false.
-        After encoding all new columns made will have dtype='category'
-        As an additional feature the code determines to find columns where integers exist
-        with $ or commas example- Money columns. The commas and $ are removed and the column has its dtype
-        converted to int64. However this feature won't be activated if categorical columns are mentioned by
-        the user.
+        :param test_df: Input dataframe, may or may not consist of the target label.
+                  Should not be ``None``
+        :type test_df: pandas.core.frames.DataFrame
 
-        Returns
-        _ _ _ _ _
+        :param target_label: Name of the Target Column. This parameter is needed to ensure that the target column
+                            isn't identified as categorical and encoded.
+        :type target_label: str
 
-        self.train_df: Modified training set
-        self.test_df: Modified test set
-        cat_cols: Columns which were taken as categorical
+        :param cat_cols: List containing the column names to be encoded categorically
+        :type cat_cols: list
+
+        :param ord_dict: Dictionary with the the key as name of column to be encoded ordinally and the corresponding value is the dictionary containing the mapping.
+        :type ord_dict: dict
+
+        :param one_hot: This parameter takes True or False to indicate whether the user wants to encode using one-hot.
+        :type one-hot: bool
+
         """
         if "test_df" in params.keys():
             self.test_df = params["test_df"]
