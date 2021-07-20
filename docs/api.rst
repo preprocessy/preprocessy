@@ -55,3 +55,11 @@ Null Values
 
 .. autoclass:: NullValuesHandler
   :members:
+
+Pipelines
+----------
+
+.. module:: preprocessy.pipelines
+
+.. autoclass:: BasePipeline
+  :members:
