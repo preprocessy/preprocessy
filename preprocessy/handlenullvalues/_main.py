@@ -1,6 +1,7 @@
 import warnings
 
 import pandas as pd
+import numpy as np
 
 from ..exceptions import ArgumentsError
 
@@ -145,16 +146,25 @@ class NullValuesHandler:
     # function to fill the missing values with mean or median as per the arguments passed
     def __fill_missing_with_mean_or_median(self):
         self.new_train = self.train_df
+        dtypeList = [np.int64,np.int32,np.float32,np.float64]
         if self.fill_missing == "median":
-            self.new_train.fillna(self.new_train.median(), inplace=True)
+            for new_train_col in self.new_train:
+                if self.new_train.dtypes[new_train_col] in dtypeList:
+                    self.new_train[new_train_col].fillna(self.new_train[new_train_col].median(), inplace=True)
         else:
-            self.new_train.fillna(self.new_train.mean(), inplace=True)
+            for new_train_col in self.new_train:
+                if self.new_train.dtypes[new_train_col] in dtypeList:
+                    self.new_train[new_train_col].fillna(self.new_train[new_train_col].mean(), inplace=True)
 
         if self.test_df is not None:
             if self.fill_missing == "median":
-                self.new_test.fillna(self.new_test.median(), inplace=True)
+                for new_test_col in self.new_test:
+                    if self.new_test.dtypes[new_test_col] in dtypeList:
+                        self.new_test[new_test_col].fillna(self.new_test[new_test_col].median(), inplace=True)
             else:
-                self.new_test.fillna(self.new_test.mean(), inplace=True)
+                for new_test_col in self.new_test:
+                    if self.new_test.dtypes[new_test_col] in dtypeList:
+                        self.new_test[new_test_col].fillna(self.new_test[new_test_col].mean(), inplace=True)
             return self.new_train, self.new_test
 
         return self.new_train, None

@@ -47,3 +47,11 @@ Outliers
 
 .. autoclass:: HandleOutlier
   :members:
+
+Null Values
+------------
+
+.. module:: preprocessy.handlenullvalues
+
+.. autoclass:: NullValuesHandler
+  :members:
