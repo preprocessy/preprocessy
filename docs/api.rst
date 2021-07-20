@@ -39,13 +39,20 @@ Resampling
 .. autoclass:: KFold
   :members:
 
-
 Outliers
 --------
 
 .. module:: preprocessy.outliers
 
 .. autoclass:: HandleOutlier
+  :members:
+
+Scaling
+--------
+
+.. module:: preprocessy.scaling
+
+.. autoclass:: Scaler
   :members:
 
 Null Values
