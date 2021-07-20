@@ -26,20 +26,21 @@ class BasePipeline:
               Should not be ``None``
     :type test_df_path: str
 
-    :param steps: A list of functions to which are to be executed sequentially. 
-            All the functions should be callable 
+    :param steps: A list of functions to which are to be executed sequentially.
+            All the functions should be callable
     :type steps: List
 
     :param params: A dictionary containing the parameters that are needed for configuring the pipeline
     :type params: Dict
 
-    :param config_file: Path to a config file that consists the parameters for configuring the pipeline. An alternative to ``params``. A config file for the current ``params`` dictionary can be generated using the ``save_config`` utility 
+    :param config_file: Path to a config file that consists the parameters for configuring the pipeline. An alternative to ``params``. A config file for the current ``params`` dictionary can be generated using the ``save_config`` utility
     :type config_file: str
 
     :param custom_reader: Custom function to read the data
     :type custom_reader: Callable
 
     """
+
     def __init__(
         self,
         train_df_path=None,
@@ -142,9 +143,7 @@ class BasePipeline:
             )
 
     def process(self):
-        """Function that executes the pipeline sequentially.
-
-        """
+        """Function that executes the pipeline sequentially."""
         self.print_info()
         with alive_bar(
             len(self.steps),
@@ -260,9 +259,7 @@ class BasePipeline:
         self.steps.remove(func)
 
     def print_info(self):
-        """Prints the current configuration of the pipeline. Shows the steps, dataframe paths and config paths.
-
-        """
+        """Prints the current configuration of the pipeline. Shows the steps, dataframe paths and config paths."""
         print(f"\nPipeline Class: {self.__class__.__name__}\n")
         table = PrettyTable(["Pipeline Property", "Value"])
         table.align = "l"

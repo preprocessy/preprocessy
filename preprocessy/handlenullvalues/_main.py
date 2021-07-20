@@ -1,13 +1,12 @@
 import warnings
 
-import pandas as pd
 import numpy as np
+import pandas as pd
 
 from ..exceptions import ArgumentsError
 
 
 class NullValuesHandler:
-
     def __init__(self):
         self.train_df = None
         self.test_df = None
@@ -146,25 +145,33 @@ class NullValuesHandler:
     # function to fill the missing values with mean or median as per the arguments passed
     def __fill_missing_with_mean_or_median(self):
         self.new_train = self.train_df
-        dtypeList = [np.int64,np.int32,np.float32,np.float64]
+        dtypeList = [np.int64, np.int32, np.float32, np.float64]
         if self.fill_missing == "median":
             for new_train_col in self.new_train:
                 if self.new_train.dtypes[new_train_col] in dtypeList:
-                    self.new_train[new_train_col].fillna(self.new_train[new_train_col].median(), inplace=True)
+                    self.new_train[new_train_col].fillna(
+                        self.new_train[new_train_col].median(), inplace=True
+                    )
         else:
             for new_train_col in self.new_train:
                 if self.new_train.dtypes[new_train_col] in dtypeList:
-                    self.new_train[new_train_col].fillna(self.new_train[new_train_col].mean(), inplace=True)
+                    self.new_train[new_train_col].fillna(
+                        self.new_train[new_train_col].mean(), inplace=True
+                    )
 
         if self.test_df is not None:
             if self.fill_missing == "median":
                 for new_test_col in self.new_test:
                     if self.new_test.dtypes[new_test_col] in dtypeList:
-                        self.new_test[new_test_col].fillna(self.new_test[new_test_col].median(), inplace=True)
+                        self.new_test[new_test_col].fillna(
+                            self.new_test[new_test_col].median(), inplace=True
+                        )
             else:
                 for new_test_col in self.new_test:
                     if self.new_test.dtypes[new_test_col] in dtypeList:
-                        self.new_test[new_test_col].fillna(self.new_test[new_test_col].mean(), inplace=True)
+                        self.new_test[new_test_col].fillna(
+                            self.new_test[new_test_col].mean(), inplace=True
+                        )
             return self.new_train, self.new_test
 
         return self.new_train, None
@@ -220,7 +227,7 @@ class NullValuesHandler:
         :param cat_cols: List containing the names of categorical columns
         :type cat_cols: List
 
-        :param replace_cat_nulls: The value which will replace null values in the categorical columns 
+        :param replace_cat_nulls: The value which will replace null values in the categorical columns
         :type replace_cat_nulls: str
 
         :param drop: Indicates if the null values in the dataframe should be dropped
