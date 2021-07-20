@@ -26,8 +26,8 @@ class BasePipeline:
               Should not be ``None``
     :type test_df_path: str
 
-    :param steps: A list of functions which will be executed sequentially. 
-            All the functions should be callables 
+    :param steps: A list of functions which will be executed sequentially.
+            All the functions should be callables
     :type steps: list
 
     :param params: A dictionary containing the parameters that are needed for configuring the pipeline
@@ -143,9 +143,7 @@ class BasePipeline:
             )
 
     def process(self):
-        """Method that executes the pipeline sequentially.
-
-        """
+        """Method that executes the pipeline sequentially."""
         self.print_info()
         with alive_bar(
             len(self.steps),
@@ -180,7 +178,7 @@ class BasePipeline:
         :param params: Dictionary of configurable parameters to be added to the existing ``params`` dictionary
         :type params: dict
 
-        :param index: The index at which the function is to be inserted. 
+        :param index: The index at which the function is to be inserted.
         :type index: int
 
         :param after: The step name after which the function should be added

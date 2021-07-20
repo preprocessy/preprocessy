@@ -20,6 +20,7 @@ class StandardPipeline(BasePipeline):
     5. Scaler
     6. Split
     """
+
     def __init__(
         self,
         train_df_path,

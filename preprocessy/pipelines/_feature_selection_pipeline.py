@@ -24,6 +24,7 @@ class FeatureSelectionPipeline(BasePipeline):
     7. Split
 
     """
+
     def __init__(
         self,
         train_df_path=None,
