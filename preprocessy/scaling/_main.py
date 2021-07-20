@@ -5,27 +5,6 @@ from ..exceptions import ArgumentsError
 
 class Scaler:
     def __init__(self):
-        """Class for Scaling the columns
-
-        Private Methods
-        ---------------
-
-        __validate_input() : validates the input
-
-        __min_max_scaler() : function to scale the supplied columns on the basis of Min-Max-Scaling technique
-
-        __binary_scaler() : function to scale the supplied columns on the basis of binary Scaling
-
-        __standard_scaler() : function to standardise the supplied columns
-
-        Note: For more information on these scaling techniques read .scaling_tecniques.txt
-
-        Public Methods
-        --------------
-
-        execute() : Main function that performs the operations on supplied dataframe and returns a new dataframe
-
-        """
 
         self.train_df = None
         self.test_df = None
@@ -235,6 +214,37 @@ class Scaler:
         return self.new_train_df, self.new_test_df
 
     def execute(self, params):
+        """Method for scaling the columns in a dataset
+
+        :param train_df: Input dataframe
+                  Should not be ``None``
+        :type train_df: pandas.core.frames.DataFrame
+
+        :param test_df: Input dataframe
+                  Should not be ``None``
+        :type test_df: pandas.core.frames.DataFrame
+
+        :param type: The type of Scaler to be used
+        :type type: "MinMaxScaler" | "BinaryScaler" | "StandardScaler"
+
+        :param columns: List of columns in the dataframe
+        :type columns: list
+
+        :param cat_cols: List containing the names of categorical columns
+        :type cat_cols: list
+
+        :param target_label: Name of the Target Column. This parameter is needed to ensure that the target column
+                            isn't scaled
+        :type target_label: str
+
+        :param is_combined: Parameter to determine whether columns should be scaled together as a group
+        :type is_combined: bool
+
+        :param threshold: Dictionary of threshold values where the key is the column name and the value is the threshold for that column.
+        :type threshold: dict
+
+
+        """
         if "type" in params.keys():
             self.type = params["type"]
         if "columns" in params.keys():

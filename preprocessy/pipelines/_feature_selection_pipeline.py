@@ -10,6 +10,21 @@ from ._base import BasePipeline
 
 
 class FeatureSelectionPipeline(BasePipeline):
+    """
+    Pre-built pipeline that can be used for feature selection
+
+    The steps of the pipeline are:
+
+    1. Parser
+    2. NullValuesHandler
+    3. Encoder
+    4. HandleOutlier
+    5. Scaler
+    6. SelectKBest
+    7. Split
+
+    """
+
     def __init__(
         self,
         train_df_path=None,

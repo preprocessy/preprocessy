@@ -39,11 +39,40 @@ Resampling
 .. autoclass:: KFold
   :members:
 
-
 Outliers
 --------
 
 .. module:: preprocessy.outliers
 
 .. autoclass:: HandleOutlier
+  :members:
+
+Scaling
+--------
+
+.. module:: preprocessy.scaling
+
+.. autoclass:: Scaler
+  :members:
+
+Null Values
+------------
+
+.. module:: preprocessy.handlenullvalues
+
+.. autoclass:: NullValuesHandler
+  :members:
+
+Pipelines
+----------
+
+.. module:: preprocessy.pipelines
+
+.. autoclass:: BasePipeline
+  :members:
+
+.. autoclass:: FeatureSelectionPipeline
+  :members:
+
+.. autoclass:: StandardPipeline
   :members:
