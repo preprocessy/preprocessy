@@ -243,7 +243,7 @@ class Scaler:
         :param threshold: Dictionary of threshold values where the key is the column name and the value is the threshold for that column.
         :type threshold: dict
 
-        
+
         """
         if "type" in params.keys():
             self.type = params["type"]
