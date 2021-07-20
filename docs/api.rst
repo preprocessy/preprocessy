@@ -63,3 +63,9 @@ Pipelines
 
 .. autoclass:: BasePipeline
   :members:
+
+.. autoclass:: FeatureSelectionPipeline
+  :members:
+
+.. autoclass:: StandardPipeline
+  :members:

@@ -218,7 +218,7 @@ class NullValuesHandler:
         :type test_df: pandas.core.frames.DataFrame
 
         :param cat_cols: List containing the names of categorical columns
-        :type cat_cols: List
+        :type cat_cols: list
 
         :param replace_cat_nulls: The value which will replace null values in the categorical columns 
         :type replace_cat_nulls: str
@@ -227,13 +227,13 @@ class NullValuesHandler:
         :type drop: bool
 
         :param fill_missing: Indicates if the null values should be filled with ``mean`` or ``median``
-        :type fill_missing: str
+        :type fill_missing: "mean" | "median"
 
         :param fill_values: Column and value mapping, where the key is the column name and value is the custom value to be filled in place of null values
-        :type fill_values: Dict
+        :type fill_values: dict
 
-        :param column_list: List of column names which have to be dropped, if this parameter is not used, the dropping of values will occur on rows
-        :type column_list: List
+        :param column_list: List of column names which have to be dropped, if this parameter is not assigned, the dropping of values will occur on rows
+        :type column_list: list
 
         """
 

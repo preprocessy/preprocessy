@@ -26,18 +26,18 @@ class BasePipeline:
               Should not be ``None``
     :type test_df_path: str
 
-    :param steps: A list of functions to which are to be executed sequentially. 
-            All the functions should be callable 
-    :type steps: List
+    :param steps: A list of functions which will be executed sequentially. 
+            All the functions should be callables 
+    :type steps: list
 
     :param params: A dictionary containing the parameters that are needed for configuring the pipeline
-    :type params: Dict
+    :type params: dict
 
     :param config_file: Path to a config file that consists the parameters for configuring the pipeline. An alternative to ``params``. A config file for the current ``params`` dictionary can be generated using the ``save_config`` utility 
     :type config_file: str
 
     :param custom_reader: Custom function to read the data
-    :type custom_reader: Callable
+    :type custom_reader: callable
 
     """
     def __init__(
@@ -142,7 +142,7 @@ class BasePipeline:
             )
 
     def process(self):
-        """Function that executes the pipeline sequentially.
+        """Method that executes the pipeline sequentially.
 
         """
         self.print_info()
@@ -171,15 +171,15 @@ class BasePipeline:
 
     def add(self, func=None, params=None, **kwargs):
 
-        """Function to add another function to the pipeline after it has been constructed
+        """Method to add another function to the pipeline after it has been constructed
 
         :param func: The function to be added
-        :type func: Callable
+        :type func: callable
 
         :param params: Dictionary of configurable parameters to be added to the existing ``params`` dictionary
-        :type params: Dict
+        :type params: dict
 
-        :param index: The index at which the function is to be inserted
+        :param index: The index at which the function is to be inserted. 
         :type index: int
 
         :param after: The step name after which the function should be added
@@ -187,6 +187,12 @@ class BasePipeline:
 
         :param before: The step name before which the function should be added
         :type before: str
+
+        To add a function, either the index position or the ``before``/``after`` positional arguments can be supplied
+
+        If ``index``, ``after`` and ``before`` are all provided, the method will follow the priority: ``index`` > ``after`` > ``before``
+
+        :raises ArgumentsError: If no position is provided to insert the function into the pipeline
 
         """
         if not callable(func):
@@ -234,10 +240,12 @@ class BasePipeline:
             )
 
     def remove(self, func_name=None):
-        """Function to remove a function from the pipeline
+        """Method to remove a function from the pipeline
 
         :param func_name: The name of the function which has to be removed from the pipeline
         :type func_name: str
+
+        :raises TypeError: If ``func_name`` is not of type ``str``
 
         """
         if not isinstance(func_name, str):
