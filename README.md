@@ -1,4 +1,4 @@
-![preprocessy-logo](assets/preprocessy_horizontal.svg)
+![preprocessy-logo](docs/_static/preprocessy_horizontal.svg)
 
 [![Workflow](https://github.com/preprocessy/preprocessy/actions/workflows/workflow.yml/badge.svg)](https://github.com/preprocessy/preprocessy/actions/workflows/workflow.yml)
 [![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-sucess.svg)](https://gitHub.com/preprocessy/preprocessy/graphs/commit-activity)
