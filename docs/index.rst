@@ -24,7 +24,7 @@ API Reference
    :maxdepth: 2
 
    api
-
+   parameters
 
 Miscellaneous Pages
 -------------------
@@ -35,6 +35,7 @@ Miscellaneous Pages
    license
    contributing
    changes
+
 
 Indices and tables
 ==================

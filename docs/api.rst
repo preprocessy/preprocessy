@@ -55,8 +55,11 @@ Scaling
 .. autoclass:: Scaler
   :members:
 
+
+.. _null-docs:
+
 Null Values
-------------
+-----------
 
 .. module:: preprocessy.handlenullvalues
 
