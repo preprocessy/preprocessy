@@ -3,8 +3,12 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Welcome to Preprocessy's documentation!
-=======================================
+.. rst-class:: hide-header
+
+.. image:: _static/preprocessy_horizontal.png
+   :align: center
+   :scale: 50%
+   :target: https://preprocessy.readthedocs.io/en/stable/
 
 Preprocessy is a library that provides data preprocessing pipelines for machine
 learning. It bundles all the common preprocessing steps that are performed on the
