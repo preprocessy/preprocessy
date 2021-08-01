@@ -10,6 +10,7 @@ from prettytable import PrettyTable
 from ..exceptions import ArgumentsError
 from ..input import Reader
 from .config import read_config
+from .config import save_config
 
 init()
 
@@ -54,6 +55,14 @@ class BasePipeline:
         self.train_df_path = train_df_path
         self.test_df_path = test_df_path
         self.config_file = config_file
+        self.config_drop_keys = [
+            "train_df",
+            "test_df",
+            "X_train",
+            "X_test",
+            "y_train",
+            "y_test",
+        ]
         self.steps = steps
         self.custom_reader = custom_reader
         self.__validate_input()
@@ -265,6 +274,19 @@ class BasePipeline:
             )
 
         self.steps.remove(func)
+
+    def save_config(self, file_path, config_drop_keys=None):
+        """Method to save the ``params`` to a ``JSON`` config file
+
+        :param file_path: Path where the config file must be created
+        :type file_path: str
+        :param config_drop_keys: List of param keys that must not be stored in the config file,
+                            defaults to ``["train_df", "test_df", "X_train", "X_test", "y_train", "y_test"]``
+        :type config_drop_keys: list, optional
+        """
+        if not config_drop_keys:
+            config_drop_keys = self.config_drop_keys
+        save_config(file_path, self.params, config_drop_keys)
 
     def print_info(self):
         """Prints the current configuration of the pipeline. Shows the steps, dataframe paths and config paths."""

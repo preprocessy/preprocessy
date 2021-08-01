@@ -3,7 +3,6 @@ import pandas as pd
 import pytest
 from preprocessy.exceptions import ArgumentsError
 from preprocessy.pipelines import BasePipeline
-from preprocessy.pipelines.config import save_config
 from preprocessy.utils import num_of_samples
 
 
@@ -191,24 +190,27 @@ def test_remove():
 def test_config():
     df = pd.DataFrame({"A": np.arange(1, 100), "B": np.arange(1, 100)})
     _ = df.to_csv("./datasets/configs/dataset.csv", index=False)
-    params = {
-        "col_1": "A",
-        "col_2": "B",
-        "test_size": 0.2,
-    }
+    params = {"col_1": "A", "col_2": "B", "test_size": 0.2, "X_train": df}
     config_path = "./datasets/configs/pipeline_config.json"
-    save_config(config_path, params)
+    pipeline = BasePipeline(
+        train_df_path="./datasets/configs/dataset.csv",
+        steps=[times_two, squared, split],
+        params=params,
+        custom_reader=custom_read,
+    )
+    pipeline.process()
+
+    # Drop custom key
+    pipeline.config_drop_keys.append("train_df_copy")
+
+    pipeline.save_config(config_path)
+
     pipeline = BasePipeline(
         train_df_path="./datasets/configs/dataset.csv",
         steps=[times_two, squared, split],
         config_file=config_path,
         custom_reader=custom_read,
     )
-    pipeline.process()
-    assert len(pipeline.params["X_train"]) == 80
-    pipeline.remove("split")
-    pipeline.process()
-    assert (
-        pipeline.params["train_df"].shape[0]
-        == pipeline.params["train_df_copy"].shape[0]
-    )
+
+    assert "X_train" not in pipeline.params
+    assert "train_df_copy" not in pipeline.params

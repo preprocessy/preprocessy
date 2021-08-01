@@ -36,6 +36,6 @@ def test_save():
         "param2": {"nestedParam": 420},
         "Split": 6969,
     }
-    save_config(filepath, params)
+    save_config(filepath, params, [])
     contents = read_config(filepath)
     assert params == contents
