@@ -52,3 +52,7 @@ Any parameter marked ``*`` are essential to the smooth working of the pipeline a
 - test_size(``float,int``): Size of test set after splitting. Can take values from 0 - 1 for float point values, 0 - Number of samples for integer values. Is complementary to train size.
 
 - train_size(``float,int``): Size of train set after splitting. Can take values from 0 - 1 for float point values, 0 - Number of samples for integer values. Is complementary to test size.
+
+- shuffle(``bool``): Decides whether to shuffle data before splitting.
+
+- random_state(``int``): Seeding to be provided for shuffling before splitting.

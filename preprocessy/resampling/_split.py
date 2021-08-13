@@ -1,6 +1,7 @@
 import numpy as np
 import pandas as pd
 
+from ..exceptions import ArgumentsError
 from ..utils import num_of_samples
 
 
@@ -16,7 +17,8 @@ class Split:
         self.test_y = None
         self.test_size = None
         self.train_size = None
-        self.random_state = 69
+        self.random_state = None
+        self.shuffle = False
 
     def __repr__(self):
         return f"Split(test_size={self.test_size}, train_size={self.train_size}, random_state={self.random_state})"
@@ -41,6 +43,8 @@ class Split:
             Size of train set after splitting. Can take values from 0 - 1 for float point values,
             0 - Number of samples for integer values. Is complementary to test size.
 
+        shuffle : bool, default = False
+            Decides whether the data should be shuffled before splitting
         random_state : int
             Seeding to be provided for shuffling before splitting.
 
@@ -149,8 +153,18 @@ class Split:
                 self.test_size = float(1 / np.sqrt(features))
                 self.train_size = 1 - self.test_size
 
+        if not isinstance(self.shuffle, bool):
+            raise TypeError(
+                f"shuffle should be of type bool. Received {self.shuffle} of type {type(self.shuffle)}."
+            )
         if not isinstance(self.random_state, int):
-            raise TypeError("random_state should be of type int")
+            raise TypeError(
+                f"random_state should be of type int. Received {self.random_state} of type {type(self.random_state)}."
+            )
+        if self.random_state and not self.shuffle:
+            raise ArgumentsError(
+                f"random_state should be None when shuffle is set to False. Received {self.random_state} as random_state."
+            )
 
     def train_test_split(self, params):
         """Performs train test split on the input data
@@ -175,6 +189,9 @@ class Split:
                            0 - 1 for float point values, 0 - Number of samples for
                            integer values. Is complementary to test size.
         :type train_size: float, int
+
+        :param shuffle: Decides whether to shuffle data before splitting.
+        :type shuffle: bool, default = False
 
         :param random_state: Seeding to be provided for shuffling before splitting.
         :type random_state: int
@@ -212,6 +229,8 @@ class Split:
             self.test_size = params["test_size"]
         if "train_size" in params.keys():
             self.train_size = params["train_size"]
+        if "shuffle" in params.keys():
+            self.shuffle = params["shuffle"]
         if "random_state" in params.keys():
             self.random_state = params["random_state"]
         if self.target_label:
@@ -232,16 +251,19 @@ class Split:
 
         else:
 
-            np.random.seed(self.random_state)
+            if self.shuffle and self.random_state:
+                np.random.seed(self.random_state)
 
             if self.train_y is not None:
                 self.df = pd.concat([self.train_df, self.train_y], axis=1)
             else:
                 self.df = self.train_df
 
-            self.df = self.df.iloc[
-                np.random.permutation(len(self.df))
-            ].reset_index(drop=True)
+            if self.shuffle:
+                self.df = self.df.iloc[
+                    np.random.permutation(len(self.df))
+                ].reset_index(drop=True)
+
             if isinstance(self.test_size, float):
                 index = int(self.test_size * len(self.df))
                 train = self.df.iloc[index:]
