@@ -1,7 +1,7 @@
 import numpy as np
 import pandas as pd
 import pytest
-from preprocessy.resampling import KFold
+from preprocessy.data_splitting import KFold
 
 
 @pytest.mark.parametrize(

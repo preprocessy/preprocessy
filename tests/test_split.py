@@ -1,7 +1,7 @@
 import numpy as np
 import pandas as pd
 import pytest
-from preprocessy.resampling import Split
+from preprocessy.data_splitting import Split
 
 
 def test_without_target_col():
