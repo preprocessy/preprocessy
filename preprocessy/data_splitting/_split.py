@@ -6,7 +6,7 @@ from ..utils import num_of_samples
 
 
 class Split:
-    """Class for resampling and splitting input data"""
+    """Class for splitting the dataset into train and test sets"""
 
     def __init__(self):
         self.df = None

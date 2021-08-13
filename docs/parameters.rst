@@ -53,7 +53,7 @@ Any parameter marked ``*`` are essential to the smooth working of the pipeline a
 
 - train_size(``float,int``): Size of train set after splitting. Can take values from 0 - 1 for float point values, 0 - Number of samples for integer values. Is complementary to test size.
 
-- n_splits(``int``): Number of folds to be made in K-fold cross validation. Must be at least 2. For more see :py:mod:`preprocessy.resampling.KFold`
+- n_splits(``int``): Number of folds to be made in K-fold cross validation. Must be at least 2. For more see :py:mod:`preprocessy.data_splitting.KFold`
 
 - shuffle(``bool``): Decides whether to shuffle data before splitting.
 
