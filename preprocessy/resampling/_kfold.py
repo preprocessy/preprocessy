@@ -1,6 +1,5 @@
-import numbers
-
 import numpy as np
+import pandas as pd
 
 from ..utils import num_of_samples
 
@@ -11,69 +10,77 @@ class KFold:
 
     Each fold is then used once as a validation while the ``k - 1`` remaining
     folds form the training set.
-
-    :param n_splits: Number of folds. Must be at least 2, defaults to 5
-    :type n_splits: int
-
-    :param shuffle: Whether to shuffle the data before splitting
-                    into folds, defaults to ``False``
-    :type shuffle: bool
-
-    :param random_state: Random state used for shuffling, defaults to ``None``
-    :type random_state: int
-
     """
 
-    def __init__(self, n_splits=5, shuffle=False, random_state=None) -> None:
+    def __init__(self):
+        self.df = None
+        self.n_splits = 5
+        self.shuffle = False
+        self.random_state = None
 
-        if not isinstance(n_splits, numbers.Integral):
-            raise ValueError(
-                f"Number of folds must be an integer. {n_splits} of type"
-                f" {type(n_splits)} was passed"
+    def __validate_input(self):
+        if self.df is None:
+            raise ValueError("Feature dataframe should not be None")
+
+        if not isinstance(self.df, pd.core.frame.DataFrame):
+            raise TypeError(
+                "Feature dataframe is not a valid dataframe.\nExpected object"
+                " type: pandas.core.frame.DataFrame"
             )
 
-        if n_splits <= 1:
+        if not isinstance(self.n_splits, int):
+            raise ValueError(
+                f"Number of folds must be an integer. Received {self.n_splits} of type"
+                f" {type(self.n_splits)}."
+            )
+
+        if self.n_splits <= 1:
             raise ValueError(
                 "K-fold cross-validation requires at least one train/test"
                 " split by setting n_splits=2 or more, received"
-                f" n_splits={n_splits}."
+                f" n_splits={self.n_splits}."
             )
 
-        if not isinstance(shuffle, bool):
+        if not isinstance(self.shuffle, bool):
             raise ValueError(
-                f"shuffle must be boolean value. Received {shuffle}"
+                f"shuffle must be boolean value. Received {self.shuffle} of type {type(self.shuffle)}."
             )
 
-        if not isinstance(random_state, numbers.Integral):
+        if self.random_state and not isinstance(self.random_state, int):
             raise ValueError(
-                f"Random state must be an integer. {random_state} of type"
-                f" {type(random_state)} was passed"
+                f"Random state must be an integer. Received {self.random_state} of type"
+                f" {type(self.random_state)}."
             )
 
-        if not shuffle and random_state is not None:
+        if not self.shuffle and self.random_state is not None:
             raise ValueError(
                 "Setting a random_state has no effect since shuffle is False."
                 " You should leave random_state to its default (None), or set"
                 " shuffle=True.",
             )
 
-        self.n_splits = n_splits
-        self.shuffle = shuffle
-        self.random_state = random_state
-
     def __repr__(self):
         return f"KFold(n_splits={self.n_splits}, shuffle={self.shuffle}, random_state={self.random_state})"
 
-    def split(self, X, y=None):
+    def split(self, params):
         """Generate indices to split data into training and test set.
 
-        :param X: Input dataframe, may or may not consist of the target label.
+        :param train_df: Input dataframe, may or may not consist of the target label.
                   Should not be ``None``
-        :type X: pandas.core.frames.DataFrame
+        :type train_df: pandas.core.frames.DataFrame
 
-        :param y: Target label series. If ``None`` then ``X`` consists target label,
-                  defaults to ``None``
-        :type y: pandas.core.series.Series, optional
+        :param test_df: Input dataframe, may or may not consist of the target label.
+        :type test_df: pandas.core.frames.DataFrame
+
+        :param n_splits: Number of folds. Must be at least 2
+        :type n_splits: int, default = 5
+
+        :param shuffle: Whether to shuffle the data before splitting
+                        into folds
+        :type shuffle: bool, default = False
+
+        :param random_state: Random state used for shuffling
+        :type random_state: int, default = None
 
         :yield: The training set indices for that split
         :rtype: ndarray
@@ -85,7 +92,20 @@ class KFold:
 
         """
 
-        n_samples = num_of_samples(X)
+        if "train_df" in params.keys():
+            self.df = params["train_df"]
+        if "test_df" in params.keys():
+            self.df = pd.concat([self.df, params["test_df"]])
+        if "n_splits" in params.keys():
+            self.n_splits = params["n_splits"]
+        if "shuffle" in params.keys():
+            self.shuffle = params["shuffle"]
+        if "random_state" in params.keys():
+            self.random_state = params["random_state"]
+
+        self.__validate_input()
+
+        n_samples = num_of_samples(self.df)
 
         if self.n_splits > n_samples:
             raise ValueError(

@@ -60,7 +60,7 @@ class Split:
         """
 
         if self.train_df is None:
-            raise ValueError("Feature dataframe should not be of None")
+            raise ValueError("Feature dataframe should not be None")
 
         if not isinstance(self.train_df, pd.core.frame.DataFrame):
             raise TypeError(
@@ -157,7 +157,7 @@ class Split:
             raise TypeError(
                 f"shuffle should be of type bool. Received {self.shuffle} of type {type(self.shuffle)}."
             )
-        if not isinstance(self.random_state, int):
+        if self.random_state and not isinstance(self.random_state, int):
             raise TypeError(
                 f"random_state should be of type int. Received {self.random_state} of type {type(self.random_state)}."
             )
@@ -174,7 +174,6 @@ class Split:
         :type train_df: pandas.core.frames.DataFrame
 
         :param test_df: Input dataframe, may or may not consist of the target label.
-                  Should not be ``None``
         :type test_df: pandas.core.frames.DataFrame
 
         :param target_label: Name of the Target Column.

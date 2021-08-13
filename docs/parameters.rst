@@ -8,7 +8,7 @@ Any parameter marked ``*`` are essential to the smooth working of the pipeline a
 
 - \*train_df_path(``str``): Path to the train dataset. Path should point to a file of approved extension.
 
-- \*test_df_path(``str``): Path to the test dataset. Path should point to a file of approved extension. For list of allowed extensions visit :py:mod:`preprocessy.input`
+- \*test_df_path(``str``): Path to the test dataset. Path should point to a file of approved extension. For list of allowed extensions see :py:mod:`preprocessy.input`
 
 - target_label(``str``): Name of the target column.
 
@@ -32,9 +32,9 @@ Any parameter marked ``*`` are essential to the smooth working of the pipeline a
 
 - replace(``int``): Integer value to replace all outliers with.
 
-- first_quartile(``float``): Float value less than 1 and represents the first percentile marker. For more visit :py:mod:`preprocessy.outliers`
+- first_quartile(``float``): Float value less than 1 and represents the first percentile marker. For more see :py:mod:`preprocessy.outliers`
 
-- third_quartile(``float``): Float value less than 1 and represents the other percentile marker. For more visit :py:mod:`preprocessy.outliers`
+- third_quartile(``float``): Float value less than 1 and represents the other percentile marker. For more see :py:mod:`preprocessy.outliers`
 
 - type(``str``): The type of Scaler to be used. Options include "MinMaxScaler" | "BinaryScaler" | "StandardScaler".
 
@@ -52,6 +52,8 @@ Any parameter marked ``*`` are essential to the smooth working of the pipeline a
 - test_size(``float,int``): Size of test set after splitting. Can take values from 0 - 1 for float point values, 0 - Number of samples for integer values. Is complementary to train size.
 
 - train_size(``float,int``): Size of train set after splitting. Can take values from 0 - 1 for float point values, 0 - Number of samples for integer values. Is complementary to test size.
+
+- n_splits(``int``): Number of folds to be made in K-fold cross validation. Must be at least 2. For more see :py:mod:`preprocessy.resampling.KFold`
 
 - shuffle(``bool``): Decides whether to shuffle data before splitting.
 
