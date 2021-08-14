@@ -6,6 +6,7 @@ from preprocessy.handlenullvalues import NullValuesHandler
 
 dataframe1 = pd.read_csv("datasets/encoding/test2.csv")
 dataframe2 = pd.read_csv("datasets/encoding/testnew.csv")
+titanic = pd.read_csv("datasets/titanic.csv")
 array = np.random.random((5, 5))
 
 
@@ -26,45 +27,43 @@ def test_null_dataframe():
 #         handler.execute({"train_df":dataframe1,'test_df':dataframe2})
 
 
-@pytest.mark.parametrize(
-    "test_input",
-    [
-        {"train_df": dataframe1, "drop": True, "fill_missing": "mean"},
-        {
-            "train_df": dataframe1,
-            "drop": True,
-            "fill_values": {"Test": "Tata"},
-        },
-        {
-            "train_df": dataframe1,
-            "drop": True,
-            "fill_values": {"Test": "Tata"},
-        },
-        {
-            "train_df": dataframe1,
-            "fill_missing": "mean",
-            "fill_values": {"Test": "Tata"},
-        },
-    ],
-)
-def test_multiple_args(test_input):
-    with pytest.raises(ArgumentsError):
-        handler = NullValuesHandler()
-        handler.execute(params=test_input)
+# @pytest.mark.parametrize(
+#     "test_input",
+#     [
+#         {"train_df": dataframe1,"fill_missing": [[],"mean"]},
+#         {
+#             "train_df": dataframe1,
+#             "fill_values": {"Test": "Tata"},
+#         },
+#         {
+#             "train_df": dataframe1,
+#             "fill_values": {"Test": "Tata"},
+#         },
+#         {
+#             "train_df": dataframe1,
+#             "fill_missing": [[],"mean"],
+#             "fill_values": {"Test": "Tata"},
+#         },
+#     ],
+# )
+# def test_multiple_args(test_input):
+#     with not pytest.raises(ArgumentsError):
+#         handler = NullValuesHandler()
+#         handler.execute(params=test_input)
 
 
 @pytest.mark.parametrize(
     "error, test_input",
     [
         (TypeError, {"train_df": array}),
-        (TypeError, {"train_df": dataframe2, "drop": "nice"}),
+        (TypeError, {"train_df": dataframe2, "drop_cols": "nice"}),
         (TypeError, {"train_df": dataframe1, "fill_missing": 3}),
         (TypeError, {"train_df": dataframe1, "fill_values": [5]}),
-        (TypeError, {"train_df": dataframe1, "drop": True, "cat_cols": 4}),
-        (ArgumentsError, {"train_df": dataframe1, "fill_missing": "sum"}),
+        (TypeError, {"train_df": dataframe1, "drop_cols": True, "cat_cols": 4}),
+        (ArgumentsError, {"train_df": dataframe1, "fill_missing": [[],"sum"]}),
         (
             ArgumentsError,
-            {"train_df": dataframe1, "drop": True, "cat_cols": ["xyz"]},
+            {"train_df": dataframe1, "drop_cols": ["Yolo"], "cat_cols": ["xyz"]},
         ),
         (
             ArgumentsError,
@@ -92,7 +91,7 @@ def test_incorrect_input_type(error, test_input):
         {
             "train_df": dataframe1,
             "test_df": dataframe1,
-            "fill_missing": "mean",
+            "fill_missing": [["Distance"],"mean"],
         },
         {
             "train_df": dataframe1,
@@ -159,7 +158,7 @@ def test_categorical_replace(test_input2):
         {
             "train_df": dataframe1,
             "test_df": dataframe1,
-            "fill_missing": "mean",
+            "fill_missing": [["Distance"],"mean"],
         },
         {
             "train_df": dataframe1,
@@ -180,8 +179,7 @@ def test_drop_col():
     params = {
         "train_df": dataframe1,
         "test_df": dataframe1,
-        "drop": True,
-        "column_list": ["Distance"],
+        "drop_cols":["Distance"] 
     }
     handler = NullValuesHandler()
     handler.execute(params=params)
@@ -200,3 +198,10 @@ def test_auto():
     rt_new = (params["test_df"].shape)[0]
     assert r_new != r
     assert rt_new != rt
+
+
+def test_mulitple():
+    params = {'train_df':titanic,'cat_cols':['Pclass','Sex','Parch','Embarked'],'drop_cols':["PassengerId","Name","Ticket","Cabin"],"fill_missing":[["Age"],"mean"]}
+    handler = NullValuesHandler()
+    handler.execute(params=params)
+    assert params["train_df"].shape == (889,8)

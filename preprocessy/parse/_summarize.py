@@ -101,5 +101,6 @@ class Parser:
 
         if self.ord_dict:
             self.ord_cols = [k for k in self.ord_dict.keys()]
+            params["ord_cols"] = self.ord_cols
 
         params["cat_cols"] = self.__get_cat_cols()
