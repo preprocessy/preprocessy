@@ -60,10 +60,14 @@ def test_null_dataframe():
         (TypeError, {"train_df": dataframe1, "fill_missing": 3}),
         (TypeError, {"train_df": dataframe1, "fill_values": [5]}),
         (TypeError, {"train_df": dataframe1, "drop_cols": True, "cat_cols": 4}),
-        (ArgumentsError, {"train_df": dataframe1, "fill_missing": [[],"sum"]}),
+        (ArgumentsError, {"train_df": dataframe1, "fill_missing": [[], "sum"]}),
         (
             ArgumentsError,
-            {"train_df": dataframe1, "drop_cols": ["Yolo"], "cat_cols": ["xyz"]},
+            {
+                "train_df": dataframe1,
+                "drop_cols": ["Yolo"],
+                "cat_cols": ["xyz"],
+            },
         ),
         (
             ArgumentsError,
@@ -91,7 +95,7 @@ def test_incorrect_input_type(error, test_input):
         {
             "train_df": dataframe1,
             "test_df": dataframe1,
-            "fill_missing": [["Distance"],"mean"],
+            "fill_missing": [["Distance"], "mean"],
         },
         {
             "train_df": dataframe1,
@@ -158,7 +162,7 @@ def test_categorical_replace(test_input2):
         {
             "train_df": dataframe1,
             "test_df": dataframe1,
-            "fill_missing": [["Distance"],"mean"],
+            "fill_missing": [["Distance"], "mean"],
         },
         {
             "train_df": dataframe1,
@@ -179,7 +183,7 @@ def test_drop_col():
     params = {
         "train_df": dataframe1,
         "test_df": dataframe1,
-        "drop_cols":["Distance"] 
+        "drop_cols": ["Distance"],
     }
     handler = NullValuesHandler()
     handler.execute(params=params)
@@ -201,7 +205,12 @@ def test_auto():
 
 
 def test_mulitple():
-    params = {'train_df':titanic,'cat_cols':['Pclass','Sex','Parch','Embarked'],'drop_cols':["PassengerId","Name","Ticket","Cabin"],"fill_missing":[["Age"],"mean"]}
+    params = {
+        "train_df": titanic,
+        "cat_cols": ["Pclass", "Sex", "Parch", "Embarked"],
+        "drop_cols": ["PassengerId", "Name", "Ticket", "Cabin"],
+        "fill_missing": [["Age"], "mean"],
+    }
     handler = NullValuesHandler()
     handler.execute(params=params)
-    assert params["train_df"].shape == (889,8)
+    assert params["train_df"].shape == (889, 8)

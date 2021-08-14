@@ -19,6 +19,7 @@ class NullValuesHandler:
         self.final_train = None
         self.final_test = None
         self.final_df = None
+        self.dtypeList = [np.int64, np.int32, np.float32, np.float64]
 
     def __repr__(self):
         return f"NullValuesHandler(train_df=None, test_df=None, drop_cols={self.drop_cols}, fill_missing={self.fill_missing}, fill_values={self.fill_values})"
@@ -71,16 +72,17 @@ class NullValuesHandler:
                         )
 
         if self.fill_missing is not None:
-            dtypeList = [np.int64, np.int32, np.float32, np.float64]
+
             if type(self.fill_missing) is not list:
-                raise TypeError(
-                    'Expected list for argument "fill_missing" '
-                )
+                raise TypeError('Expected list for argument "fill_missing" ')
             self.fill_missing[1] = self.fill_missing[1].lower()
             if self.fill_missing[1] not in ["mean", "median"]:
                 raise ArgumentsError('Allowed argument is "mean" or "median" ')
-            
-            if type(self.fill_missing[0]) is list and len(self.fill_missing[0]) == 0:
+
+            if (
+                type(self.fill_missing[0]) is list
+                and len(self.fill_missing[0]) == 0
+            ):
                 warnings.warn(
                     f'No columns specified."{self.fill_missing[1]}" will be applied on all columns containing null values.',
                     UserWarning,
@@ -92,7 +94,7 @@ class NullValuesHandler:
                             f'Column "{c}" does not exist in dataframe'
                         )
                     else:
-                        if self.train_df.dtypes[c] not in dtypeList:
+                        if self.train_df.dtypes[c] not in self.dtypeList:
                             raise TypeError(
                                 f'Expected integer or float datatype in columns to be filled with mean or median. Column in error here : "{c}"'
                             )
@@ -116,7 +118,6 @@ class NullValuesHandler:
                     raise ArgumentsError(
                         f"Column {col} does not exist in dataframe"
                     )
-
 
     # function to drop all rows with nan values
     def __drop_all_rows_with_null_values(self):
@@ -142,13 +143,13 @@ class NullValuesHandler:
             col_list = self.train_df.columns
             if method == "median":
                 for new_train_col in col_list:
-                    if self.new_train.dtypes[new_train_col] in dtypeList:
+                    if self.new_train.dtypes[new_train_col] in self.dtypeList:
                         self.new_train[new_train_col].fillna(
                             self.new_train[new_train_col].median(), inplace=True
                         )
             else:
                 for new_train_col in col_list:
-                    if self.new_train.dtypes[new_train_col] in dtypeList:
+                    if self.new_train.dtypes[new_train_col] in self.dtypeList:
                         self.new_train[new_train_col].fillna(
                             self.new_train[new_train_col].mean(), inplace=True
                         )
@@ -156,13 +157,14 @@ class NullValuesHandler:
             if self.test_df is not None:
                 if self.fill_missing == "median":
                     for new_test_col in self.new_test:
-                        if self.new_test.dtypes[new_test_col] in dtypeList:
+                        if self.new_test.dtypes[new_test_col] in self.dtypeList:
                             self.new_test[new_test_col].fillna(
-                                self.new_test[new_test_col].median(), inplace=True
+                                self.new_test[new_test_col].median(),
+                                inplace=True,
                             )
                 else:
                     for new_test_col in self.new_test:
-                        if self.new_test.dtypes[new_test_col] in dtypeList:
+                        if self.new_test.dtypes[new_test_col] in self.dtypeList:
                             self.new_test[new_test_col].fillna(
                                 self.new_test[new_test_col].mean(), inplace=True
                             )
@@ -171,26 +173,26 @@ class NullValuesHandler:
         else:
             if method == "median":
                 for new_train_col in col_list:
-                        self.new_train[new_train_col].fillna(
-                            self.new_train[new_train_col].median(), inplace=True
-                        )
+                    self.new_train[new_train_col].fillna(
+                        self.new_train[new_train_col].median(), inplace=True
+                    )
             else:
                 for new_train_col in col_list:
-                        self.new_train[new_train_col].fillna(
-                            self.new_train[new_train_col].mean(), inplace=True
-                        )
+                    self.new_train[new_train_col].fillna(
+                        self.new_train[new_train_col].mean(), inplace=True
+                    )
 
             if self.test_df is not None:
                 if self.fill_missing == "median":
                     for new_test_col in col_list:
-                            self.new_test[new_test_col].fillna(
-                                self.new_test[new_test_col].median(), inplace=True
-                            )
+                        self.new_test[new_test_col].fillna(
+                            self.new_test[new_test_col].median(), inplace=True
+                        )
                 else:
                     for new_test_col in col_list:
-                            self.new_test[new_test_col].fillna(
-                                self.new_test[new_test_col].mean(), inplace=True
-                            )
+                        self.new_test[new_test_col].fillna(
+                            self.new_test[new_test_col].mean(), inplace=True
+                        )
                 return self.new_train, self.new_test
 
             return self.new_train, None
@@ -275,29 +277,24 @@ class NullValuesHandler:
         if "fill_values" in params.keys():
             self.fill_values = params["fill_values"]
 
-
         self.__validate_input()
 
         self.__categoricalnull()
-        if (
-            self.drop_cols is not None
-        ):
+        if self.drop_cols is not None:
             (
                 self.train_df,
                 self.test_df,
             ) = self.__drop_column_with_null_values()
 
-        if (
-            self.fill_missing is not None
-        ):
+        if self.fill_missing is not None:
             (
                 self.train_df,
                 self.test_df,
-            ) = self.__fill_missing_with_mean_or_median(self.fill_missing[0],self.fill_missing[1])
+            ) = self.__fill_missing_with_mean_or_median(
+                self.fill_missing[0], self.fill_missing[1]
+            )
 
-        if (
-            self.fill_values is not None
-        ):
+        if self.fill_values is not None:
             self.train_df, self.test_df = self.__fill_values_columns()
 
         (
