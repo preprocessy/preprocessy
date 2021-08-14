@@ -4,6 +4,17 @@ API
 This part of the documentation lists the full API reference of all public
 classes and functions.
 
+Data Splitting
+--------------
+
+.. module:: preprocessy.data_splitting
+
+.. autoclass:: Split
+  :members:
+
+.. autoclass:: KFold
+  :members:
+
 Encoding
 --------
 
@@ -26,17 +37,6 @@ Input
 .. module:: preprocessy.input
 
 .. autoclass:: Reader
-  :members:
-
-Resampling
-----------
-
-.. module:: preprocessy.resampling
-
-.. autoclass:: Split
-  :members:
-
-.. autoclass:: KFold
   :members:
 
 Outliers
