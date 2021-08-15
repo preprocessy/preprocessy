@@ -121,7 +121,8 @@ class SelectKBest:
         :type target_label: str
 
         :param score_func: Function taking two arrays X and y, and returning a pair of arrays
-                     ``(scores, pvalues)`` or a single array with scores. ``score_func`` is provided from ``sklearn.feature_selection``
+                     ``(scores, pvalues)`` or a single array with scores. ``score_func`` can be custom
+                     or used from ``sklearn.feature_selection``
         :type score_func: callable
 
         :param k: Number of top features to select.
