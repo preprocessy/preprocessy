@@ -43,7 +43,8 @@ Any parameter marked ``*`` are essential to the smooth working of the pipeline a
 - threshold(``dict``): Dictionary of threshold values where the key is the column name and the value is the threshold for that column.
 
 - score_func(``callable``): Function taking two arrays X and y, and returning a pair of arrays
-                     ``(scores, pvalues)`` or a single array with scores. ``score_func`` is provided from ``sklearn.feature_selection``
+                     ``(scores, pvalues)`` or a single array with scores. ``score_func`` can be custom
+                     or used from ``sklearn.feature_selection``
 
 - k(``int``): Number of top features to select.
 
