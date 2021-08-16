@@ -67,6 +67,8 @@ class BasePipeline:
         ]
         if steps is None:
             self.steps = []
+        else:
+            self.steps = steps
         self.custom_reader = custom_reader
         self.__validate_input()
 
