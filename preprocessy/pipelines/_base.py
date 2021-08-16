@@ -46,7 +46,7 @@ class BasePipeline:
         self,
         train_df_path=None,
         test_df_path=None,
-        steps=[],
+        steps=None,
         config_file=None,
         params=None,
         custom_reader=None,
@@ -65,7 +65,8 @@ class BasePipeline:
             "train_df_path",
             "test_df_path",
         ]
-        self.steps = steps
+        if steps is None:
+            self.steps = []
         self.custom_reader = custom_reader
         self.__validate_input()
 
