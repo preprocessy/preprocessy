@@ -16,42 +16,6 @@ def test_null_dataframe():
         handler.execute({})
 
 
-# def test_none_args():
-#     with pytest.raises(ArgumentsError):
-#         handler = NullValuesHandler()
-#         handler.execute({"train_df": dataframe1})
-
-# def disparate_train_and_test():
-#     with pytest.raises(ArgumentsError):
-#         handler = NullValuesHandler()
-#         handler.execute({"train_df":dataframe1,'test_df':dataframe2})
-
-
-# @pytest.mark.parametrize(
-#     "test_input",
-#     [
-#         {"train_df": dataframe1,"fill_missing": [[],"mean"]},
-#         {
-#             "train_df": dataframe1,
-#             "fill_values": {"Test": "Tata"},
-#         },
-#         {
-#             "train_df": dataframe1,
-#             "fill_values": {"Test": "Tata"},
-#         },
-#         {
-#             "train_df": dataframe1,
-#             "fill_missing": [[],"mean"],
-#             "fill_values": {"Test": "Tata"},
-#         },
-#     ],
-# )
-# def test_multiple_args(test_input):
-#     with not pytest.raises(ArgumentsError):
-#         handler = NullValuesHandler()
-#         handler.execute(params=test_input)
-
-
 @pytest.mark.parametrize(
     "error, test_input",
     [
@@ -60,7 +24,34 @@ def test_null_dataframe():
         (TypeError, {"train_df": dataframe1, "fill_missing": 3}),
         (TypeError, {"train_df": dataframe1, "fill_values": [5]}),
         (TypeError, {"train_df": dataframe1, "drop_cols": True, "cat_cols": 4}),
-        (ArgumentsError, {"train_df": dataframe1, "fill_missing": [[], "sum"]}),
+        (
+            TypeError,
+            {
+                "train_df": titanic,
+                "cat_cols": ["Pclass", "Sex", "Parch", "Embarked"],
+                "drop_cols": ["PassengerId", "Name", "Ticket", "Cabin"],
+                "fill_missing": ["mean", "Age"],
+            },
+        ),
+        (
+            TypeError,
+            {
+                "train_df": titanic,
+                "cat_cols": ["Pclass", "Sex", "Parch", "Embarked"],
+                "drop_cols": ["PassengerId", "Name", "Ticket", "Cabin"],
+                "fill_missing": {"mean": "Age"},
+            },
+        ),
+        (
+            TypeError,
+            {
+                "train_df": titanic,
+                "cat_cols": ["Pclass", "Sex", "Parch", "Embarked"],
+                "drop_cols": ["PassengerId", "Name", "Ticket", "Cabin"],
+                "fill_missing": {"mean": ["Name"]},
+            },
+        ),
+        (ArgumentsError, {"train_df": dataframe1, "fill_missing": {"sum": []}}),
         (
             ArgumentsError,
             {
@@ -74,6 +65,24 @@ def test_null_dataframe():
             {"train_df": dataframe1, "fill_values": {"Label": 10}},
         ),
         (ArgumentsError, {"train_df": dataframe1, "test_df": dataframe2}),
+        (
+            ArgumentsError,
+            {
+                "train_df": titanic,
+                "cat_cols": ["Pclass", "Sex", "Parch", "Embarked"],
+                "drop_cols": ["PassengerId", "Name", "Ticket", "Cabin"],
+                "fill_missing": {"mean": ["Age"], "median": []},
+            },
+        ),
+        (
+            ArgumentsError,
+            {
+                "train_df": titanic,
+                "cat_cols": ["Pclass", "Sex", "Parch", "Embarked"],
+                "drop_cols": ["PassengerId", "Name", "Ticket", "Cabin"],
+                "fill_missing": {"mean": ["Car"]},
+            },
+        ),
     ],
 )
 def test_incorrect_input_type(error, test_input):
@@ -95,7 +104,7 @@ def test_incorrect_input_type(error, test_input):
         {
             "train_df": dataframe1,
             "test_df": dataframe1,
-            "fill_missing": [["Distance"], "mean"],
+            "fill_missing": {"mean": ["Distance"]},
         },
         {
             "train_df": dataframe1,
@@ -162,7 +171,7 @@ def test_categorical_replace(test_input2):
         {
             "train_df": dataframe1,
             "test_df": dataframe1,
-            "fill_missing": [["Distance"], "mean"],
+            "fill_missing": {"mean": ["Distance"]},
         },
         {
             "train_df": dataframe1,
@@ -209,7 +218,7 @@ def test_mulitple():
         "train_df": titanic,
         "cat_cols": ["Pclass", "Sex", "Parch", "Embarked"],
         "drop_cols": ["PassengerId", "Name", "Ticket", "Cabin"],
-        "fill_missing": [["Age"], "mean"],
+        "fill_missing": {"mean": ["Age"], "median": ["Fare"]},
     }
     handler = NullValuesHandler()
     handler.execute(params=params)

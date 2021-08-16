@@ -47,57 +47,94 @@ class NullValuesHandler:
                 raise ArgumentsError(
                     "The columns in train df and test df are not same. Provide test and train df with same columns."
                 )
-        # if (
-        #     self.drop_cols is None
-        #     and self.fill_missing is None
-        #     and self.fill_values is None
-        # ):
-        #     raise ArgumentsError(
-        #         "Expected atleast one argument apart from dataframe, received none"
-        #     )
 
         if self.drop_cols is not None:
             if not isinstance(self.drop_cols, list):
                 raise TypeError('Expected List for argument "drop_cols"')
-            if len(self.drop_cols) == 0:
-                warnings.warn(
-                    '"drop_cols" is empty, no columns will be dropped.',
-                    UserWarning,
-                )
+
             if len(self.drop_cols) != 0:
                 for c in self.drop_cols:
                     if c not in col_list:
                         raise ArgumentsError(
                             f'Column "{c}" does not exist in dataframe'
                         )
+            else:
+                warnings.warn(
+                    '"drop_cols" is empty, no columns will be dropped.',
+                    UserWarning,
+                )
 
         if self.fill_missing is not None:
 
-            if type(self.fill_missing) is not list:
-                raise TypeError('Expected list for argument "fill_missing" ')
-            self.fill_missing[1] = self.fill_missing[1].lower()
-            if self.fill_missing[1] not in ["mean", "median"]:
-                raise ArgumentsError('Allowed argument is "mean" or "median" ')
+            if type(self.fill_missing) is not dict:
+                raise TypeError('Expected dict for argument "fill_missing"')
 
-            if (
-                type(self.fill_missing[0]) is list
-                and len(self.fill_missing[0]) == 0
-            ):
-                warnings.warn(
-                    f'No columns specified."{self.fill_missing[1]}" will be applied on all columns containing null values.',
-                    UserWarning,
-                )
-            if len(self.fill_missing[0]) != 0:
-                for c in self.fill_missing[0]:
-                    if c not in col_list:
-                        raise ArgumentsError(
-                            f'Column "{c}" does not exist in dataframe'
+            for key in self.fill_missing.keys():
+                if key not in ["mean", "median"]:
+                    raise ArgumentsError(
+                        f'The only two options allowed are "mean" and "median". Given "{key}"'
+                    )
+
+            if "mean" in self.fill_missing.keys():
+                if type(self.fill_missing["mean"]) is list:
+                    if len(self.fill_missing["mean"]) == 0:
+                        if "median" in self.fill_missing.keys():
+                            raise ArgumentsError(
+                                "Since given empty list for mean which indicates mean applied everywhere, median can not also be given. Remove median or add columns in the mean column list."
+                            )
+                        warnings.warn(
+                            'No columns specified."mean" will be applied on all columns containing null values.',
+                            UserWarning,
                         )
                     else:
-                        if self.train_df.dtypes[c] not in self.dtypeList:
-                            raise TypeError(
-                                f'Expected integer or float datatype in columns to be filled with mean or median. Column in error here : "{c}"'
+                        for c in self.fill_missing["mean"]:
+                            if c not in col_list:
+                                raise ArgumentsError(
+                                    f'Column "{c}" does not exist in dataframe'
+                                )
+                            else:
+                                if (
+                                    self.train_df.dtypes[c]
+                                    not in self.dtypeList
+                                ):
+                                    raise TypeError(
+                                        f'Expected integer or float datatype in columns to be filled with mean or median. Column in error here : "{c}"'
+                                    )
+                else:
+                    raise TypeError(
+                        f'List containing column names to apply mean is required. Given: "{type(self.fill_missing["mean"])}"'
+                    )
+            if (
+                "median" in self.fill_missing.keys()
+            ):  # median is the only other option
+                if type(self.fill_missing["median"]) is list:
+                    if len(self.fill_missing["median"]) == 0:
+                        if "mean" in self.fill_missing.keys():
+                            raise ArgumentsError(
+                                "Since given empty list for median which indicates median applied everywhere, mean can not also be given. Remove mean or add columns in the median column list."
                             )
+                        warnings.warn(
+                            'No columns specified."median" will be applied on all columns containing null values.',
+                            UserWarning,
+                        )
+                    else:
+                        for c in self.fill_missing["median"]:
+                            if c not in col_list:
+                                raise ArgumentsError(
+                                    f'Column "{c}" does not exist in dataframe'
+                                )
+                            else:
+                                if (
+                                    self.train_df.dtypes[c]
+                                    not in self.dtypeList
+                                ):
+                                    raise TypeError(
+                                        f'Expected integer or float datatype in columns to be filled with mean or median. Column in error here : "{c}"'
+                                    )
+                else:
+                    raise TypeError(
+                        f'List containing column names to apply median is required. Given: "{type(self.fill_missing["median"])}"'
+                    )
 
         if self.fill_values is not None:
             if type(self.fill_values) is not dict:
@@ -132,70 +169,47 @@ class NullValuesHandler:
 
         self.new_train = self.train_df.drop(self.drop_cols, axis=1)
         if self.test_df is not None:
-            self.new_test = self.train_df.drop(self.drop_cols, axis=1)
+            self.new_test = self.test_df.drop(self.drop_cols, axis=1)
             return self.new_train, self.new_test
         return self.new_train, None
 
     # function to fill the missing values with mean or median as per the arguments passed
-    def __fill_missing_with_mean_or_median(self, col_list, method):
+
+    def __fill_missing_with_mean(self, col_list):
         self.new_train = self.train_df
+        self.new_test = self.test_df
         if len(col_list) == 0:
             col_list = self.train_df.columns
-            if method == "median":
-                for new_train_col in col_list:
-                    if self.new_train.dtypes[new_train_col] in self.dtypeList:
-                        self.new_train[new_train_col].fillna(
-                            self.new_train[new_train_col].median(), inplace=True
-                        )
-            else:
-                for new_train_col in col_list:
-                    if self.new_train.dtypes[new_train_col] in self.dtypeList:
-                        self.new_train[new_train_col].fillna(
-                            self.new_train[new_train_col].mean(), inplace=True
-                        )
-
-            if self.test_df is not None:
-                if self.fill_missing == "median":
-                    for new_test_col in self.new_test:
-                        if self.new_test.dtypes[new_test_col] in self.dtypeList:
-                            self.new_test[new_test_col].fillna(
-                                self.new_test[new_test_col].median(),
-                                inplace=True,
-                            )
-                else:
-                    for new_test_col in self.new_test:
-                        if self.new_test.dtypes[new_test_col] in self.dtypeList:
-                            self.new_test[new_test_col].fillna(
-                                self.new_test[new_test_col].mean(), inplace=True
-                            )
-                return self.new_train, self.new_test
-            return self.new_train, None
-        else:
-            if method == "median":
-                for new_train_col in col_list:
-                    self.new_train[new_train_col].fillna(
-                        self.new_train[new_train_col].median(), inplace=True
+        for col in col_list:
+            if self.new_train.dtypes[col] in self.dtypeList:
+                self.new_train[col].fillna(
+                    self.new_train[col].mean(), inplace=True
+                )
+        if self.test_df is not None:
+            for col in col_list:
+                if self.new_test.dtypes[col] in self.dtypeList:
+                    self.new_test[col].fillna(
+                        self.new_test[col].mean(), inplace=True
                     )
-            else:
-                for new_train_col in col_list:
-                    self.new_train[new_train_col].fillna(
-                        self.new_train[new_train_col].mean(), inplace=True
+        return self.new_train, self.new_test
+
+    def __fill_missing_with_median(self, col_list):
+        self.new_train = self.train_df
+        self.new_test = self.test_df
+        if len(col_list) == 0:
+            col_list = self.train_df.columns
+        for col in col_list:
+            if self.new_train.dtypes[col] in self.dtypeList:
+                self.new_train[col].fillna(
+                    self.new_train[col].median(), inplace=True
+                )
+        if self.test_df is not None:
+            for col in col_list:
+                if self.new_test.dtypes[col] in self.dtypeList:
+                    self.new_test[col].fillna(
+                        self.new_test[col].median(), inplace=True
                     )
-
-            if self.test_df is not None:
-                if self.fill_missing == "median":
-                    for new_test_col in col_list:
-                        self.new_test[new_test_col].fillna(
-                            self.new_test[new_test_col].median(), inplace=True
-                        )
-                else:
-                    for new_test_col in col_list:
-                        self.new_test[new_test_col].fillna(
-                            self.new_test[new_test_col].mean(), inplace=True
-                        )
-                return self.new_train, self.new_test
-
-            return self.new_train, None
+        return self.new_train, self.new_test
 
     # function to fill columns containing null values with the character supplied by the user
     def __fill_values_columns(self):
@@ -254,8 +268,8 @@ class NullValuesHandler:
         :param drop_cols: List of column names of columns to be dropped
         :type drop_cols: list
 
-        :param fill_missing: List of format [[col_name],'method'] to indicate the method (``mean``/``median``) to be applied on specified col_list
-        :type fill_missing: "mean" | "median"
+        :param fill_missing: Dictionary of format {"method": [col_list]} to indicate the method (``mean``/``median``) to be applied on specified col_list
+        :type fill_missing: dict
 
         :param fill_values: Column and value mapping, where the key is the column name and value is the custom value to be filled in place of null values
         :type fill_values: dict
@@ -287,12 +301,14 @@ class NullValuesHandler:
             ) = self.__drop_column_with_null_values()
 
         if self.fill_missing is not None:
-            (
-                self.train_df,
-                self.test_df,
-            ) = self.__fill_missing_with_mean_or_median(
-                self.fill_missing[0], self.fill_missing[1]
-            )
+            if "mean" in self.fill_missing.keys():
+                self.train_df, self.test_df = self.__fill_missing_with_mean(
+                    self.fill_missing["mean"]
+                )
+            if "median" in self.fill_missing.keys():
+                self.train_df, self.test_df = self.__fill_missing_with_median(
+                    self.fill_missing["median"]
+                )
 
         if self.fill_values is not None:
             self.train_df, self.test_df = self.__fill_values_columns()
@@ -301,5 +317,6 @@ class NullValuesHandler:
             self.final_train,
             self.final_test,
         ) = self.__drop_all_rows_with_null_values()
+
         params["train_df"] = self.final_train
         params["test_df"] = self.final_test

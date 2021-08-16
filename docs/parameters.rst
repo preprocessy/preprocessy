@@ -20,7 +20,7 @@ Any parameter marked ``*`` are essential to the smooth working of the pipeline a
 
 - drop_cols(``list``): List of column names to be dropped.
 
-- fill_missing(``list``): List with the format [[columns that the method will be applied on], method]. For example: [["Age"],"mean"].
+- fill_missing(``dict``): Dictionary of format {"method": [col_list]} to indicate the method (``mean``/``median``) to be applied on specified col_list. For example: {"mean":["col a"],"median":["col b]}
 
 - fill_values(``dict``): Dictionary with keys as column names and values that fill the null records in corresponding column.
 
