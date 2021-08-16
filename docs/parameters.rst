@@ -18,13 +18,11 @@ Any parameter marked ``*`` are essential to the smooth working of the pipeline a
 
 - replace_cat_nulls(``int``): Integer value that is used to fill all null cells in categorical columns(taken from ``cat_cols`` parameter)
 
-- drop(``bool``): ``True`` if all records with null values to be removed. ``False`` otherwise. If ``fill_missing`` and ``fill_values`` and ``drop`` are not given then ``drop`` is set to True.
+- drop_cols(``list``): List of column names to be dropped.
 
-- fill_missing(``str``): ``mean`` if null values to be filled with mean of that column, ``median`` otherwise.
+- fill_missing(``dict``): Dictionary of format {"method": [col_list]} to indicate the method (``mean``/``median``) to be applied on specified col_list. For example: {"mean":["col a"],"median":["col b]}
 
 - fill_values(``dict``): Dictionary with keys as column names and values that fill the null records in corresponding column.
-
-- column_list(``list``): List containing column names that indicate which columns to be dropped.
 
 - one_hot(``bool``): ``True`` if one hot encoding desired. Default= ``False``.
 
