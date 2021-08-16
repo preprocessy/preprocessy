@@ -62,8 +62,13 @@ class BasePipeline:
             "X_test",
             "y_train",
             "y_test",
+            "train_df_path",
+            "test_df_path",
         ]
-        self.steps = steps
+        if steps is None:
+            self.steps = []
+        else:
+            self.steps = steps
         self.custom_reader = custom_reader
         self.__validate_input()
 
@@ -97,7 +102,7 @@ class BasePipeline:
                 " either a list of steps or path to a JSON config file."
             )
 
-        if self.steps and not isinstance(self.steps, list):
+        if not isinstance(self.steps, list):
             raise TypeError(
                 f"'steps' should be of type 'list'. Received {self.steps} of"
                 f" type {type(self.steps)}"
