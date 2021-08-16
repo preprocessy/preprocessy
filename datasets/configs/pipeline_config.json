@@ -1,5 +1,7 @@
 {
   "col_1": "A",
   "col_2": "B",
-  "test_size": 0.2
+  "test_size": 0.2,
+  "train_df_path": "./datasets/configs/dataset.csv",
+  "test_df_path": null
 }

@@ -35,11 +35,11 @@ class Parser:
             )
         if (
             self.target_label is not None
-            and self.target_label in self.train_df.columns
-            and (self.cat_cols is None or self.target_label in self.cat_cols)
+            and self.cat_cols is not None
+            and (self.target_label in self.cat_cols)
         ):
             raise ValueError(
-                f"Target column: {self.target_label} will be encoded. Remove it from cat_cols if in there or remove from dataframe"
+                f"Target column: {self.target_label} will be encoded. Remove it from cat_cols if in there."
             )
 
         if self.ord_dict is not None:
@@ -101,5 +101,6 @@ class Parser:
 
         if self.ord_dict:
             self.ord_cols = [k for k in self.ord_dict.keys()]
+            params["ord_cols"] = self.ord_cols
 
         params["cat_cols"] = self.__get_cat_cols()

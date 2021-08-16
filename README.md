@@ -1,4 +1,4 @@
-# Preprocessy
+![preprocessy-logo](docs/_static/preprocessy_horizontal.png)
 
 [![Workflow](https://github.com/preprocessy/preprocessy/actions/workflows/workflow.yml/badge.svg)](https://github.com/preprocessy/preprocessy/actions/workflows/workflow.yml)
 [![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-sucess.svg)](https://gitHub.com/preprocessy/preprocessy/graphs/commit-activity)
@@ -36,42 +36,6 @@ This is the major part of the pipeline consisting of processing functions. The f
 
 The output consists of processed dataset and pipeline parameters depending on the verbosity required.
 
-## Project Structure
-
-```
-.
-├── CONTRIBUTING.md
-├── LICENSE
-├── README.md
-├── datasets
-├── evaluations
-├── preprocessy
-├── requirements.txt
-├── requirements_dev.txt
-├── setup.py
-├── tests
-└── venv
-
-5 directories, 6 files
-```
-
-- **preprocessy** - Contains the different pipeline and function classes
-
-- **tests** - Contains all the unit and integration tests
-
-- **datasets** - Contains sample datasets for development purposes
-
-- **evaluations** - Contains jupyter notebooks with example implementations and performance measurements
-
-## Requirements
-
-```
-pandas
-scikit-learn # required for feature selection
-```
-
-For development requirements see [Contributing Guidelines](https://github.com/preprocessy/preprocessy/blob/master/CONTRIBUTING.md)
-
 ## Contributing
 
 Please read our [Contributing Guide](https://github.com/preprocessy/preprocessy/blob/master/CONTRIBUTING.md) before submitting a Pull Request to the project.
@@ -91,3 +55,12 @@ Currently, documentation is under development. All contributions are welcome! Pl
 ## License
 
 See the [LICENSE](https://github.com/preprocessy/preprocessy/blob/master/LICENSE) file for licensing information.
+
+## Links
+
+- Documentation: https://preprocessy.readthedocs.io/en/stable/
+- Changes: https://preprocessy.readthedocs.io/en/stable/changes/
+- PyPI Releases: https://pypi.org/project/preprocessy/
+- Source Code: https://github.com/preprocessy/preprocessy
+- Issue Tracker: https://github.com/preprocessy/preprocessy/issues
+- Chat: https://discord.gg/5q2yCqqU6N

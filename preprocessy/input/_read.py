@@ -5,6 +5,11 @@ import pandas as pd
 
 
 class Reader(object):
+    """Standard Reader Class that serves to read and load numeric data into pandas dataframe.
+
+    The file extensions allowed are: .csv, .xls, .xlxs, .xlsm, .xlsb, .odf, .ods, .odt
+    """
+
     def __init__(self):
         self.excel_extensions = [
             "xls",
@@ -58,6 +63,15 @@ class Reader(object):
         return df
 
     def read_file(self, params):
+        """Function to take the train and test dataframe paths and load it in pandas dataframe
+
+        :param train_df_path: Path that points to the train dataset(Extension can be any of the above listed).
+                        Should not be ``None``.
+        :type train_df_path: str
+
+        :param test_df_path: Path that points to the test dataset(Extension can be any of the above listed).
+        :type test_df_path: str
+        """
         if "train_df_path" in params.keys():
             self.train_df_path = params["train_df_path"]
         if "test_df_path" in params.keys():

@@ -10,11 +10,38 @@ from prettytable import PrettyTable
 from ..exceptions import ArgumentsError
 from ..input import Reader
 from .config import read_config
+from .config import save_config
 
 init()
 
 
 class BasePipeline:
+
+    """The ``BasePipeline`` Class can be used to create your own customized pipeline.
+
+    :param train_df_path: Path to train dataframe
+              Should not be ``None``
+    :type train_df_path: str
+
+    :param test_df_path: Path to train dataframe
+              Should not be ``None``
+    :type test_df_path: str
+
+    :param steps: A list of functions which will be executed sequentially.
+            All the functions should be callables
+    :type steps: list
+
+    :param params: A dictionary containing the parameters that are needed for configuring the pipeline
+    :type params: dict
+
+    :param config_file: Path to a config file that consists the parameters for configuring the pipeline. An alternative to ``params``. A config file for the current ``params`` dictionary can be generated using the ``save_config`` utility
+    :type config_file: str
+
+    :param custom_reader: Custom function to read the data
+    :type custom_reader: callable
+
+    """
+
     def __init__(
         self,
         train_df_path=None,
@@ -28,7 +55,20 @@ class BasePipeline:
         self.train_df_path = train_df_path
         self.test_df_path = test_df_path
         self.config_file = config_file
-        self.steps = steps
+        self.config_drop_keys = [
+            "train_df",
+            "test_df",
+            "X_train",
+            "X_test",
+            "y_train",
+            "y_test",
+            "train_df_path",
+            "test_df_path",
+        ]
+        if steps is None:
+            self.steps = []
+        else:
+            self.steps = steps
         self.custom_reader = custom_reader
         self.__validate_input()
 
@@ -62,7 +102,7 @@ class BasePipeline:
                 " either a list of steps or path to a JSON config file."
             )
 
-        if self.steps and not isinstance(self.steps, list):
+        if not isinstance(self.steps, list):
             raise TypeError(
                 f"'steps' should be of type 'list'. Received {self.steps} of"
                 f" type {type(self.steps)}"
@@ -117,6 +157,7 @@ class BasePipeline:
             )
 
     def process(self):
+        """Method that executes the pipeline sequentially."""
         self.print_info()
         with alive_bar(
             len(self.steps),
@@ -143,6 +184,30 @@ class BasePipeline:
 
     def add(self, func=None, params=None, **kwargs):
 
+        """Method to add another function to the pipeline after it has been constructed
+
+        :param func: The function to be added
+        :type func: callable
+
+        :param params: Dictionary of configurable parameters to be added to the existing ``params`` dictionary
+        :type params: dict
+
+        :param index: The index at which the function is to be inserted.
+        :type index: int
+
+        :param after: The step name after which the function should be added
+        :type after: str
+
+        :param before: The step name before which the function should be added
+        :type before: str
+
+        To add a function, either the index position or the ``before``/``after`` positional arguments can be supplied
+
+        If ``index``, ``after`` and ``before`` are all provided, the method will follow the priority: ``index`` > ``after`` > ``before``
+
+        :raises ArgumentsError: If no position is provided to insert the function into the pipeline
+
+        """
         if not callable(func):
             raise TypeError(
                 f"'func' should be a callable. Received {func} of type"
@@ -188,6 +253,14 @@ class BasePipeline:
             )
 
     def remove(self, func_name=None):
+        """Method to remove a function from the pipeline
+
+        :param func_name: The name of the function which has to be removed from the pipeline
+        :type func_name: str
+
+        :raises TypeError: If ``func_name`` is not of type ``str``
+
+        """
         if not isinstance(func_name, str):
             raise TypeError(
                 f"'func_name' should be of type str. Received {func_name} of"
@@ -207,7 +280,21 @@ class BasePipeline:
 
         self.steps.remove(func)
 
+    def save_config(self, file_path, config_drop_keys=None):
+        """Method to save the ``params`` to a ``JSON`` config file
+
+        :param file_path: Path where the config file must be created
+        :type file_path: str
+        :param config_drop_keys: List of param keys that must not be stored in the config file,
+                            defaults to ``["train_df", "test_df", "X_train", "X_test", "y_train", "y_test"]``
+        :type config_drop_keys: list, optional
+        """
+        if not config_drop_keys:
+            config_drop_keys = self.config_drop_keys
+        save_config(file_path, self.params, config_drop_keys)
+
     def print_info(self):
+        """Prints the current configuration of the pipeline. Shows the steps, dataframe paths and config paths."""
         print(f"\nPipeline Class: {self.__class__.__name__}\n")
         table = PrettyTable(["Pipeline Property", "Value"])
         table.align = "l"

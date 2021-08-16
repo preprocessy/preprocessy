@@ -1,15 +1,30 @@
+from preprocessy.data_splitting import Split
 from preprocessy.encoding import Encoder
 from preprocessy.feature_selection import SelectKBest
 from preprocessy.handlenullvalues import NullValuesHandler
 from preprocessy.outliers import HandleOutlier
 from preprocessy.parse import Parser
-from preprocessy.resampling import Split
 from preprocessy.scaling import Scaler
 
 from ._base import BasePipeline
 
 
 class FeatureSelectionPipeline(BasePipeline):
+    """
+    Pre-built pipeline that can be used for feature selection
+
+    The steps of the pipeline are:
+
+    1. Parser
+    2. NullValuesHandler
+    3. Encoder
+    4. HandleOutlier
+    5. Scaler
+    6. SelectKBest
+    7. Split
+
+    """
+
     def __init__(
         self,
         train_df_path=None,
