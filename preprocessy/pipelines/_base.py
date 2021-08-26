@@ -178,9 +178,13 @@ class BasePipeline:
 
     def __insert(self, index, func, params):
         self.steps.insert(index, func)
-        for k, v in params.items():
-            # TODO: Add warning if param with same name already exists
-            self.params[k] = v
+        if params:
+            for k, v in params.items():
+                if k in self.params:
+                    raise ValueError(
+                        f"Non unique parameter name. Param with name {k} already exists."
+                    )
+                self.params[k] = v
 
     def add(self, func=None, params=None, **kwargs):
 
