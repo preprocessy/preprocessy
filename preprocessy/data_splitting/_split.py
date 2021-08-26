@@ -232,15 +232,14 @@ class Split:
             self.shuffle = params["shuffle"]
         if "random_state" in params.keys():
             self.random_state = params["random_state"]
-        if self.target_label:
+        if self.target_label and self.test_df is not None:
             self.train_y = self.train_df[self.target_label]
-            if self.test_df is not None:
-                self.test_y = self.test_df[self.target_label]
+            self.test_y = self.test_df[self.target_label]
 
         self.__validate_input()
         if self.test_df is not None and self.test_y is not None:
-            params["X_train"] = self.train_df
-            params["X_test"] = self.test_df
+            params["X_train"] = self.train_df.drop([self.target_label], axis=1)
+            params["X_test"] = self.test_df.drop([self.target_label], axis=1)
             params["y_train"] = self.train_y
             params["y_test"] = self.test_y
 
