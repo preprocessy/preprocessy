@@ -178,9 +178,13 @@ class BasePipeline:
 
     def __insert(self, index, func, params):
         self.steps.insert(index, func)
-        for k, v in params.items():
-            # TODO: Add warning if param with same name already exists
-            self.params[k] = v
+        if params:
+            for k, v in params.items():
+                if k in self.params:
+                    raise ValueError(
+                        f"Non unique parameter name. Param with name {k} already exists."
+                    )
+                self.params[k] = v
 
     def add(self, func=None, params=None, **kwargs):
 
@@ -189,7 +193,8 @@ class BasePipeline:
         :param func: The function to be added
         :type func: callable
 
-        :param params: Dictionary of configurable parameters to be added to the existing ``params`` dictionary
+        :param params: Dictionary of configurable parameters to be added to the existing
+                    ``params`` dictionary. Can be empty or ``None``.
         :type params: dict
 
         :param index: The index at which the function is to be inserted.
@@ -206,6 +211,8 @@ class BasePipeline:
         If ``index``, ``after`` and ``before`` are all provided, the method will follow the priority: ``index`` > ``after`` > ``before``
 
         :raises ArgumentsError: If no position is provided to insert the function into the pipeline
+
+        :raises ValueError: If ``params`` contains a key that already exists in ``self.params``
 
         """
         if not callable(func):

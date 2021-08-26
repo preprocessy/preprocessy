@@ -160,11 +160,55 @@ def test_add():
     num_1 = df.loc[42, "A"]
     assert num_0 == (num_1 ** 2) * 2
     pipeline.remove("squared")
-    pipeline.add(squared, {"col_2": "A"}, after="read_file")
+    pipeline.add(squared, after="read_file")
     pipeline.process()
     num_0 = pipeline.params["train_df"].loc[42, "A"]
     num_1 = df.loc[42, "A"]
     assert num_0 == (num_1 ** 2) * 2
+
+
+def test_add_without_params():
+    df = pd.DataFrame({"A": np.arange(1, 100), "B": np.arange(1, 100)})
+    _ = df.to_csv("./datasets/configs/dataset.csv", index=False)
+    params = {
+        "col_1": "A",
+        "col_2": "B",
+        "test_size": 0.2,
+    }
+    pipeline = BasePipeline(
+        train_df_path="./datasets/configs/dataset.csv",
+        steps=[times_two, split],
+        params=params,
+    )
+    pipeline.add(
+        squared,
+        before="times_two",
+    )
+    pipeline.process()
+    assert pipeline.params["train_df"].loc[42, "B"] == df.loc[42, "B"] ** 2
+
+
+def test_duplicate_param():
+    df = pd.DataFrame({"A": np.arange(1, 100), "B": np.arange(1, 100)})
+    _ = df.to_csv("./datasets/configs/dataset.csv", index=False)
+    params = {
+        "col_1": "A",
+        "col_2": "B",
+        "test_size": 0.2,
+    }
+    pipeline = BasePipeline(
+        train_df_path="./datasets/configs/dataset.csv",
+        steps=[times_two, split],
+        params=params,
+    )
+    with pytest.raises(ValueError):
+        pipeline.add(
+            squared,
+            {
+                "col_2": "A",
+            },
+            before="times_two",
+        )
 
 
 def test_remove():
