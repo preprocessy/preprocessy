@@ -39,6 +39,16 @@ Input
 .. autoclass:: Reader
   :members:
 
+.. _null-docs:
+
+Null Values
+-----------
+
+.. module:: preprocessy.missing_data
+
+.. autoclass:: NullValuesHandler
+  :members:
+
 Outliers
 --------
 
@@ -53,17 +63,6 @@ Scaling
 .. module:: preprocessy.scaling
 
 .. autoclass:: Scaler
-  :members:
-
-
-.. _null-docs:
-
-Null Values
------------
-
-.. module:: preprocessy.handlenullvalues
-
-.. autoclass:: NullValuesHandler
   :members:
 
 Pipelines
