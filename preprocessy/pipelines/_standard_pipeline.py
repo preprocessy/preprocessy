@@ -1,6 +1,6 @@
 from preprocessy.data_splitting import Split
 from preprocessy.encoding import Encoder
-from preprocessy.handlenullvalues import NullValuesHandler
+from preprocessy.missing_data import NullValuesHandler
 from preprocessy.outliers import HandleOutlier
 from preprocessy.parse import Parser
 from preprocessy.scaling import Scaler

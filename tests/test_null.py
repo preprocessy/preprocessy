@@ -2,7 +2,7 @@ import numpy as np
 import pandas as pd
 import pytest
 from preprocessy.exceptions import ArgumentsError
-from preprocessy.handlenullvalues import NullValuesHandler
+from preprocessy.missing_data import NullValuesHandler
 
 dataframe1 = pd.read_csv("datasets/encoding/test2.csv")
 dataframe2 = pd.read_csv("datasets/encoding/testnew.csv")
