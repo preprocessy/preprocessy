@@ -25,7 +25,7 @@ def read_config(file_path):
     except Exception as e:
         raise TypeError(
             f"Error occurred while reading the config file : {str(e)}"
-        )
+        ) from e
 
     if "train_df_path" in content:
         warnings.warn(
