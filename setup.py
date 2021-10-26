@@ -27,7 +27,7 @@ setup(
     packages=find_packages(),
     include_package_data=True,
     install_requires=[
-        "alive-progress>=1.6.2",
+        "alive-progress~=1.6.2",
         "colorama>=0.4.4",
         "pandas>=1.0.5",
         "prettytable>=2.1.0",
