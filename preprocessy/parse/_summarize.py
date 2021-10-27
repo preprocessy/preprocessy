@@ -85,6 +85,8 @@ class Parser:
             self.test_df = params["test_df"]
         if "ord_dict" in params.keys():
             self.ord_dict = params["ord_dict"]
+        if "target_label" in params.keys():
+            self.target_label = params["target_label"]
 
         self.__validate_input()
 
