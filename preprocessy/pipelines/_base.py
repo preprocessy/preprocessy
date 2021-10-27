@@ -163,7 +163,6 @@ class BasePipeline:
             len(self.steps),
             title="Pipeline Stages",
             enrich_print=False,
-            force_tty=True,
         ) as bar:
             print("\nProcessing...\n")
             for step in self.steps:
