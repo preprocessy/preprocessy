@@ -27,7 +27,9 @@ version = "1.0.0"
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
 master_doc = "index"
-extensions = ["sphinx.ext.autodoc"]
+extensions = ["sphinx.ext.autodoc", "sphinx_issues"]
+
+issues_github_path = "preprocessy/preprocessy"
 
 # Add any paths that contain templates here, relative to this directory.
 # templates_path = ["_templates"]

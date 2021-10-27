@@ -1,8 +1,13 @@
+Version 1.0.1
+-------------
+
+Released 2021-10-27
+
+- Added progress bar support to Jupyter Notebooks :issue:`85`
+
 Version 1.0.0
 -------------
 
-Unreleased
+Released 2021-09-10
 
 - Initial Release
-
--  Updated null values handler to remove exclusive choosing of a null values handling method. https://github.com/preprocessy/preprocessy/issues/100
