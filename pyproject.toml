@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "preprocessy"
-version = "1.0.0"
+version = "1.0.1"
 description = "Data Preprocessing library that provides customizable pipelines."
 authors = ["Saif Kazi <saif1204kazi@gmail.com>"]
 license = "MIT"
