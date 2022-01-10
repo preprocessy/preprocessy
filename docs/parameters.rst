@@ -24,11 +24,11 @@ Any parameter marked ``*`` are essential to the smooth working of the pipeline a
 
 - fill_values(``dict``): Dictionary with keys as column names and values that fill the null records in corresponding column.
 
-- one_hot(``bool``): ``True`` if one hot encoding desired. Default= ``False``.
+- one_hot(``bool``): ``True`` if one hot encoding desired. Default = ``False``.
 
-- remove_outliers(``bool``): ``True`` if outlier records to be removed. Default= ``True``. If ``False`` then ``replace`` parameter must be given.
+- remove_outliers(``bool``): ``True`` if outlier records to be removed. If ``False`` then ``replace`` parameter must be given. Default = ``True``
 
-- replace(``int``): Integer value to replace all outliers with.
+- replace(``bool``): Boolean value to indicate if the outliers need to be replaced by ``-999``. Default = False.
 
 - first_quartile(``float``): Float value less than 1 and represents the first percentile marker. For more see :py:mod:`preprocessy.outliers`
 
