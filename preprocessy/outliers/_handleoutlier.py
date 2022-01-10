@@ -181,9 +181,9 @@ class HandleOutlier:
         :param ord_cols: List containing the column names to be encoded ordinally.This parameter is needed to ensure that the ordinal columns isn't included in the outlier removing process.
         :type ord_cols: List
 
-        :param replace: Integer value to indicate the value with which to replace the identified outliers.
-                        This will replace and will not remove the outliers
-        :type replace: int
+        :param replace: Boolean value to indicate if the outliers need to be replaced.
+                        This will replace the outliers with ``-999`` and will not remove them.
+        :type replace: bool, default=False
 
         :param first_quartile: Float value <1 representing the first percentile marker
         :type first_quartile: float
