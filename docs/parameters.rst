@@ -6,9 +6,9 @@ The parameters for the pipeline are to be given in a ``dict`` or in a json file 
 The paramters are listed below along with their meaning, expected dtype, defualt(if any).
 Any parameter marked ``*`` are essential to the smooth working of the pipeline and are required.
 
-- \*train_df_path(``str``): Path to the train dataset. Path should point to a file of approved extension.
+- \*train_df_path(``str``): Path to the train dataset. Path should point to a file of approved extension. For list of allowed extensions see :py:mod:`preprocessy.input`.
 
-- \*test_df_path(``str``): Path to the test dataset. Path should point to a file of approved extension. For list of allowed extensions see :py:mod:`preprocessy.input`
+- test_df_path(``str``): Path to the test dataset. Path should point to a file of approved extension. For list of allowed extensions see :py:mod:`preprocessy.input`.
 
 - target_label(``str``): Name of the target column.
 

@@ -204,7 +204,6 @@ class Encoder:
         :type train_df: pandas.core.frames.DataFrame
 
         :param test_df: Input dataframe, may or may not consist of the target label.
-                  Should not be ``None``
         :type test_df: pandas.core.frames.DataFrame
 
         :param target_label: Name of the Target Column. This parameter is needed to ensure that the target column

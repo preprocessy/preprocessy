@@ -216,12 +216,11 @@ class Scaler:
     def execute(self, params):
         """Method for scaling the columns in a dataset
 
-        :param train_df: Input dataframe
+        :param train_df: Input dataframe, may or may not consist of the target label.
                   Should not be ``None``
         :type train_df: pandas.core.frames.DataFrame
 
-        :param test_df: Input dataframe
-                  Should not be ``None``
+        :param test_df: Input dataframe, may or may not consist of the target label.
         :type test_df: pandas.core.frames.DataFrame
 
         :param type: The type of Scaler to be used
