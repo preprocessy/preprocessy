@@ -1,6 +1,7 @@
 Version 1.0.2
+-------------
 
-Unreleased
+Released 2022-01-10
 
 - Train test split should insert ``y_train`` in params when ``target_label`` is provided. :issue:`124`
 
