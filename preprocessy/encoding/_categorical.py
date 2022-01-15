@@ -125,12 +125,12 @@ class Encoder:
                     axis=1,
                 )
                 for val in self.train_df[col].unique():
-                    if col + '_' + str(val) not in self.train_df.columns:
+                    if col + "_" + str(val) not in self.train_df.columns:
                         raise ValueError(
                             f"Encoded column {col}_{val} not found. {col} has value {val}."
                         )
                     else:
-                        self.cat_cols.append(col + '_' + str(val))
+                        self.cat_cols.append(col + "_" + str(val))
 
     def __encode_categorical(self):
         """
