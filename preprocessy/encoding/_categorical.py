@@ -100,7 +100,7 @@ class Encoder:
         Helper function to one-hot encode categorical columns using pd.get_dummies. Encoding will not affect the
         original columns. Instead a new column will be made with the name 'col_labelname'.
         """
-        for col in self.cat_cols:
+        for col in self.cat_cols.copy():
             if (
                 col in self.train_df
                 and col + str("Encoded") not in self.ord_cols
@@ -124,6 +124,13 @@ class Encoder:
                     ],
                     axis=1,
                 )
+                for val in self.train_df[col].unique():
+                    if col+'_'+str(val) not in self.train_df.columns:
+                        raise ValueError(
+                            f"Encoded column {col}_{val} not found. {col} has value {val}."
+                        )
+                    else:
+                        self.cat_cols.append(col+'_'+str(val))
 
     def __encode_categorical(self):
         """

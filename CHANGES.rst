@@ -1,7 +1,12 @@
-Version 1.0.3
+Version 1.0.4
 -------------
 
 Unreleased
+
+Version 1.0.3
+-------------
+
+- Addition of newly created one hot encoded columns to categorical columns list. :issue:`129`
 
 Version 1.0.2
 -------------
