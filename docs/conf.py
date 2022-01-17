@@ -18,7 +18,7 @@ sys.path.insert(0, os.path.abspath(".."))
 project = "Preprocessy"
 copyright = "2021-Present, Saif Kazi and contributors to Preprocessy"
 author = "Saif Kazi and contributors to Preprocessy"
-version = "1.0.0"
+version = "1.0.2"
 
 
 # -- General configuration ---------------------------------------------------
