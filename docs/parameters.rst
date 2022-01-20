@@ -50,7 +50,7 @@ Name of the target column.
 
 - **cat_cols**
 
-List of column names provided by user indicating these columns are to be encoded categorically. If ``None`` then ``Preprocessy`` calculates and identifies the columns on its own.
+List of column names provided by user indicating these columns are to be encoded categorically. If ``None`` then ``Preprocessy`` analyses and identifies the columns on its own.
 
 .. code:: python
 
@@ -60,7 +60,8 @@ List of column names provided by user indicating these columns are to be encoded
 - **ord_dict**
 
 Ordinal attributes require an associated weight mapping. This parameter is mapping from attribute column
-name to weight mapping.
+name to weight mapping. Weight mapping is a dict specifying the weight associated with each unique value of
+the attribute in consideration.
 
 .. code:: python
 
@@ -118,7 +119,7 @@ Dictionary with keys as column names and values that fill the null records in co
 
 - **one_hot**
 
-``True`` if one hot encoding desired. Default = ``False``.
+``True`` if one hot encoding is desired. Default = ``False``.
 
 .. code:: python
 
@@ -126,7 +127,8 @@ Dictionary with keys as column names and values that fill the null records in co
 
 - **remove_outliers**
 
-``True`` if outlier records are to be removed. If ``False`` then ``replace`` parameter must be provided. Default = ``True``
+``True`` if outlier records are to be removed. If both ``remove_outliers`` and ``replace``
+are ``False``, a warning will be raised and no operation will be performed. Default = ``True``
 
 .. code:: python
 
@@ -135,6 +137,10 @@ Dictionary with keys as column names and values that fill the null records in co
 - **replace**
 
 Boolean value to indicate if the outliers need to be replaced by ``-999``. Default = ``False``.
+
+.. code:: python
+
+    dtype: bool
 
 - **first_quartile**
 
@@ -149,9 +155,14 @@ Float value between 0 and 1, representing the first quartile marker. For more se
 
 Float value between 0 and 1, representing the third quartile marker. For more see :py:mod:`preprocessy.outliers`
 
+.. code:: python
+
+    dtype: float
+    example: 0.75
+
 - **type**
 
-The type of Scaler to be used. Options include. Default = ``StandardScaler``.
+The type of Scaler to be used. Default = ``StandardScaler``.
 
 .. code:: python
 
@@ -165,6 +176,7 @@ List of columns in the dataframe for which scaling is to be done. If ``None`` is
 .. code:: python
 
     dtype: list[str]
+    example : ["Fare"]
 
 - **is_combined**
 
@@ -178,7 +190,7 @@ Parameter to determine whether columns should be scaled together as a group.
 
 ``BinaryScaler`` uses a dictionary of threshold values where the key is the column name and the
 value is the threshold for that column. All values less than or equal to the threshold are scaled to 0.
-Values about the threshold are scaled to 1. The default threshold value is 0.
+Values above the threshold are scaled to 1. The default threshold value is 0.
 
 .. code:: python
 
@@ -210,7 +222,7 @@ Number of top features to select.
 - **test_size**
 
 Size of test set after splitting. Can take values from 0 - 1 for floating point values,
-0 - Number of samples for integer values. Is complementary to train size.
+0 - Number of samples for integer values. It is complementary to train size.
 
 .. code:: python
 
@@ -220,7 +232,7 @@ Size of test set after splitting. Can take values from 0 - 1 for floating point 
 - **train_size**
 
 Size of train set after splitting. Can take values from 0 - 1 for floating point values,
-0 - Number of samples for integer values. Is complementary to test size. If both ``train_size``
+0 - Number of samples for integer values. It is complementary to test size. If both ``train_size``
 and ``test_size`` are given, then ``train_size + test_size`` should be equal to 1 if sizes are
 floating point values, else the total size of the dataset.
 
