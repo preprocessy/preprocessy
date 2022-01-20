@@ -19,7 +19,7 @@ and will have access to your custom parameter.
 The paramters used by the built-in functions are listed below along with their meaning,
 expected dtype and default value, if any. Any parameter marked ``*`` is required.
 
-- **train_df_path**
+- **train_df_path \***
 
 Path to the train dataset. Path should point to a file of one of the supported extensions.
 For list of allowed extensions see :py:mod:`preprocessy.input`.
