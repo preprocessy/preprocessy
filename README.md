@@ -58,8 +58,8 @@ See the [LICENSE](https://github.com/preprocessy/preprocessy/blob/master/LICENSE
 
 ## Links
 
-- Documentation: https://preprocessy.readthedocs.io/en/stable/
-- Changes: https://preprocessy.readthedocs.io/en/stable/changes/
+- Documentation: https://preprocessy.readthedocs.io/en/latest/
+- Changes: https://preprocessy.readthedocs.io/en/latest/changes/
 - PyPI Releases: https://pypi.org/project/preprocessy/
 - Source Code: https://github.com/preprocessy/preprocessy
 - Issue Tracker: https://github.com/preprocessy/preprocessy/issues
