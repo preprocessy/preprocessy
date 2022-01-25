@@ -234,8 +234,10 @@ class Split:
             self.random_state = params["random_state"]
         if self.target_label:
             self.train_y = self.train_df[self.target_label]
+            self.train_df = self.train_df.drop([self.target_label], axis=1)
             if self.test_df is not None:
                 self.test_y = self.test_df[self.target_label]
+                self.test_df = self.test_df.drop([self.target_label], axis=1)
 
         self.__validate_input()
         if self.test_df is not None and self.test_y is not None:
