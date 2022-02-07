@@ -158,13 +158,13 @@ def test_add():
     pipeline.process()
     num_0 = pipeline.params["train_df"].loc[42, "A"]
     num_1 = df.loc[42, "A"]
-    assert num_0 == (num_1 ** 2) * 2
+    assert num_0 == (num_1**2) * 2
     pipeline.remove("squared")
     pipeline.add(squared, after="read_file")
     pipeline.process()
     num_0 = pipeline.params["train_df"].loc[42, "A"]
     num_1 = df.loc[42, "A"]
-    assert num_0 == (num_1 ** 2) * 2
+    assert num_0 == (num_1**2) * 2
 
 
 def test_add_without_params():
