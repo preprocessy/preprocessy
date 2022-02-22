@@ -6,7 +6,9 @@ Unreleased
 Version 1.0.3
 -------------
 
-- Train test split should drop target column from ```train_df``` and ```test_df``` so that there is no redundant target column in ```y_train```
+Released 2022-01-25
+
+- Train test split should drop target column from ``train_df`` and ``test_df`` so that there is no redundant target column in ``y_train``
 
 Version 1.0.2
 -------------
