@@ -231,6 +231,49 @@ def test_remove():
     assert pipeline.params["train_df"].shape[0] == df.shape[0]
 
 
+def test_get_original_params():
+    df = pd.DataFrame({"A": np.arange(1, 100), "B": np.arange(1, 100)})
+    _ = df.to_csv("./datasets/configs/dataset.csv", index=False)
+    params = {
+        "col_1": "A",
+        "col_2": "B",
+        "test_size": 0.2,
+    }
+    pipeline = BasePipeline(
+        train_df_path="./datasets/configs/dataset.csv",
+        steps=[times_two, squared, split],
+        params=params,
+    )
+    pipeline.process()
+
+    # 3 params + 2 inserted by reader (train_df_path and test_df_path)
+    assert len(pipeline.get_original_params().keys()) == 5
+
+
+def test_set_original_params():
+    df = pd.DataFrame({"A": np.arange(1, 100), "B": np.arange(1, 100)})
+    _ = df.to_csv("./datasets/configs/dataset.csv", index=False)
+    params = {
+        "col_1": "A",
+        "col_2": "B",
+        "test_size": 0.2,
+    }
+    pipeline = BasePipeline(
+        train_df_path="./datasets/configs/dataset.csv",
+        steps=[times_two, squared, split],
+        params=params,
+    )
+    pipeline.process()
+
+    assert len(pipeline.get_original_params().keys()) != len(
+        pipeline.params.keys()
+    )
+    pipeline.set_original_params(params)
+    assert len(pipeline.get_original_params().keys()) == len(
+        pipeline.params.keys()
+    )
+
+
 def test_config():
     df = pd.DataFrame({"A": np.arange(1, 100), "B": np.arange(1, 100)})
     _ = df.to_csv("./datasets/configs/dataset.csv", index=False)

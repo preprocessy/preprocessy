@@ -3,6 +3,8 @@ Version 1.0.4
 
 Unreleased
 
+- Added ``__original_params`` field and corresponding getter and setter to ``BasePipeline``. :issue:`135`
+
 Version 1.0.3
 -------------
 
