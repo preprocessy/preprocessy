@@ -42,7 +42,8 @@ class BasePipeline:
     :type custom_reader: callable
 
     .. versionchanged:: 1.0.4
-        Added ``__original_params`` and corresponding getter and setter to preserve original parameter dictionary.
+        ``params`` field of the pipeline is made private and is initialised as a deepcopy of the
+        passed in parameter dict.
     """
 
     def __init__(
@@ -54,10 +55,7 @@ class BasePipeline:
         params=None,
         custom_reader=None,
     ):
-        # self.params is now a copy of the original params dict that was passed
-        # .. versionadded:: 1.0.4
-        self.__original_params = params
-        self.params = deepcopy(self.__original_params)
+        self.__params = deepcopy(params)
         self.train_df_path = train_df_path
         self.test_df_path = test_df_path
         self.config_file = config_file
@@ -78,9 +76,8 @@ class BasePipeline:
         self.custom_reader = custom_reader
         self.__validate_input()
 
-        if self.config_file and not self.params:
-            self.__original_params = read_config(self.config_file)
-            self.params = deepcopy(self.__original_params)
+        if self.config_file and not self.__params:
+            self.__params = read_config(self.config_file)
 
         if self.custom_reader is None:
             self.custom_reader = Reader().read_file
@@ -96,14 +93,14 @@ class BasePipeline:
 
     def __validate_input(self):
 
-        if self.params and self.config_file:
+        if self.__params and self.config_file:
             self.config_file = None
             warnings.warn(
                 "'params' and 'config_file' both were provided. Using 'params'"
                 " to construct the pipeline."
             )
 
-        if not self.params and not self.config_file:
+        if not self.__params and not self.config_file:
             raise ArgumentsError(
                 "Both 'steps' and 'config_file' cannot be null. Please provide"
                 " either a list of steps or path to a JSON config file."
@@ -123,16 +120,16 @@ class BasePipeline:
                         f" {step} of type {type(step)}"
                     )
 
-        if self.steps and not self.params and not self.config_file:
+        if self.steps and not self.__params and not self.config_file:
             raise ArgumentsError(
                 "'params' dictionary or 'config_file' path to config file"
                 " required for configuring pipeline. Received None"
             )
 
-        if self.params and not isinstance(self.params, dict):
+        if self.__params and not isinstance(self.__params, dict):
             raise TypeError(
-                f"'params' should be of type dict. Received {self.params} of"
-                f" type {type(self.params)}"
+                f"'params' should be of type dict. Received {self.__params} of"
+                f" type {type(self.__params)}"
             )
 
         if self.config_file and not isinstance(self.config_file, str):
@@ -173,7 +170,7 @@ class BasePipeline:
         ) as bar:
             print("\nProcessing...\n")
             for step in self.steps:
-                step(self.params)
+                step(self.__params)
                 print(
                     f"==> Completed Stage: {stringcase.sentencecase(step.__name__)}\n"
                 )
@@ -186,17 +183,16 @@ class BasePipeline:
         self.steps.insert(index, func)
         if params:
             for k, v in params.items():
-                if (k in self.params) or (k in self.__original_params):
+                if k in self.__params:
                     raise ValueError(
                         f"Non unique parameter name. Param with name {k} already exists."
                     )
-                self.params[k] = v
-                self.__original_params[k] = v
+                self.__params[k] = v
 
     def add(self, func=None, params=None, **kwargs):
 
         """Method to add another function to the pipeline after it has been constructed. The
-        parameters of the newly added function are merged with ``self.params`` and ``self.__original_params``.
+        parameters of the newly added function are merged with ``self.__params``.
 
         :param func: The function to be added
         :type func: callable
@@ -220,10 +216,7 @@ class BasePipeline:
 
         :raises ArgumentsError: If no position is provided to insert the function into the pipeline
 
-        :raises ValueError: If ``params`` contains a key that already exists in ``self.params`` or ``self.__original_params``
-
-        .. versionchanged:: 1.0.4
-            Params are merged with both ``self.params`` and ``self.__original_params``.
+        :raises ValueError: If ``params`` contains a key that already exists in ``self.__params``
         """
         if not callable(func):
             raise TypeError(
@@ -298,9 +291,7 @@ class BasePipeline:
         self.steps.remove(func)
 
     def save_config(self, file_path, config_drop_keys=None):
-        """Method to save the ``params`` to a ``JSON`` config file. ``params`` is saved
-        instead of ``__original_params`` as some pipeline can generate or change values
-        of parameters and the most recent copy will be saved.
+        """Method to save the ``params`` to a ``JSON`` config file.
 
         :param file_path: Path where the config file must be created
         :type file_path: str
@@ -310,7 +301,7 @@ class BasePipeline:
         """
         if not config_drop_keys:
             config_drop_keys = self.config_drop_keys
-        save_config(file_path, self.params, config_drop_keys)
+        save_config(file_path, self.__params, config_drop_keys)
 
     def print_info(self):
         """Prints the current configuration of the pipeline. Shows the steps, dataframe paths and config paths."""
@@ -332,22 +323,21 @@ class BasePipeline:
             ]
         )
         table.add_row(["Total Pipeline Stages", len(self.steps)])
-        table.add_row(["Total Params", len(self.params.keys())])
+        table.add_row(["Total Params", len(self.__params.keys())])
         print(table)
 
-    def get_original_params(self):
-        """Returns the original parameter dictionary
+    def get_params(self):
+        """Returns the parameter dictionary
 
-        :return: Original parameter dictionary
+        :return: Parameter dictionary
         :rtype: dict
 
         .. versionadded:: 1.0.4
         """
-        return self.__original_params
+        return self.__params
 
-    def set_original_params(self, params):
-        """Set and overwrite the original parameters and ``self.params`` dictionaries
-        initialised in the constructor
+    def set_params(self, params):
+        """Set and overwrite the parameter dictionary initialised in the constructor
 
         :param params: A dictionary containing the parameters that are needed for configuring
                         the pipeline.
@@ -359,10 +349,8 @@ class BasePipeline:
         if not isinstance(params, dict):
             raise ArgumentsError("'params' should be a dictionary.")
 
-        self.__original_params = params
+        self.__params = deepcopy(params)
 
         # Required for reader
-        self.__original_params["train_df_path"] = self.train_df_path
-        self.__original_params["test_df_path"] = self.test_df_path
-
-        self.params = deepcopy(self.__original_params)
+        self.__params["train_df_path"] = self.train_df_path
+        self.__params["test_df_path"] = self.test_df_path

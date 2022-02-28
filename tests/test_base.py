@@ -101,7 +101,7 @@ def test_pipeline_with_default_reader():
     )
     pipeline.process()
 
-    assert "train_df" in pipeline.params.keys()
+    assert "train_df" in pipeline.get_params().keys()
 
 
 def test_pipeline_with_custom_reader():
@@ -123,15 +123,15 @@ def test_pipeline_with_custom_reader():
     pipeline.process()
 
     assert (
-        pipeline.params["train_df"].loc[69, "A"]
-        == pipeline.params["train_df_copy"].loc[69, "A"] * 2
+        pipeline.get_params()["train_df"].loc[69, "A"]
+        == pipeline.get_params()["train_df_copy"].loc[69, "A"] * 2
     )
     assert (
-        pipeline.params["train_df"].loc[42, "B"]
-        == pipeline.params["train_df_copy"].loc[42, "B"] ** 2
+        pipeline.get_params()["train_df"].loc[42, "B"]
+        == pipeline.get_params()["train_df_copy"].loc[42, "B"] ** 2
     )
 
-    assert len(pipeline.params["X_train"]) == 80
+    assert len(pipeline.get_params()["X_train"]) == 80
 
 
 def test_add():
@@ -147,7 +147,7 @@ def test_add():
         params=params,
     )
     pipeline.process()
-    assert pipeline.params["train_df"].loc[42, "A"] == df.loc[42, "A"] * 2
+    assert pipeline.get_params()["train_df"].loc[42, "A"] == df.loc[42, "A"] * 2
     pipeline.add(
         squared,
         {
@@ -156,13 +156,13 @@ def test_add():
         before="times_two",
     )
     pipeline.process()
-    num_0 = pipeline.params["train_df"].loc[42, "A"]
+    num_0 = pipeline.get_params()["train_df"].loc[42, "A"]
     num_1 = df.loc[42, "A"]
     assert num_0 == (num_1**2) * 2
     pipeline.remove("squared")
     pipeline.add(squared, after="read_file")
     pipeline.process()
-    num_0 = pipeline.params["train_df"].loc[42, "A"]
+    num_0 = pipeline.get_params()["train_df"].loc[42, "A"]
     num_1 = df.loc[42, "A"]
     assert num_0 == (num_1**2) * 2
 
@@ -185,7 +185,9 @@ def test_add_without_params():
         before="times_two",
     )
     pipeline.process()
-    assert pipeline.params["train_df"].loc[42, "B"] == df.loc[42, "B"] ** 2
+    assert (
+        pipeline.get_params()["train_df"].loc[42, "B"] == df.loc[42, "B"] ** 2
+    )
 
 
 def test_duplicate_param():
@@ -225,13 +227,13 @@ def test_remove():
         params=params,
     )
     pipeline.process()
-    assert len(pipeline.params["X_train"]) == 80
+    assert len(pipeline.get_params()["X_train"]) == 80
     pipeline.remove("split")
     pipeline.process()
-    assert pipeline.params["train_df"].shape[0] == df.shape[0]
+    assert pipeline.get_params()["train_df"].shape[0] == df.shape[0]
 
 
-def test_get_original_params():
+def test_get_params():
     df = pd.DataFrame({"A": np.arange(1, 100), "B": np.arange(1, 100)})
     _ = df.to_csv("./datasets/configs/dataset.csv", index=False)
     params = {
@@ -244,34 +246,32 @@ def test_get_original_params():
         steps=[times_two, squared, split],
         params=params,
     )
+
+    assert pipeline.get_params() is not None
+
+
+def test_set_params():
+    df = pd.DataFrame({"A": np.arange(1, 100), "B": np.arange(1, 100)})
+    _ = df.to_csv("./datasets/configs/dataset.csv", index=False)
+    params = {
+        "col_1": "A",
+        "col_2": "B",
+        "test_size": 0.2,
+    }
+    pipeline = BasePipeline(
+        train_df_path="./datasets/configs/dataset.csv",
+        steps=[times_two, squared, split],
+        params=params,
+    )
+
     pipeline.process()
+
+    assert len(pipeline.get_params().keys()) != len(params.keys())
+
+    pipeline.set_params(params)
 
     # 3 params + 2 inserted by reader (train_df_path and test_df_path)
-    assert len(pipeline.get_original_params().keys()) == 5
-
-
-def test_set_original_params():
-    df = pd.DataFrame({"A": np.arange(1, 100), "B": np.arange(1, 100)})
-    _ = df.to_csv("./datasets/configs/dataset.csv", index=False)
-    params = {
-        "col_1": "A",
-        "col_2": "B",
-        "test_size": 0.2,
-    }
-    pipeline = BasePipeline(
-        train_df_path="./datasets/configs/dataset.csv",
-        steps=[times_two, squared, split],
-        params=params,
-    )
-    pipeline.process()
-
-    assert len(pipeline.get_original_params().keys()) != len(
-        pipeline.params.keys()
-    )
-    pipeline.set_original_params(params)
-    assert len(pipeline.get_original_params().keys()) == len(
-        pipeline.params.keys()
-    )
+    assert len(pipeline.get_params().keys()) == len(params.keys()) + 2
 
 
 def test_config():
@@ -299,5 +299,5 @@ def test_config():
         custom_reader=custom_read,
     )
 
-    assert "X_train" not in pipeline.params
-    assert "train_df_copy" not in pipeline.params
+    assert "X_train" not in pipeline.get_params()
+    assert "train_df_copy" not in pipeline.get_params()
