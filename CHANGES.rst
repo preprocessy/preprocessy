@@ -3,6 +3,9 @@ Version 1.0.4
 
 Unreleased
 
+- ``params`` field has been renamed to ``__params`` and corresponding getter and setter
+  have been added to ``BasePipeline``. :issue:`135`
+
 Version 1.0.3
 -------------
 
