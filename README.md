@@ -9,7 +9,7 @@
 [![PRs welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat)](https://github.com/dwyl/esta/issues)
 [![MIT license](https://img.shields.io/badge/License-MIT-informational.svg)](https://lbesson.mit-license.org/)
 
-Preprocessy is a library that provides data preprocessing pipelines for machine learning. It bundles all the common preprocessing steps that are performed on the data to prepare it for machine learning models. It aims to do so in a manner that is independent of the source and type of dataset. Hence, it provides a set of functions that have been generalised to different types of data.
+Preprocessy is a framework that provides data preprocessing pipelines for machine learning. It bundles all the common preprocessing steps that are performed on the data to prepare it for machine learning models. It aims to do so in a manner that is independent of the source and type of dataset. Hence, it provides a set of functions that have been generalised to different types of data.
 
 The pipelines themselves are composed of these functions and flexible so that the users can customise them by adding their processing functions or removing pipeline functions according to their needs. The pipelines thus provide an abstract and high-level interface to the users.
 
@@ -50,7 +50,36 @@ Check out our [roadmap](https://github.com/preprocessy/preprocessy/projects/1) t
 
 ## Documentation
 
-Currently, documentation is under development. All contributions are welcome! Please see our [Contributing Guide](https://github.com/preprocessy/preprocessy/blob/master/CONTRIBUTING.md).
+The documentation can be found at [here](https://preprocessy.readthedocs.io/en/latest/). Currently, some parts of the documentation are under development. All contributions are welcome! Please see our [Contributing Guide](https://github.com/preprocessy/preprocessy/blob/master/CONTRIBUTING.md).
+
+## Research Paper and Citations
+
+**Preprocessy: A Customisable Data Preprocessing Framework with High-Level APIs** was presented at the **2022 7th International Conference on Data Science and Machine Learning Applications (CDMA)** and is published in **IEEE Xplore**.
+
+Link to full paper: https://ieeexplore.ieee.org/document/9736366
+
+If you're using Preprocessy as a part of scientific research, please use the below citations.
+
+### Plain Text Citation
+
+```
+S. Kazi et al., "Preprocessy: A Customisable Data Preprocessing Framework with High-Level APIs," 2022 7th International Conference on Data Science and Machine Learning Applications (CDMA), 2022, pp. 206-211, doi: 10.1109/CDMA54072.2022.00039.
+```
+
+
+### BibTeX Citation
+
+```
+@INPROCEEDINGS{9736366,
+  author={Kazi, Saif and Vakharia, Priyesh and Shah, Parth and Gupta, Riya and Tailor, Yash and Mantry, Palak and Rathod, Jash},
+  booktitle={2022 7th International Conference on Data Science and Machine Learning Applications (CDMA)},
+  title={Preprocessy: A Customisable Data Preprocessing Framework with High-Level APIs},
+  year={2022},
+  volume={},
+  number={},
+  pages={206-211},
+  doi={10.1109/CDMA54072.2022.00039}}
+```
 
 ## License
 
