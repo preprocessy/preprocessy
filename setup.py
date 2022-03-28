@@ -13,7 +13,7 @@ VERSION = "1.0.3"
 setup(
     name="preprocessy",
     version=VERSION,
-    description="Data Preprocessing library that provides customizable pipelines.",
+    description="Data Preprocessing framework that provides customizable pipelines.",
     long_description=LONG_DESC,
     long_description_content_type="text/markdown",
     url="https://github.com/Saif807380/dpp",
