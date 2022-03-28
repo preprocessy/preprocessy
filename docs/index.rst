@@ -10,7 +10,7 @@
    :scale: 50%
    :target: https://preprocessy.readthedocs.io/en/stable/
 
-Preprocessy is a library that provides data preprocessing pipelines for machine
+Preprocessy is a framework that provides data preprocessing pipelines for machine
 learning. It bundles all the common preprocessing steps that are performed on the
 data to prepare it for machine learning models. It aims to do so in a manner that
 is independent of the source and type of dataset. Hence, it provides a set of
@@ -37,6 +37,7 @@ Miscellaneous Pages
    :maxdepth: 2
 
    license
+   research
    contributing
    changes
 
