@@ -83,7 +83,7 @@ S. Kazi et al., "Preprocessy: A Customisable Data Preprocessing Framework with H
 
 ## License
 
-See the [LICENSE](https://github.com/preprocessy/preprocessy/blob/master/LICENSE) file for licensing information.
+See the [LICENSE](https://github.com/preprocessy/preprocessy/blob/master/LICENSE.rst) file for licensing information.
 
 ## Links
 
