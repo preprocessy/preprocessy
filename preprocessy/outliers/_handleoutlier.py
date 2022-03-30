@@ -49,8 +49,6 @@ class HandleOutlier:
 
         if self.train_df is None:
             raise ValueError("Train dataframe should not be of None type")
-        # not adding validation for whether test_df is included or not since
-        # user choice
 
         if not isinstance(self.train_df, pd.core.frame.DataFrame):
             raise TypeError(
@@ -244,6 +242,7 @@ class HandleOutlier:
                     if self.test_df is not None:
                         self.test_df = self.test_df[(self.test_df[col] > q1)]
                         self.test_df = self.test_df[(self.test_df[col] <= q3)]
+
         # if removeoutliers = False and replace=True i.e. user wants outliers
         # replaced by a value to indicate these are outliers
         elif self.replace:
@@ -252,11 +251,11 @@ class HandleOutlier:
                     self.__return_quartiles(col)
                 for col in self.cols:
                     q1, q3 = self.quartiles[col]
-                    self.train_df[(self.train_df[col] < q1)] = -999
-                    self.train_df[(self.train_df[col] > q3)] = -999
+                    self.train_df[col][(self.train_df[col] < q1)] = -999
+                    self.train_df[col][(self.train_df[col] > q3)] = -999
                     if self.test_df is not None:
-                        self.test_df[(self.test_df[col] <= q1)] = -999
-                        self.test_df[(self.test_df[col] >= q3)] = -999
+                        self.test_df[col][(self.test_df[col] <= q1)] = -999
+                        self.test_df[col][(self.test_df[col] >= q3)] = -999
 
         params["train_df"] = self.train_df
         params["test_df"] = self.test_df

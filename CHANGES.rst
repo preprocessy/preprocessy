@@ -5,6 +5,8 @@ Unreleased
 
 - ``params`` field has been renamed to ``__params`` and corresponding getter and setter
   have been added to ``BasePipeline``. :issue:`135`
+- Fixed bug in outliers that replaced outliers from all columns instead of just numeric
+  columns. :issue:`144`
 
 Version 1.0.3
 -------------
