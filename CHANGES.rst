@@ -7,6 +7,8 @@ Unreleased
   have been added to ``BasePipeline``. :issue:`135`
 - Fixed bug in outliers that replaced outliers from all columns instead of just numeric
   columns. :issue:`144`
+- Fixed bug in ``train_test_split`` that tried to access ``train_df`` and ``train_y`` by their old
+  variable names. :issue:`147`
 
 Version 1.0.3
 -------------

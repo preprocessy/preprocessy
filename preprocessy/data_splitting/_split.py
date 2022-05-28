@@ -75,7 +75,7 @@ class Split:
                 raise ValueError(
                     "Number of samples of target label and feature dataframe"
                     " unequal.\nSamples in feature dataframe:"
-                    f" {self.X.shape[0]}\nSamples in target label: {self.y.shape[0]}"
+                    f" {self.train_df.shape[0]}\nSamples in target label: {self.train_y.shape[0]}"
                 )
             if not isinstance(self.train_y, pd.core.series.Series):
                 raise TypeError(
