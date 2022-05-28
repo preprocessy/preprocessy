@@ -1,12 +1,26 @@
-Version 1.0.4
+Version 1.0.5
 -------------
 
 Unreleased
 
+Version 1.0.4
+-------------
+
+Released 2022-05-28
+
+- ``params`` field has been renamed to ``__params`` and corresponding getter and setter
+  have been added to ``BasePipeline``. :issue:`135`
+- Fixed bug in outliers that replaced outliers from all columns instead of just numeric
+  columns. :issue:`144`
+- Fixed bug in ``train_test_split`` that tried to access ``train_df`` and ``train_y`` by their old
+  variable names. :issue:`147`
+
 Version 1.0.3
 -------------
 
-- Train test split should drop target column from ```train_df``` and ```test_df``` so that there is no redundant target column in ```y_train```
+Released 2022-01-25
+
+- Train test split should drop target column from ``train_df`` and ``test_df`` so that there is no redundant target column in ``y_train``
 
 Version 1.0.2
 -------------

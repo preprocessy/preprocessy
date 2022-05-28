@@ -83,7 +83,7 @@ S. Kazi et al., "Preprocessy: A Customisable Data Preprocessing Framework with H
 
 ## License
 
-See the [LICENSE](https://github.com/preprocessy/preprocessy/blob/master/LICENSE) file for licensing information.
+See the [LICENSE](https://github.com/preprocessy/preprocessy/blob/master/LICENSE.rst) file for licensing information.
 
 ## Links
 
@@ -91,5 +91,6 @@ See the [LICENSE](https://github.com/preprocessy/preprocessy/blob/master/LICENSE
 - Changes: https://preprocessy.readthedocs.io/en/latest/changes/
 - PyPI Releases: https://pypi.org/project/preprocessy/
 - Source Code: https://github.com/preprocessy/preprocessy
+- Datasets: https://drive.google.com/drive/folders/1MoMHNgd6KR5A_l5PkFIcxeax7lXm72l9?usp=sharing
 - Issue Tracker: https://github.com/preprocessy/preprocessy/issues
 - Chat: https://discord.gg/5q2yCqqU6N

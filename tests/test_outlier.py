@@ -1,3 +1,4 @@
+import numpy as np
 import pandas as pd
 import pytest
 from preprocessy.exceptions import ArgumentsError
@@ -158,3 +159,25 @@ def test_all(test_input):
     assert -999 in test_input["train_df"]["Distance"].values
     assert -999 in test_input["test_df"]["Distance"].values
     assert test_input["train_df"].equals(test_input["test_df"])
+
+
+def test_outlier_replace_only_in_numeric_columns():
+    a = np.random.rand(
+        100,
+    )
+    a[95:] = 1504360
+    b = [0 if i % 2 == 0 else 1 for i in range(100)]
+    b = np.asarray(b)
+    b[70:] = 42
+    data = {"A": a, "B": b}
+    sample_df = pd.DataFrame(data)
+    params = {
+        "train_df": sample_df,
+        "cat_cols": ["B"],
+        "remove_outliers": False,
+        "replace": True,
+    }
+    outlier = HandleOutlier()
+    outlier.handle_outliers(params=params)
+    assert -999 in params["train_df"]["A"].values[95:]
+    assert (params["train_df"]["B"].compare(sample_df["B"])).empty
