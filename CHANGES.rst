@@ -1,7 +1,12 @@
-Version 1.0.4
+Version 1.0.5
 -------------
 
 Unreleased
+
+Version 1.0.4
+-------------
+
+Released 2022-05-28
 
 - ``params`` field has been renamed to ``__params`` and corresponding getter and setter
   have been added to ``BasePipeline``. :issue:`135`
