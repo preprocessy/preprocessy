@@ -56,6 +56,12 @@ Also include `.. versionchanged::` inline changelogs in relevant docstrings.
 
 3. Create a virtual environment (always a good practice!)
 
+```bash
+    $ python3 -m venv preprocessy_venv
+
+    $ source preprocessy_venv/bin/activate
+```
+
 4. Install the development dependencies
 
 Using Poetry

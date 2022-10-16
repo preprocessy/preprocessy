@@ -111,6 +111,8 @@ venv/
 ENV/
 env.bak/
 venv.bak/
+# Generated project files
+preprocessy_venv/*
 
 # Spyder project settings
 .spyderproject
@@ -129,3 +131,10 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+## Files left by editors/IDEs and local environments
+.DS_Store
+# VS Code
+.vscode/*
+# PyCharm
+.idea
