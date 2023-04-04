@@ -17,7 +17,6 @@ class HandleOutlier:
     """
 
     def __init__(self):
-
         """Function to initialize a few parameters used to make the process
         run without human interaction.
 
@@ -46,7 +45,6 @@ class HandleOutlier:
         self.third_quartile = 0.95
 
     def __validate_input(self):
-
         if self.train_df is None:
             raise ValueError("Train dataframe should not be of None type")
 

@@ -73,7 +73,6 @@ def split(params):
 def test_pipeline_arguments(
     error, train_df_path, steps, config_file, params, custom_reader
 ):
-
     with pytest.raises(error):
         BasePipeline(
             train_df_path=train_df_path,

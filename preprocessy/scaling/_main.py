@@ -5,7 +5,6 @@ from ..exceptions import ArgumentsError
 
 class Scaler:
     def __init__(self):
-
         self.train_df = None
         self.test_df = None
         self.type = "StandardScaler"

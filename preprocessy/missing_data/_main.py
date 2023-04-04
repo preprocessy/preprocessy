@@ -25,7 +25,6 @@ class NullValuesHandler:
         return f"NullValuesHandler(train_df=None, test_df=None, drop_cols={self.drop_cols}, fill_missing={self.fill_missing}, fill_values={self.fill_values})"
 
     def __validate_input(self):
-
         if self.train_df is None:
             raise ValueError("Feature dataframe should not be of None type")
 
@@ -65,7 +64,6 @@ class NullValuesHandler:
                 )
 
         if self.fill_missing is not None:
-
             if type(self.fill_missing) is not dict:
                 raise TypeError('Expected dict for argument "fill_missing"')
 
@@ -166,7 +164,6 @@ class NullValuesHandler:
 
     # function to drop a particular column
     def __drop_column_with_null_values(self):
-
         self.new_train = self.train_df.drop(self.drop_cols, axis=1)
         if self.test_df is not None:
             self.new_test = self.test_df.drop(self.drop_cols, axis=1)
@@ -248,7 +245,6 @@ class NullValuesHandler:
 
     # main function
     def execute(self, params):
-
         """Function that handles null values in the supplied dataframe and returns a new dataframe. If no user parameters are supplied, the rows containing null values are dropped by default.
 
         :param train_df: Input dataframe, may or may not consist of the target label.

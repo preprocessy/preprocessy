@@ -92,7 +92,6 @@ class BasePipeline:
         )
 
     def __validate_input(self):
-
         if self.__params and self.config_file:
             self.config_file = None
             warnings.warn(
@@ -190,7 +189,6 @@ class BasePipeline:
                 self.__params[k] = v
 
     def add(self, func=None, params=None, **kwargs):
-
         """Method to add another function to the pipeline after it has been constructed. The
         parameters of the newly added function are merged with ``self.__params``.
 
