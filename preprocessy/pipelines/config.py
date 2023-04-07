@@ -30,7 +30,8 @@ def read_config(file_path):
     if "train_df_path" in content:
         warnings.warn(
             "The dataset has to be passed as param to the Pipeline class, any"
-            " value provided in the config file will be overridden."
+            " value provided in the config file will be overridden.",
+            stacklevel=2,
         )
     return content
 

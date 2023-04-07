@@ -32,6 +32,7 @@ class Parser:
                 "To mitigate, provide the target_label from dataframe or provide explicit list of columns for encoding "
                 "via the 'cat_cols' parameter",
                 UserWarning,
+                stacklevel=2,
             )
         if (
             self.target_label is not None

@@ -96,7 +96,8 @@ class BasePipeline:
             self.config_file = None
             warnings.warn(
                 "'params' and 'config_file' both were provided. Using 'params'"
-                " to construct the pipeline."
+                " to construct the pipeline.",
+                stacklevel=2,
             )
 
         if not self.__params and not self.config_file:

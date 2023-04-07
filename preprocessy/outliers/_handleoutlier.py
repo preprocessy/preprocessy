@@ -113,6 +113,7 @@ class HandleOutlier:
                 "remove_outliers and replace both are False, thus no operation will be performed on"
                 " dataframe, please specify either of the argument as True ",
                 UserWarning,
+                stacklevel=2,
             )
 
         if not isinstance(self.first_quartile, float):
