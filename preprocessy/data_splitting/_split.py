@@ -251,7 +251,6 @@ class Split:
             params["X_test"] = self.test_df
 
         else:
-
             if self.shuffle and self.random_state:
                 np.random.seed(self.random_state)
 

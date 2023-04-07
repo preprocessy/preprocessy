@@ -32,7 +32,6 @@ class Reader(object):
             self.file_name = file_name
 
     def __read_file_util(self, file_name):
-
         self._validate_input(file_name)
         df = None
 
