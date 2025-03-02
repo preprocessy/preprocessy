@@ -64,7 +64,7 @@ class Scaler:
                 )
             column_list = list(self.train_df.keys())
             for column in self.columns:
-                if type(column) != str:
+                if type(column) is not str:
                     raise TypeError(
                         f"Expected str type column, got {type(column)}"
                     )

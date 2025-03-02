@@ -11,8 +11,8 @@ array = np.random.random((5, 5))
 
 
 def test_null_dataframe():
+    handler = NullValuesHandler()
     with pytest.raises(ValueError):
-        handler = NullValuesHandler()
         handler.execute({})
 
 
@@ -86,8 +86,8 @@ def test_null_dataframe():
     ],
 )
 def test_incorrect_input_type(error, test_input):
+    handler = NullValuesHandler()
     with pytest.raises(error):
-        handler = NullValuesHandler()
         handler.execute(params=test_input)
 
 

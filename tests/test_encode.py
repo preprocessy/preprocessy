@@ -10,8 +10,8 @@ ord_dict = {"Profession": {"Student": 1, "Teacher": 2, "HOD": 3}}
 # test for empty input
 def test_empty_df():
     params = {"target_label": "Price", "ord_dict": ord_dict}
+    encoder = Encoder()
     with pytest.raises(ValueError):
-        encoder = Encoder()
         encoder.encode(params=params)
 
 
@@ -19,8 +19,8 @@ def test_empty_df():
 def test_target_label_warning():
     train_csv = pd.read_csv("datasets/encoding/testnew.csv")
     params = {"train_df": train_csv, "ord_dict": ord_dict}
+    encoder = Encoder()
     with pytest.warns(UserWarning):
-        encoder = Encoder()
         encoder.encode(params=params)
 
 
@@ -82,8 +82,8 @@ def test_empty_weight_mapping():
         "target_label": "Price",
         "ord_dict": ord_dict1,
     }
+    encoder = Encoder()
     with pytest.raises(ValueError):
-        encoder = Encoder()
         encoder.encode(params=params)
 
 

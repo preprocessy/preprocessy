@@ -16,14 +16,14 @@ from preprocessy.data_splitting import KFold
 )
 def test_kfold(n_splits, shuffle, random_state):
     df = pd.DataFrame(np.arange(1000).reshape(100, 10))
+    cv = KFold()
+    params = {
+        "train_df": df,
+        "n_splits": n_splits,
+        "shuffle": shuffle,
+        "random_state": random_state,
+    }
     with pytest.raises(ValueError):
-        cv = KFold()
-        params = {
-            "train_df": df,
-            "n_splits": n_splits,
-            "shuffle": shuffle,
-            "random_state": random_state,
-        }
         for _, _ in cv.split(params):
             pass
 

@@ -39,8 +39,8 @@ def test_invalid_input():
     ],
 )
 def test_score_func(test_input):
+    kbest = SelectKBest()
     with pytest.raises(TypeError):
-        kbest = SelectKBest()
         kbest.fit(params=test_input)
 
 

@@ -34,15 +34,15 @@ train_df = pd.read_csv("datasets/encoding/test2.csv")
     ],
 )
 def test_incorrect_input_value(test_input):
+    outlier = HandleOutlier()
     with pytest.raises(ValueError):
-        outlier = HandleOutlier()
         outlier.handle_outliers(params=test_input)
 
 
 # test for none operation
 def test_false_arguments():
+    outlier = HandleOutlier()
     with pytest.warns(UserWarning):
-        outlier = HandleOutlier()
         outlier.handle_outliers(
             params={
                 "train_df": train_df,
@@ -55,8 +55,8 @@ def test_false_arguments():
 
 # test for multiple operation
 def test_true_arguments():
+    outlier = HandleOutlier()
     with pytest.raises(ArgumentsError):
-        outlier = HandleOutlier()
         outlier.handle_outliers(
             params={
                 "train_df": train_df,
@@ -97,14 +97,14 @@ def test_true_arguments():
     ],
 )
 def test_incorrect_input_type(test_input):
+    outlier = HandleOutlier()
     with pytest.raises(TypeError):
-        outlier = HandleOutlier()
         outlier.handle_outliers(params=test_input)
 
 
 def test_incorrect_input_key():
+    outlier = HandleOutlier()
     with pytest.raises(KeyError):
-        outlier = HandleOutlier()
         outlier.handle_outliers(
             params={"train_df": train_df, "out_cols": ["Place"]}
         )
