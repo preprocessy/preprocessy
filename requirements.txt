@@ -2,5 +2,5 @@ alive-progress==2.1.0
 colorama==0.4.4
 pandas==2.2.3
 prettytable==2.1.0
-scikit-learn==0.24.2
+scikit-learn>=1.0.0
 stringcase==1.2.0
