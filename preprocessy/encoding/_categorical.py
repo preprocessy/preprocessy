@@ -148,7 +148,7 @@ class Encoder:
                 if col not in self.ord_cols:
                     if (
                         self.train_df[col].dtype == "object"
-                        and type(self.train_df[col][0]) == "str"
+                        and type(self.train_df[col][0]) is str
                     ) and (
                         "$" in self.train_df[col][0]
                         or self.train_df[col].str.contains(",").any()

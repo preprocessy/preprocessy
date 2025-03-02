@@ -36,8 +36,8 @@ array = np.random.random((5, 5))
     ],
 )
 def test_incorrect_input_type(test_input, error):
+    scaler = Scaler()
     with pytest.raises(error):
-        scaler = Scaler()
         scaler.execute(params=test_input)
 
 

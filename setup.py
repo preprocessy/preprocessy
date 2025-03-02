@@ -31,7 +31,7 @@ setup(
         "colorama>=0.4.4",
         "pandas>=1.0.5",
         "prettytable>=2.1.0",
-        "scikit-learn>=0.23.2",
+        "scikit-learn>=1.0.0",
         "stringcase>=1.2.0"
         # add contents from requirements.txt only
         # "sample_package>=version_number"

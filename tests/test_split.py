@@ -22,7 +22,7 @@ def test_without_target_col():
 
 def test_random_state():
     df = pd.DataFrame(np.arange(1000).reshape(100, 10))
+    params = {"train_df": df, "test_size": 0.2, "random_state": "hello"}
+    split = Split()
     with pytest.raises(TypeError):
-        params = {"train_df": df, "test_size": 0.2, "random_state": "hello"}
-        split = Split()
         split.train_test_split(params=params)

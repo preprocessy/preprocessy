@@ -8,16 +8,16 @@ train_csv = pd.read_csv("datasets/encoding/testnew.csv")
 
 def test_empty_df():
     params = {"target_label": "Price", "ord_dict": ord_dict}
+    parser = Parser()
     with pytest.raises(ValueError):
-        parser = Parser()
         parser.parse_dataset(params=params)
 
 
 def test_target_label_warning():
     train_csv = pd.read_csv("datasets/encoding/testnew.csv")
     params = {"train_df": train_csv, "ord_dict": ord_dict}
+    parser = Parser()
     with pytest.warns(UserWarning):
-        parser = Parser()
         parser.parse_dataset(params=params)
 
 
@@ -31,8 +31,8 @@ def test_empty_weight_mapping():
         "target_label": "Price",
         "ord_dict": ord_dict1,
     }
+    parser = Parser()
     with pytest.raises(ValueError):
-        parser = Parser()
         parser.parse_dataset(params=params)
 
 
