@@ -6,7 +6,6 @@ from ..exceptions import ArgumentsError
 
 
 class HandleOutlier:
-
     """Class for handling outliers on its own or according to users needs.
     This class handles outliers using the percentile concept. The 2 percentile markers
     will represent the data to be kept ie if one marker is 5th percentile and other is 95th
