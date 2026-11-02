@@ -17,7 +17,6 @@ init()
 
 
 class BasePipeline:
-
     """The ``BasePipeline`` Class can be used to create your own customized pipeline.
 
     :param train_df_path: Path to train dataframe

@@ -1,4 +1,5 @@
-""" setup """
+"""setup"""
+
 import io
 
 from setuptools import find_packages
@@ -32,7 +33,7 @@ setup(
         "pandas>=2.2.3",
         "prettytable>=2.1.0",
         "scikit-learn>=1.0.0",
-        "stringcase>=1.2.0"
+        "stringcase>=1.2.0",
         # add contents from requirements.txt only
         # "sample_package>=version_number"
     ],
